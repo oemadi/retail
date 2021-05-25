@@ -25,15 +25,15 @@ class KasirController extends Controller
         $anggota = Anggota::get();
         return view("pages.kasir.index", compact('kode', 'anggota', 'cart', 'barang'));
     }
-   //getDataAnggotaSelect
-      public function getDataAnggotaSelect($id)
+
+      public function getDataAnggotaSelect()
     {
-        $anggota = Anggota::where('nama', 'like','%'.$id.'%')->get();
-        if ($anggota) {
-            return response()->json($anggota);
-        } else {
-            return response()->json("no result");
-        }
+        $id = request()->get('search');
+        $res = Anggota::where('nama','like','%'.$id.'%')->limit(20)->get();
+       foreach($res as $row){
+           $data[] = array('id'=>$row->id,'text'=>$row->nama);
+       }
+        return json_encode($data);
     }
     public function getBarangById($id)
     {

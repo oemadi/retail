@@ -26,10 +26,9 @@
                     <div class="col-md-12 col-sm-12">
                         <div class="form-group">
                             <label for="pelanggan">Anggota</label>
-                            <select name="pelanggan" id="pelanggan" class="form-control select2" style="width: 100%;">
-                                @foreach ($anggota as $item)
-                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
-                                @endforeach
+                            <select name="pelanggan" id="pelanggan" class="select2-anggota" style="width: 100%;height:auto">
+
+
                             </select>
                         </div>
                     </div>
@@ -372,6 +371,30 @@
 <script src="{{ asset('adminlte') }}/plugins/jquery-ui/jquery-ui.min.js"></script>
 <script>
     $(document).ready(function(){
+        $(".select2-anggota").select2({
+        ajax: {
+        url: "{{ route('getDataAnggotaSelect') }}",
+        contentType: 'application/json',
+
+        dataType: 'json',
+        delay:50,
+        data: function(params) {
+            console.log(params.term)
+            return {
+            search: params.term
+            };
+        },
+        processResults: function(data) {
+            return {
+            results: data
+            };
+        },
+        cache: true
+        },
+
+        placeholder:"Nama anggota",
+  });
+
         $("#table-barang-modal").dataTable();
         $('#showModalBarang').click(function(){
             $('#modalBarang').modal('show');
