@@ -43,7 +43,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="kode_barang">Kode Barang 123</label>
+                            <label for="kode_barang">Kode Barang</label>
                             <div class="input-group">
                                 <input type="text" name="kode_barang" id="kode_barang" class="form-control">
                                 <span class="input-group-addon" style="cursor: pointer"
