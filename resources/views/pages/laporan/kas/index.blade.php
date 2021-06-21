@@ -132,11 +132,13 @@
             var maxDate = new Date(selected.date.valueOf());
             $('#startdate').datepicker('setEndDate', maxDate);
         });
+		
         $('#filter1').click(function(){
-        $('#example-table').DataTable().destroy();
-		cekData();
-		loadKotakAtas("custom",$('#startdate').val(),$('#enddate').val());
+				$('#example-table').DataTable().destroy();
+				cekData();
+				loadKotakAtas("custom",$('#startdate').val(),$('#enddate').val());
         });
+		
 		function cekData(){
 		   $.fn.dataTable.ext.errMode = 'none';
 		   var  awal = $('#startdate').val();
