@@ -54,9 +54,7 @@
 </div>
 @endsection
 @push('script')
-<script src="{{ asset('adminlte') }}/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="{{ asset('adminlte') }}/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js">
-</script>
+
 <!-- SlimScroll -->
 <script type="text/javascript">
     $(function() {

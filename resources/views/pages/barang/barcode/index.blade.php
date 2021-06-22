@@ -112,14 +112,10 @@
 </div>
 @endsection
 @push('style')
-<link rel="stylesheet"
-    href="{{ asset('adminlte') }}/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
 <link rel="stylesheet" href="{{ asset('adminlte') }}/plugins/print/print.css">
 <link rel="stylesheet" href="{{ asset('adminlte') }}/plugins/sweetalert2/dist/sweetalert2.css">
 @endpush
 @push('script')
-<script src="{{ asset('adminlte') }}/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="{{ asset('adminlte') }}/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js">
 </script>
 <script src="{{ asset('adminlte') }}/plugins/print/print.js"></script>
 <script src="{{ asset('adminlte') }}/plugins/sweetalert2/dist/sweetalert2.all.min.js"></script>

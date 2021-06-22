@@ -51,12 +51,8 @@
 
 @endsection
 @push('style')
-<link rel="stylesheet"
-    href="{{ asset('adminlte') }}/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
 @endpush
 @push('script')
-<script src="{{ asset('adminlte') }}/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="{{ asset('adminlte') }}/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js">
 </script>
 <!-- SlimScroll -->
 <script type="text/javascript">

@@ -39,8 +39,8 @@ class KategoriController extends Controller
 			->count();
 			
 			$records = Kategori::orderBy($columnName,$columnSortOrder)
-			->where('Kategori.nama','like','%'.$searchValue.'%')
-			->select('Kategori.*')
+			->where('kategori.nama','like','%'.$searchValue.'%')
+			->select('kategori.*')
 			->skip($start)
 			->take($rowperpage)
 			->get();

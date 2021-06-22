@@ -24,7 +24,7 @@
             <div class="inner">
                 <h3>{{ $totalAnggota }}</h3>
 
-                <p>Anggota</p>
+                <p>Customer</p>
             </div>
             <div class="icon">
                 <i class="fa fa-users"></i>
@@ -156,18 +156,18 @@
 
 @endsection
 @push('style')
-<link rel="stylesheet" href="{{ asset('adminlte') }}/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+<link rel="stylesheet" href="{{ url('public/adminlte') }}/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
 <link rel="stylesheet"
-    href="{{ asset('adminlte') }}/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    href="{{ url('public/adminlte') }}/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
 <!-- Daterange picker -->
-<link rel="stylesheet" href="{{ asset('adminlte') }}/bower_components/bootstrap-daterangepicker/daterangepicker.css">
+<link rel="stylesheet" href="{{ url('public/adminlte') }}/bower_components/bootstrap-daterangepicker/daterangepicker.css">
 <!-- bootstrap wysihtml5 - text editor -->
 @endpush
 @push('script')
-<script src="{{ asset('adminlte') }}/bower_components/moment/min/moment.min.js"></script>
+<script src="{{ url('public/adminlte') }}/bower_components/moment/min/moment.min.js"></script>
 
-<script src="{{ asset('adminlte') }}/plugins/chartjs/chart.js"></script>
-<script src="{{ asset('adminlte') }}/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<script src="{{ url('public/adminlte') }}/plugins/chartjs/chart.js"></script>
+<script src="{{ url('public/adminlte') }}/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
 
 <script>
     $(document).ready(function(){

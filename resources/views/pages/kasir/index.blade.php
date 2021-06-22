@@ -401,7 +401,7 @@
         });
         var barangData = [];
         $.ajax({
-            url :  `{{ route('kasir.barang_data') }}`,
+            url :  '{{ route('kasir.barang_data') }}',
             method : 'GET',
             dataType:"json",
             async:false,
@@ -434,7 +434,7 @@
             placeholder: 'Nama Barang....',
             ajax: {
                 dataType: 'json',
-                url: `{{ route('kasir.barang_data') }}`,
+                url: '{{ route('kasir.barang_data') }}',
                 delay: 800,
                 data: function(params) {
                     return {
@@ -457,7 +457,7 @@
             placeholder: 'Nama Barang....',
             ajax: {
                 dataType: 'json',
-                url: `{{ route('kasir.barang_data') }}`,
+                url: '{{ route('kasir.barang_data') }}',
                 delay: 800,
                 data: function(params) {
                     return {
@@ -619,10 +619,10 @@
             const result=bayar-grandtotal;
             if(result < -1){
                 $('#kembali').val('Pembayaran Kurang');
-                $('#kembali2').html(`<span style="font-size:50pt;" class="text-danger">${result}</span>`);
+                $('#kembali2').html('<span style="font-size:50pt;" class="text-danger">${result}</span>');
                 $('#alert-kembali2').html('Pembayaran Kurang');
             }else{
-                $('#kembali2').html(`<span style="font-size:50pt;" >${result}</span>`);
+                $('#kembali2').html('<span style="font-size:50pt;" >${result}</span>');
                 $('#kembali').val(result);
                 $('#alert-kembali2').html('Kembali: '+result);
             }
@@ -739,23 +739,23 @@
             var html = '';
             var subtotal = 0;
             data.detail_transaksi.forEach(function(item){
-                html += `<tr><td>${item.barang.nama}</td><td>${item.harga}</td><td>${item.jumlah_beli}</td><td>${item.subtotal}</td></tr>`;
+                html += '<tr><td>${item.barang.nama}</td><td>${item.harga}</td><td>${item.jumlah_beli}</td><td>${item.subtotal}</td></tr>';
                 subtotal += item.subtotal
             });
-            html += `<tr><td colspan="3" align="center">Subtotal Barang</td><td>${subtotal}</td></tr>`;
-            html += `<tr><td colspan="3" align="center">Diskon</td><td>${data.diskon}</td></tr>`;
-            html += `<tr><td colspan="3" align="center">Grandtotal</td><td>${data.total}</td></tr>`;
+            html += '<tr><td colspan="3" align="center">Subtotal Barang</td><td>${subtotal}</td></tr>';
+            html += '<tr><td colspan="3" align="center">Diskon</td><td>${data.diskon}</td></tr>';
+            html += '<tr><td colspan="3" align="center">Grandtotal</td><td>${data.total}</td></tr>';
             if(data2 != null){
-                html += `<tr><td colspan="3" align="center">Bayar</td><td>${data2.bayar}</td></tr>`;
-                html += `<tr><td colspan="3" align="center">kembali</td><td>${data2.kembali}</td></tr>`;
+                html += '<tr><td colspan="3" align="center">Bayar</td><td>${data2.bayar}</td></tr>';
+                html += '<tr><td colspan="3" align="center">kembali</td><td>${data2.kembali}</td></tr>';
             }
             $('#table-after-transaksi').html(html);
             $('#modal-selesai').modal('show');
         }
         $('.cetak-struk').click(function(){
             const invoice = $('#showInvoice').text();
-            let url = `{{ url('/kasir/struk/${invoice}') }}`;
-            const urlNota = `{{ url('/penjualan/nota/${invoice}') }}`;
+            let url = '{{ url('/kasir/struk/${invoice}') }}';
+            const urlNota = '{{ url('/penjualan/nota/${invoice}') }}';
             const parseResult = new DOMParser().parseFromString(url, "text/html");
             const parseResultNota = new DOMParser().parseFromString(urlNota,"text/html");
             const parsedUrl = parseResult.documentElement.textContent;
