@@ -104,16 +104,12 @@
 @endsection
 @push('style')
 <link rel="stylesheet"
-    href="{{ asset('adminlte') }}/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
 <link rel="stylesheet"
     href="{{ asset('adminlte') }}/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
 @endpush
 @push('script')
 <script src="{{ asset('adminlte') }}/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js">
 </script>
-<script src="{{ asset('adminlte') }}/bower_components/datatables.net/js/jquery.dataTables.min.js">
-</script>
-<script src="{{ asset('adminlte') }}/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js">
 </script>
 <script>
     $(document).ready(function(){

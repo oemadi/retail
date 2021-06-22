@@ -70,6 +70,7 @@
 		   ajax:"{{route('getDataSuplier')}}",
 		   columns:[
 		   {data:'id'},
+		   {data:'nama'},
 		   {data:'email'},
    		   {data:'website'},
 		   {data:'no_hp'},

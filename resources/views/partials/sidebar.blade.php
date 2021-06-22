@@ -44,9 +44,6 @@
                     <li class="{{ set_active(['barang.masuk.index']) }}">
                         <a href="{{ route('barang.masuk.index') }}"><i class="fa fa-circle-o"></i> Stok Masuk</a>
                     </li>
-                    <li class="{{ set_active(['barang.barcode.index']) }}">
-                        <a href="{{ route('barang.barcode.index') }}"><i class="fa fa-circle-o"></i> Barcode</a>
-                    </li>
                 </ul>
             </li>
             @endif
@@ -63,9 +60,6 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="{{ set_active(['jabatan.index','jabatan.create','jabatan.edit']) }}">
-                        <a href="{{ route('jabatan.index') }}"><i class="fa fa-bookmark"></i> Jabatan</a>
-                    </li>
                     <li class="{{ set_active(['suplier.index','suplier.create','suplier.edit']) }}">
                         <a href="{{ route('suplier.index') }}">
                             <i class="fa fa-truck"></i> <span>Suplier</span>
@@ -73,7 +67,7 @@
                     </li>
                     <li class="{{ set_active(['anggota.create','anggota.index','anggota.edit']) }}">
                         <a href="{{ route('anggota.index') }}">
-                            <i class="fa fa-user"></i> <span>Anggota</span>
+                            <i class="fa fa-user"></i> <span>Customer</span>
                         </a>
                     </li>
                     <li class="{{ set_active(['pegawai.create','pegawai.index','pegawai.edit']) }}">

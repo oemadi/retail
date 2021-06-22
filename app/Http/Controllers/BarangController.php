@@ -37,12 +37,12 @@ class BarangController extends Controller
 		
 			
 			
-		$records = Barang::select('Barang.*','kategori.nama as kategori_nama','satuan.nama as satuan_nama')
+		$records = Barang::select('barang.*','kategori.nama as kategori_nama','satuan.nama as satuan_nama')
         ->join('satuan', 'satuan.id', '=', 'barang.satuan_id')
         ->join('kategori', 'kategori.id', '=', 'barang.kategori_id')
 		
 		->orderBy($columnName,$columnSortOrder)
-		->where('Barang.nama','like','%'.$searchValue.'%')
+		->where('barang.nama','like','%'.$searchValue.'%')
 		->skip($start)
 		->take($rowperpage)
 		->get();

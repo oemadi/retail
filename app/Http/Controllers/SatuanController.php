@@ -38,8 +38,8 @@ class SatuanController extends Controller
 			->count();
 			
 			$records = Satuan::orderBy($columnName,$columnSortOrder)
-			->where('Satuan.nama','like','%'.$searchValue.'%')
-			->select('Satuan.*')
+			->where('satuan.nama','like','%'.$searchValue.'%')
+			->select('satuan.*')
 			->skip($start)
 			->take($rowperpage)
 			->get();
@@ -83,7 +83,7 @@ class SatuanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required|min:3'
+            'nama' => 'required|min:2'
         ]);
         $satuan = new Satuan();
         $satuan->nama = $request->nama;
@@ -129,7 +129,7 @@ class SatuanController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama' => 'required|min:3'
+            'nama' => 'required|min:2'
         ]);
         $satuan = Satuan::find($id);
         $satuan->nama = $request->nama;

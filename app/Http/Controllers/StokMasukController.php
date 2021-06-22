@@ -39,7 +39,7 @@ class StokMasukController extends Controller
 			->leftJoin('suplier', 'suplier.id', '=', 'history_stok_barang_masuk.suplier_id')
             ->join('barang', 'barang.id', '=', 'history_stok_barang_masuk.barang_id')
 			->orderBy($columnName,$columnSortOrder)
-			->where('History_stok_barang_masuk.barang_id','like','%'.$searchValue.'%')
+			->where('history_stok_barang_masuk.barang_id','like','%'.$searchValue.'%')
 			
 			->skip($start)
 			->take($rowperpage)
