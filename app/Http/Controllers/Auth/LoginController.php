@@ -7,6 +7,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Session;
 
 class LoginController extends Controller
 {
@@ -44,15 +45,19 @@ class LoginController extends Controller
     }
     public function login(Request $request)
     {
+        //dd($request->branch_id);
         $request->validate([
             'username' => 'required|min:3',
-            'password' => 'required|min:5'
+            'password' => 'required|min:5',
+            'branch' => 'required'
         ]);
         $attempt = [
             'username' => $request->username,
-            'password' => $request->password
+            'password' => $request->password,
+            'branch' => $request->branch
         ];
         if (Auth::attempt($attempt)) {
+            Session::put('branch',$request->branch);
             return redirect()->route('dashboard');
         } else {
             return redirect()->back()->with('message', 'Username atau password salah');

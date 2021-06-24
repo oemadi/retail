@@ -61,17 +61,21 @@
                     <label class="help-block error">{{ $message }}</label>
                     @enderror
                 </div>
-				<div class="form-group has-feedback @error('password') has-error @enderror">
-					<select name="jabatan_id" id="jabatan_id" class="form-control">
-                                    <option disabled selected>Pilih Cabang</option>
-                                    <option value="">Depok</option>
-									<option value="">Cikarang</option>
+				<div class="form-group has-feedback @error('branch') has-error @enderror">
+					<select name="branch" id="branch" class="form-control">
+                        <option value="">Pilih Cabang</option>
+                        <option value="1">Depok</option>
+									<option value="2">Cikarang</option>
+                                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
 									</select>
+                                    @error('branch')
+                                    <label class="help-block error">{{ $message }}</label>
+                                    @enderror
                 </div>
                 <div class="row">
                     <!-- /.col -->
-                    <div class="col-xs-4">
-                        <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+                    <div class="col-xs-4" style="float:right">
+                        <button type="submit" class="btn btn-default btn-block btn-flat" style="color:blue;font-weight:bold;border-radius:5px">Sign In</button>
                     </div>
                     <!-- /.col -->
                 </div>

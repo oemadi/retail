@@ -10,7 +10,7 @@ class User extends Authenticatable
 {
     use Notifiable;
     protected $fillable = [
-        'nama', 'email', 'password', 'level', 'username'
+        'nama', 'email', 'password', 'level', 'username','branch'
     ];
     public function cart_transaksi()
     {
