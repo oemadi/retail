@@ -62,6 +62,11 @@ class PenjualanController extends Controller
 				echo json_encode($response);
 				exit();
 		}
+        public function getKodeFakturJual()
+        {
+            $data =  penjualan::kodeFaktur();
+            return json_encode($data);
+        }
         public function getDataCustomer()
         {
             //$id_ship = Session::get('id_ship');
@@ -97,10 +102,10 @@ class PenjualanController extends Controller
     }
     public function create()
     {
-        $kodeFaktur = penjualan::kodeFaktur();
+
         $customer = Customer::get();
         $barang = Barang::get();
-        return view("pages.transaksi.penjualan.create", compact('barang', 'customer', 'kodeFaktur'));
+        return view("pages.transaksi.penjualan.create", compact('barang', 'customer'));
     }
     public function store(Request $request)
     {
@@ -122,6 +127,7 @@ class PenjualanController extends Controller
                 $detail = new Detail_penjualan();
                 $detail->penjualan_id = $penjualan->id;
                 $detail->barang_id = $row['kode_barang'];
+                $detail->harga = $row['harga'];
                 $detail->jumlah_jual = $row['jumlah'];
                 $detail->subtotal = $row['subtotal'];
                 $detail->save();

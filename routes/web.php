@@ -28,6 +28,7 @@ Route::any('/getDataPenjualan', 'PenjualanController@getDataPenjualan')->name('g
 
 Route::any('/getDataCustomer', 'PenjualanController@getDataCustomer')->name('getDataCustomer');
 
+Route::any('/getKodeFakturJual', 'PenjualanController@getKodeFakturJual')->name('getKodeFakturJual');
 
 Route::any('/getDataPenggajian', 'PenggajianController@getPenggajian')->name('getDataPenggajian');
 Route::any('/getDataAnggotaSelect', 'KasirController@getDataAnggotaSelect')->name('getDataAnggotaSelect');

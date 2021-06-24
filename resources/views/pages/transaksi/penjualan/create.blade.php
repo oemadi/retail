@@ -16,8 +16,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="faktur">Faktur</label>
-                            <input type="text" name="faktur" id="faktur" class="form-control" value="{{ $kodeFaktur }}"
-                                readonly>
+                            <input type="text" name="faktur" id="faktur" class="form-control" readonly>
                         </div>
                     </div>
                     <div class="col-md-12">
@@ -54,16 +53,17 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="box box-danger">
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="barang">Kode Barang</label>
+                            <label for="barang">Barang</label>
                             <div class="input-group">
                                 <input type="hidden" name="id_barang" id="id_barang">
-                                <input type="hidden" name="hargabeli" id="hargabeli">
+                                <input type="hidden" name="namabarang" id="namabarang">
+                                <input type="hidden" name="hargajual" id="hargajual">
                                 <input type="text" name="barang" id="barang" class="form-control" readonly>
                                 <div class="input-group-addon showModalBarang" style="cursor: pointer;">
                                     <i class="fa fa-search"></i>
@@ -74,8 +74,8 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="nama_barang">Nama Barang</label>
-                            <input type="text" name="nama_barang" id="nama_barang" class="form-control" readonly>
+                            <label for="harga_barang">Harga</label>
+                            <input type="text" name="harga_barang" id="harga_barang" class="form-control" readonly>
                         </div>
                     </div>
                     <div class="col-md-12">
@@ -91,11 +91,11 @@
             </div>
         </div>
     </div>
-    <div class="col-md-5">
+    <div class="col-md-4">
         <div class="box box-danger">
             <div class="box-body">
                 <div align="right">
-                    <h1><b><span id="grand_total2" style="font-size:36pt;">0</span></b></h1>
+                    <h1><b><span id="grand_total2" style="font-size:30pt;">0</span></b></h1>
                 </div>
             </div>
         </div>
@@ -196,7 +196,7 @@
                                 <thead>
                                     <th>Kode</th>
                                     <th>Nama Barang</th>
-                                    <th>Harga Beli</th>
+                                    <th>Harga Jual</th>
                                     <th>Stok</th>
                                     <th>Aksi</th>
                                 </thead>
@@ -205,11 +205,11 @@
                                     <tr>
                                         <td>{{ $item->id }}</td>
                                         <td>{{ $item->nama }}</td>
-                                        <td>{{ $item->harga_beli }}</td>
+                                        <td>{{ $item->harga_jual }}</td>
                                         <td>{{ $item->stok_akhir }}</td>
                                         <td><button class="btn btn-warning btn-pilih-barang" data-id="{{ $item->id }}"
                                                 data-nbarang="{{ $item->nama }}"
-                                                data-hargabeli="{{ $item->harga_beli }}">Pilih</button></td>
+                                                data-hargajual="{{ $item->harga_jual }}">Pilih</button></td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -271,7 +271,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-success" data-dismiss="modal">Cetak Struk</button>
-                <a href="{{ route('transaksi.penjualan.create') }}"  class="btn btn-default">Selesai</a>
+                <a  class="btn btn-default newTrans">Selesai</a>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -289,7 +289,13 @@
 <script src="{{ url('public/adminlte') }}/bower_components/select2/dist/js/select2.full.min.js"></script>
 <script type="text/javascript">
     $(function() {
-        //alert();
+        var cart = [];
+            if(localStorage.cart){
+                cart = JSON.parse(localStorage.cart);
+            }
+
+       getNewFaktur();
+
         $(".select2-customer").select2({
 
         ajax: {
@@ -315,10 +321,7 @@
         placeholder:"Nama Customer",
         });
 
-        var cart = [];
-        if(localStorage.cart){
-            cart = JSON.parse(localStorage.cart);
-        }
+
        // alert();
         $(document).on('click','#minus',function(){
             minusCart($(this).data('kode'),$(this).data('i'));
@@ -339,6 +342,7 @@
             $('#modalcustomer').modal('hide');
         });
         $(document).on('click','#delete',function(){
+
             cart.splice($(this).data('i'),1);
             saveCart();
             showCart();
@@ -346,9 +350,9 @@
         });
         $(document).on('click','.btn-pilih-barang',function(){
             $('#id_barang').val($(this).data('id'));
-            $('#barang').val($(this).data('id'));
-            $('#hargabeli').val($(this).data('hargabeli'));
-            $('#nama_barang').val($(this).data('nbarang'));
+            $('#namabarang').val($(this).data('nbarang'));
+            $('#barang').val($(this).data('id')+'-'+$(this).data('nbarang'));
+            $('#harga_barang').val($(this).data('hargajual'));
             $('#modalBarang').modal('hide');
         });
         $('#metode1').click(function(){
@@ -360,18 +364,52 @@
         $('.addCart').click(function(){
            // alert();
             if($('#barang').val() != "" && $('#jumlah').val() != ""){
-                addToCart();
+            addToCart();
+
             }else{
                 Swal.fire("Error!","Barang atau jumlah belum diisi","error");
             }
+
         });
 
+        $('.newTrans').click(function(){
+            for (var i in cart){  var item = cart[i];  cart.splice(item); }
+            showCart();
+            loadKotak()
+            resetFormTrans();
+            getNewFaktur();
+            $('#id_customer').val(null).trigger('change');
+            $('#modal-selesai').modal('hide');
+
+        });
+        function resetFormTrans(){
+
+            $('#id_barang').val('');
+            $('#namabarang').val('');
+            $('#hargajual').val('');
+            $('#barang').val('');
+            $('#harga_barang').val('');
+            $('#jumlah').val('');
+
+        }
+          function getNewFaktur(){
+                $.ajax({
+                            type: "get",
+                            url: "{{ route('getKodeFakturJual') }}",
+                            dataType: "json",
+                            success: function (response) {
+                            // alert(response);
+                                $('#faktur').val(response);
+                            }
+
+                    });
+          }
           function addToCart(){
 
-            var kode_barang = $('#barang').val();
-            var nama_barang = $('#nama_barang').val();
+            var kode_barang = $('#id_barang').val();
+            var nama_barang = $('#namabarang').val();
             var jumlah = $('#jumlah').val();
-            var harga = $('#hargabeli').val();
+            var harga = $('#harga_barang').val();
             for (var i in cart){
                 if(cart[i].kode_barang == kode_barang){
                     cart[i].jumlah = parseInt(cart[i].jumlah)+parseInt(jumlah);
@@ -392,6 +430,7 @@
             cart.push(item);
             saveCart();
             showCart();
+            resetFormTrans();
 
         $('#loadCart').html(row);
             loadKotak();
@@ -461,8 +500,10 @@
             var grandtotal = 0;
             for (var i in cart){
                 grandtotal += cart[i].subtotal;
+                $('#grand_total2').text(grandtotal);
             }
-            $('#grand_total2').text(grandtotal);
+            resetFormTrans();
+
         }
         $('.simpan').click(function(){
 
