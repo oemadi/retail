@@ -75,7 +75,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="harga_barang">Harga</label>
-                            <input type="text" name="harga_barang" id="harga_barang" class="form-control" readonly>
+                            <input type="text" name="harga_barang" id="harga_barang" class="form-control" >
                         </div>
                     </div>
                     <div class="col-md-12">
