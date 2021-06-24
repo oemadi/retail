@@ -1,5 +1,5 @@
 @extends('layouts.template')
-@section('page','Transaksi Pembelian')
+@section('page','Transaksi Penjualan')
 @section('content')
 <div class="row">
     <div class="col-md-4">
@@ -22,14 +22,9 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="suplier">Suplier</label>
-                            <div class="input-group">
-                                <input type="hidden" name="id_suplier" id="id_suplier">
-                                <input type="text" name="suplier" id="suplier" class="form-control" readonly>
-                                <div class="input-group-addon showModalSuplier" style="cursor: pointer;">
-                                    <i class="fa fa-search"></i>
-                                </div>
-                            </div>
+                            <label for="customer">Customer</label>
+                                <select name="id_customer" id="id_customer" class="form-control select2-customer" style="width: 100%;height:auto">
+                                </select>
 
                         </div>
                     </div>
@@ -135,7 +130,7 @@
                     <div class="col-md-12">
                         <button class="btn btn-primary pull-right simpan"><i class="fa fa-check-square-o"></i>
                             Simpan</button>
-                        <a href="{{ route('transaksi.pembelian.index') }}" class="btn btn-danger pull-right ml-2"><i
+                        <a href="{{ route('transaksi.penjualan.index') }}" class="btn btn-danger pull-right ml-2"><i
                                 class="fa fa-window-close"></i> Kembali</a>
                     </div>
                 </div>
@@ -144,12 +139,12 @@
     </div>
 </div>
 
-<div id="modalSuplier" class="modal fade" role="dialog">
+<div id="modalcustomer" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Data Suplier</h4>
+                <h4 class="modal-title">Data customer</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -157,19 +152,19 @@
                         <div class="table-responsive">
                             <table class="table table-bordered table-hover" id="dataTable">
                                 <thead>
-                                    <th>Nama Suplier</th>
+                                    <th>Nama customer</th>
                                     <th>Alamat</th>
                                     <th>No HP</th>
                                     <th>Aksi</th>
                                 </thead>
                                 <tbody>
-                                    @foreach ($suplier as $item)
+                                    @foreach ($customer as $item)
                                     <tr>
                                         <td>{{ $item->nama }}</td>
                                         <td>{{ $item->alamat }}</td>
                                         <td>{{ $item->no_hp }}</td>
-                                        <td><button class="btn btn-warning btn-pilih-suplier" data-id="{{ $item->id }}"
-                                                data-nsuplier="{{ $item->nama }}">Pilih</button></td>
+                                        <td><button class="btn btn-warning btn-pilih-customer" data-id="{{ $item->id }}"
+                                                data-ncustomer="{{ $item->nama }}">Pilih</button></td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -191,7 +186,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Data Suplier</h4>
+                <h4 class="modal-title">Data customer</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -230,36 +225,118 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="modal-selesai">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Transaksi Selesai</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table>
+                            <tr>
+                                <td>Tanggal</td>
+                                <td>:</td>
+                                <td id="showTanggal"></td>
+                                <td>Pelanggan</td>
+                                <td>:</td>
+                                <td id="showPelanggan"></td>
+                            </tr>
+                            <tr>
+                                <td>Invoice</td>
+                                <td>:</td>
+                                <td id="showInvoice"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Nama Barang</th>
+                                    <th>Harga</th>
+                                    <th>Qty</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-after-transaksi"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Cetak Struk</button>
+                <a href="{{ route('transaksi.penjualan.create') }}"  class="btn btn-default">Selesai</a>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
 @endsection
 @push('style')
 <link rel="stylesheet" href="{{  url('public/adminlte') }}/plugins/sweetalert2/dist/sweetalert2.css">
+<link rel="stylesheet" href="{{url('public/adminlte')}}/bower_components/select2/dist/css/select2.min.css">
+
 @endpush
 @push('script')
 <script src="{{ url('public/adminlte') }}/plugins/sweetalert2/dist/sweetalert2.all.min.js"></script>
+<script src="{{ url('public/adminlte') }}/bower_components/select2/dist/js/select2.full.min.js"></script>
 <script type="text/javascript">
     $(function() {
         //alert();
+        $(".select2-customer").select2({
+
+        ajax: {
+        url: "{{ route('getDataCustomer') }}",
+        contentType: 'application/json',
+
+        dataType: 'json',
+        delay:50,
+        type:"get",
+        data: function(params) {
+            return {
+            search: params.term,_token: '{{csrf_token()}}'
+            };
+        },
+        processResults: function(data) {
+            return {
+            results: data
+            };
+        },
+        cache: true
+        },
+
+        placeholder:"Nama Customer",
+        });
+
         var cart = [];
         if(localStorage.cart){
             cart = JSON.parse(localStorage.cart);
         }
-
+       // alert();
         $(document).on('click','#minus',function(){
             minusCart($(this).data('kode'),$(this).data('i'));
         });
         $(document).on('click','#plus',function(){
             plusCart($(this).data('kode'),$(this).data('i'));
         });
-        $('.showModalSuplier').click(function(){
-            $('#modalSuplier').modal('show');
+        $('.showModalCustomer').click(function(){
+            //alert();
+            $('#modalcustomer').modal('show');
         });
         $('.showModalBarang').click(function(){
             $('#modalBarang').modal('show');
         });
-        $(document).on('click','.btn-pilih-suplier',function(){
-            $('#suplier').val($(this).data('nsuplier'));
-            $('#id_suplier').val($(this).data('id'));
-            $('#modalSuplier').modal('hide');
+        $(document).on('click','.btn-pilih-customer',function(){
+            $('#customer').val($(this).data('ncustomer'));
+            $('#id_customer').val($(this).data('id'));
+            $('#modalcustomer').modal('hide');
         });
         $(document).on('click','#delete',function(){
             cart.splice($(this).data('i'),1);
@@ -289,7 +366,7 @@
             }
         });
 
-    function addToCart(){
+          function addToCart(){
 
             var kode_barang = $('#barang').val();
             var nama_barang = $('#nama_barang').val();
@@ -389,8 +466,8 @@
         }
         $('.simpan').click(function(){
 
-            if($('#suplier').val() == ""){
-                Swal.fire("Error!","Suplier belum diisi","error");
+            if($('#customer').val() == ""){
+                Swal.fire("Error!","customer belum diisi","error");
                 return;
             }
             if(cart.length == 0){
@@ -408,39 +485,60 @@
                 //alert();
             $.ajax({
                 type: "POST",
-                url: "{{ route('transaksi.pembelian.store') }}",
+                url: "{{ route('transaksi.penjualan.store') }}",
                 data: {
                     faktur : $('#faktur').val(),
-                    suplier_id : $('#id_suplier').val(),
+                    customer_id : $('#id_customer').val(),
                     data : cart,
                     tempo: $('#tanggal_tempo').val(),
                     status:status, _token: '{{csrf_token()}}'
                 },
                 beforeSend:function(){
-                    Swal.fire({
-                        title: 'Loading .....',
-                        allowEscapeKey: false,
-                        allowOutsideClick: false,
-                        onOpen: () => {
-                            Swal.showLoading()
-                        }
-                    })
+                    // Swal.fire({
+                    //     title: 'Loading .....',
+                    //     allowEscapeKey: false,
+                    //     allowOutsideClick: false,
+                    //     onOpen: () => {
+                    //         Swal.showLoading()
+                    //     }
+                    // })
                 },
                 dataType: "json",
                 success: function (response) {
 
-                    Swal.close();
-                    if(response[0] == "success"){
-                        Swal.fire(response[0],response[1],response[0]).then(()=>{
-                            localStorage.removeItem('cart');
-                            location.href = "{{ route('transaksi.pembelian.index') }}";
-                        });
-                    }else{
-                        Swal.fire(response[0],response[1],response[0]);
+                    if(response[0] == "berhasil"){
+                        localStorage.removeItem('cart');
+                        console.log(response);
+                        modalTransaksi(response[1]);
+
+                        // Swal.fire(response[0],response[1],response[0]).then(()=>{
+
+                           // location.href = "{{ route('transaksi.penjualan.index') }}";
+
+                        // });
+                     }else{
+                         Swal.fire(response[0],response[1],response[0]);
+
                     }
                 }
             });
         });
+
+        function modalTransaksi(data){
+            $('#showTanggal').text(data.tanggal_penjualan);
+            $('#showPelanggan').text(data.customer.nama);
+            $('#showInvoice').text(data.faktur);
+
+            var html = '';
+            var subtotal = 0;
+            data.detail_penjualan.forEach(function(item){
+                html += `<tr><td>${item.barang.nama}</td><td>${item.barang.harga_jual}</td><td>${item.jumlah_jual}</td><td>${item.subtotal}</td></tr>`;
+                subtotal += item.subtotal
+            });
+            html += `<tr><td colspan="3" align="center">Subtotal Barang</td><td>${subtotal}</td></tr>`;
+            $('#table-after-transaksi').html(html);
+            $('#modal-selesai').modal('show');
+        }
 
     })
 

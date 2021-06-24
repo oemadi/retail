@@ -1,5 +1,5 @@
 @extends('layouts.template')
-@section('page','Dashboard')
+@section('page','dashboard')
 @section('content')
 <div class="row">
     <div class="col-lg-3 col-xs-6">
@@ -156,14 +156,10 @@
 
 @endsection
 @push('style')
-<link rel="stylesheet" href="{{ url('public/adminlte') }}/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
-<link rel="stylesheet"
-    href="{{ url('public/adminlte') }}/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
-<!-- Daterange picker -->
-<link rel="stylesheet" href="{{ url('public/adminlte') }}/bower_components/bootstrap-daterangepicker/daterangepicker.css">
-<!-- bootstrap wysihtml5 - text editor -->
+
 @endpush
 @push('script')
+
 <script src="{{ url('public/adminlte') }}/bower_components/moment/min/moment.min.js"></script>
 
 <script src="{{ url('public/adminlte') }}/plugins/chartjs/chart.js"></script>

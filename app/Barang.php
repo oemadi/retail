@@ -33,8 +33,8 @@ class Barang extends Model
     {
         return $this->belongsTo(Satuan::class, 'satuan_id', 'id');
     }
-    public function detail_transaksi()
+    public function detail_penjualan()
     {
-        return $this->hasMany(Detail_transaksi::class, 'barang_id', 'id');
+        return $this->hasMany(Detail_penjualan::class, 'barang_id', 'id');
     }
 }

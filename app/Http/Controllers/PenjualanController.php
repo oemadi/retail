@@ -3,140 +3,175 @@
 namespace App\Http\Controllers;
 
 use App\Barang;
-use App\Cashback;
-use App\Cashback_detail;
-use App\Detail_transaksi;
-use App\Transaksi;
+use App\Detail_penjualan;
+use App\History_stok_barang_masuk;
+use App\HutangCustomer;
+use App\Penjualan;
+use App\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Kas as KasHelper;
+use Saldo;
 
 class PenjualanController extends Controller
 {
-    protected $page = "pages.transaksi.penjualan.";
     public function index()
     {
-        $transaksi = Transaksi::with('pelanggan')->get();
-        return view($this->page . "index", compact('transaksi'));
+        return view("pages.transaksi.penjualan.index");
     }
-    public function nota($kode)
-    {
-        $transaksi = Transaksi::where('kode', $kode)->firstOrFail();
-        return view($this->page . "nota", compact('transaksi'));
-    }
+	public function getDataPenjualan(Request $request){
+			$draw = $request->get('draw');
+			$start = $request->get('start');
+			$rowperpage = $request->get('length');
+
+			$columnIndex_arr = $request->get('order');
+			$columnName_arr = $request->get('columns');
+			$order_arr = $request->get('order');
+			$search_arr = $request->get('search');
+
+			$columnIndex = $columnIndex_arr[0]['column'];
+			$columnName = $columnName_arr[$columnIndex]['data'];
+			$columnSortOrder = $order_arr[0]['dir'];
+			$searchValue =$search_arr['value'];
+
+			$totalRecords = Penjualan::select('count(*)  as allcount')->count();
+			$totalRecordswithFilter =  Penjualan::select('count(*)  as allcount')
+			->count();
+
+			$records = Penjualan::orderBy($columnName,$columnSortOrder)
+            ->join('customer','customer.id','penjualan.customer_id')
+			->where('penjualan.faktur','like','%'.$searchValue.'%')
+			->select('penjualan.*','customer.nama as customer')
+			->skip($start)
+			->take($rowperpage)
+			->get();
+
+			$data_arr = array();
+			foreach($records as $record){
+                $data_arr[]=array('id'=>$record->id,'faktur'=>$record->faktur,
+                'tanggal_penjualan'=>$record->tanggal_penjualan,'customer'=>$record->customer,
+                'total'=>$record->total,'status'=>$record->status);
+				$response = array(
+				"draw" => intval($draw),
+				"iTotalRecords" => $totalRecords,
+				"iTotalDisplayRecords" => $totalRecordswithFilter,
+				"aaData" => $data_arr
+				);
+
+			}
+				echo json_encode($response);
+				exit();
+		}
+        public function getDataCustomer()
+        {
+            //$id_ship = Session::get('id_ship');
+            $id = request()->get('search');
+            $res = DB::select("SELECT a.* from customer a
+            ".($id!="" ?  "where a.nama like '%".$id."%'"  : "")."
+             order by a.nama limit 10
+            ");
+           foreach($res as $row){
+               $data[] = array('id'=>$row->id,'text'=>$row->nama.'-'.$row->alamat);
+           }
+            return json_encode($data);
+        }
     public function loadTable()
     {
-        $transaksi = Transaksi::with('pelanggan');
-        if (request()->get('lanjut') == "all") {
-            if (request()->get('transaksi') != "all") {
-                $transaksi->where('status', request()->get('transaksi'));
-            }
-            $transaksi = $transaksi->whereDate('tanggal_transaksi', ">=", request()->get('start'));
-            $transaksi = $transaksi->whereDate('tanggal_transaksi', "<=", request()->get('end'));
-        } else {
-            if (request()->get('lanjut') == "hari") {
-                $transaksi->where('tanggal_transaksi', date('Y-m-d'));
-            } elseif (request()->get('lanjut') == "bulan") {
-                $transaksi->whereMonth('tanggal_transaksi', date('m'));
-                $transaksi->whereYear('tanggal_transaksi', date('Y'));
-            } else {
-                $transaksi->whereYear('tanggal_transaksi', date('Y'));
-            }
+        $penjualan = penjualan::with('Customer');
+        if (request()->get('tanggal_awal') != "all") {
+            $penjualan = $penjualan->whereDate('tanggal_penjualan', ">=", request()->get('tanggal_awal'));
         }
-        $transaksi = $transaksi->get();
-        return view($this->page . 'table', compact('transaksi'));
-    }
-    public function periode()
-    {
-        $transaksi = Transaksi::with('pelanggan')->get();
-        return view($this->page . "periode.index", compact('transaksi'));
-    }
-    public function periodeLoadTable()
-    {
-        $transaksi = Transaksi::with('pelanggan');
-        if (request()->get('lanjut') == "all") {
-            if (request()->get('transaksi') != "all") {
-                $transaksi->where('status', request()->get('transaksi'));
-            }
-            $transaksi = $transaksi->whereDate('tanggal_transaksi', ">=", request()->get('start'));
-            $transaksi = $transaksi->whereDate('tanggal_transaksi', "<=", request()->get('end'));
-        } else {
-            if (request()->get('lanjut') == "hari") {
-                $transaksi->where('tanggal_transaksi', date('Y-m-d'));
-            } elseif (request()->get('lanjut') == "bulan") {
-                $transaksi->whereMonth('tanggal_transaksi', date('m'));
-                $transaksi->whereYear('tanggal_transaksi', date('Y'));
-            } else {
-                $transaksi->whereYear('tanggal_transaksi', date('Y'));
-            }
+        if (request()->get('tanggal_akhir') != "all") {
+            $penjualan = $penjualan->whereDate('tanggal_penjualan', "<=", request()->get('tanggal_akhir'));
         }
-        $transaksi = $transaksi->get();
-        return view($this->page . 'periode.table', compact('transaksi'));
+        if (request()->get('penjualan') != "all") {
+            $penjualan = $penjualan->where('status', request()->get('penjualan'));
+        }
+        $penjualan = $penjualan->get();
+        return view("pages.transaksi.penjualan.table", compact('Customer', 'penjualan'));
     }
-    public function barang()
+    public function loadKotakAtas()
     {
+        $total = Saldo::getTotalpenjualan();
+        return view("pages.transaksi.penjualan.kotak_atas", compact('total'));
+    }
+    public function create()
+    {
+        $kodeFaktur = penjualan::kodeFaktur();
+        $customer = Customer::get();
         $barang = Barang::get();
-        $transaksi = Transaksi::where('status', 'asdasd')->get();
-        return view($this->page . 'barang.index', compact('barang', 'transaksi'));
+        return view("pages.transaksi.penjualan.create", compact('barang', 'customer', 'kodeFaktur'));
     }
-    public function barangLoadTable()
-    {
-        $param = request()->get('barang');
-        $transaksi = Transaksi::with(['detail_transaksi' => function ($query) use ($param) {
-            $query->where('barang_id', $param);
-        }]);
-        $transaksi = $transaksi->whereDate('tanggal_transaksi', ">=", request()->get('start'));
-        $transaksi = $transaksi->whereDate('tanggal_transaksi', "<=", request()->get('end'));
-        $transaksi = $transaksi->get();
-        return view($this->page . 'barang.table', compact('transaksi'));
-    }
-    public function cashback($kode)
-    {
-        $transaksi = Transaksi::where('kode', $kode)->firstOrFail();
-        if ($transaksi->cashback != null) {
-            session()->flash('message', 'Cashback sudah dibayar!');
-            return redirect()->route('transaksi.penjualan.all')->with('status', 'danger');
-        }
-        return view($this->page . 'cashback', compact('transaksi'));
-    }
-    public function cashbackPost(Request $request, $kode)
+    public function store(Request $request)
     {
         try {
             DB::beginTransaction();
-            $params = $request->all();
-            $transaksi = Transaksi::where('kode', $kode)->firstOrFail();
-            $cashback = new Cashback();
-            $cashback->faktur = Cashback::kodeFaktur();
-            $cashback->tanggal = date('Y-m-d');
-            $cashback->transaksi_id = $transaksi->id;
-            $cashback->total = $params['total_cashback'];
-            $cashback->save();
-            for ($i = 1; $i <= $params['total_row']; $i++) {
-                $cashback_detail = new Cashback_detail();
-                $cashback_detail->cashback_id = $cashback->id;
-                $cashback_detail->detail_transaksi_id = $params['detail_transaksi_id' . $i];
-                $cashback_detail->cashback_per_item = $params['cashback_value' . $i];
-                $cashback_detail->qty = $params['qty_hidden' . $i];
-                $cashback_detail->subtotal = $params['subtotal_cashback' . $i];
-                $cashback_detail->save();
+            $penjualan = new penjualan();
+            $penjualan->faktur = $request->faktur;
+            $penjualan->customer_id = $request->customer_id;
+            $penjualan->tanggal_penjualan = date('Y-m-d');
+            //dd($penjualan);
+            $total = 0;
+            foreach ($request->data as $row) {
+                $total += $row['subtotal'];
             }
-            KasHelper::add($cashback->faktur, 'pengeluaran', 'cashback', 0, $cashback->total);
+            $penjualan->total = $total;
+            $penjualan->status = $request->status;
+            $penjualan->save();
+            foreach ($request->data as $row) {
+                $detail = new Detail_penjualan();
+                $detail->penjualan_id = $penjualan->id;
+                $detail->barang_id = $row['kode_barang'];
+                $detail->jumlah_jual = $row['jumlah'];
+                $detail->subtotal = $row['subtotal'];
+                $detail->save();
+              // self::insertDataToHistory($row['kode_barang'], $request->customer_id, $row['jumlah']);
+               self::updateStokbarang($row['kode_barang'], $row['jumlah']);
+            }
+            if ($request->status != "tunai") {
+                $hutang = new HutangCustomer();
+                $hutang->faktur = HutangCustomer::kodeFaktur();
+                $hutang->tanggal_hutang = date('Y-m-d');
+                $hutang->tanggal_tempo = $request->tempo;
+                $hutang->customer_id = $request->customer_id;
+                $hutang->penjualan_id = $penjualan->id;
+                $hutang->total_hutang = $total;
+                $hutang->pembayaran_hutang = 0;
+                $hutang->sisa_hutang = $total;
+                $hutang->save();
+            } else {
+                KasHelper::add($penjualan->faktur, 'pendapatan', 'penjualan', 0, $penjualan->total);
+            }
             DB::commit();
-            $response = [
-                'status' => 'success',
-                'data' => $transaksi
-            ];
+            //return response()->json(["success", "penjualan berhasil"]);
+
+            $response = Penjualan::with('customer', 'detail_penjualan.barang')->find($penjualan->id);
+           // dd($response);
+            return response()->json(["berhasil", $response]);
         } catch (\Throwable $th) {
-            $response = [
-                'status' => 'error',
-            ];
             DB::rollback();
+            return response()->json(["error", "penjualan gagal"]);
         }
-        return response()->json($response);
     }
-    public function notaCashback($kode)
+    public function loadModal($id)
     {
-        $transaksi = Transaksi::where('kode', $kode)->firstOrFail();
-        return view($this->page . 'cashback_nota', compact('transaksi'));
+        $penjualan = penjualan::with('Customer', 'detail_penjualan.barang')->find($id);
+        return view("pages.transaksi.penjualan.modal", compact('penjualan'));
+    }
+    public static function updateStokbarang($barang_id, $qty)
+    {
+        $barang = Barang::find($barang_id);
+        $barang->stok_masuk += $qty;
+        $barang->stok_akhir += $qty;
+        $barang->update();
+    }
+    public static function insertDataToHistory($barang_id, $Customer_id, $qty)
+    {
+        $history = new History_stok_barang_masuk();
+        $history->barang_id = $barang_id;
+        $history->qty = $qty;
+        $history->Customer_id = $Customer_id;
+        $history->keterangan = "Stok masuk dari Customer";
+        $history->save();
     }
 }

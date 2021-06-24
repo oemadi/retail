@@ -32,7 +32,7 @@
                                 id="example-table">
                                 <thead>
                                     <tr>
-                                     
+
                                         <th>Kode</th>
                                         <th>Nama</th>
                                         <th>Harga Beli</th>
@@ -47,10 +47,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                           
+
                                 </tbody>
                             </table>
-                       
+
                         </div>
                     </div>
                 </div>
@@ -163,11 +163,10 @@
 @push('style')
 @endpush
 @push('script')
-</script>
 <!-- SlimScroll -->
 <script type="text/javascript">
     $(function() {
-        
+
         $(document).on('click','.showBarcode',function(){
             barcode = $(this).first().html();
             nama = $(this).data('nama');
@@ -210,4 +209,3 @@
 </script>
 @endpush
 
-		

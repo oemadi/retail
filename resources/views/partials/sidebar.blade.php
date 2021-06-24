@@ -102,14 +102,19 @@
                     <li class="{{ set_active(['transaksi.kas.index','transaksi.kas.create']) }}">
                         <a href="{{ route('transaksi.kas.index') }}"><i class="fa fa-calendar"></i> Kas</a>
                     </li>
+                    <li class="{{ set_active(['transaksi.pembelian.index','transaksi.pembelian.create']) }}">
+                        <a href="{{ route('transaksi.pembelian.index') }}"><i class="fa fa-shopping-basket"></i>
+                            Pembelian</a>
+                    </li>
+                    <li class="{{ set_active(['transaksi.penjualan.all']) }}">
+                        <a href="{{ route('transaksi.penjualan.index') }}"><i class="fa fa-credit-card"></i>
+                            Penjualan</a>
+                    </li>
                     <li class="{{ set_active(['transaksi.penggajian.index','transaksi.penggajian.create']) }}">
                         <a href="{{ route('transaksi.penggajian.index') }}"><i class="fa fa-credit-card"></i>
                             Penggajian</a>
                     </li>
-                    <li class="{{ set_active(['transaksi.penjualan.all']) }}">
-                        <a href="{{ route('transaksi.penjualan.all') }}"><i class="fa fa-credit-card"></i>
-                            Transaksi Penjualan</a>
-                    </li>
+
                     <li class="{{ set_active(['transaksi.piutang.index']) }}">
                         <a href="{{ route('transaksi.piutang.index') }}"><i class="fa fa-calendar"></i> Piutang</a>
                     </li>
@@ -117,12 +122,9 @@
                         <a href="{{ route('transaksi.hutang.index') }}"><i class="fa fa-calendar-o"></i>
                             Hutang</a>
                     </li>
-                    <li class="{{ set_active(['transaksi.pembelian.index','transaksi.pembelian.create']) }}">
-                        <a href="{{ route('transaksi.pembelian.index') }}"><i class="fa fa-shopping-basket"></i>
-                            Pembelian</a>
-                    </li>
 
-                    <li
+
+                    {{-- <li
                         class="treeview {{ set_active(['transaksi.penjualan.periode.index','transaksi.penjualan.barang.index']) }}">
                         <a href="#"><i class="fa fa-shopping-bag"></i> Penjualan
                             <span class="pull-right-container">
@@ -139,7 +141,7 @@
                                 <a href="{{ route('transaksi.penjualan.barang.index') }}"><i class="fa fa-circle-o"></i>
                                     Per Barang</a></li>
                         </ul>
-                    </li>
+                    </li> --}}
                     <li
                         class="treeview {{ set_active(['transaksi.return.penjualan.index','transaksi.return.penjualan.create','transaksi.return.pembelian.index','transaksi.return.pembelian.create']) }}">
                         <a href="#"><i class="fa fa-sticky-note"></i> Return

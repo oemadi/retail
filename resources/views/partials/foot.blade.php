@@ -1,5 +1,7 @@
 <script src="{{ url('public/adminlte') }}/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="{{ url('public/adminlte') }}/bower_components/jquery-ui/jquery-ui.min.js"></script>
+<script src="{{ url('public/adminlte') }}/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js">
+</script>
 <script>
     $.widget.bridge('uibutton', $.ui.button);
 </script>
@@ -11,6 +13,7 @@
 
 <script src="{{ url('public/adminlte') }}/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="{{ url('public/adminlte') }}/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js">
+
 <script>
     $.ajaxSetup({
         headers: {

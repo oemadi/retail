@@ -17,58 +17,55 @@ class PembelianController extends Controller
 {
     public function index()
     {
-        $pembelian = Pembelian::with('suplier')->get();
-        $total = Saldo::getTotalPembelian();
+       // $pembelian = Pembelian::with('suplier')->get();
+        //$total = Saldo::getTotalPembelian();
         return view("pages.transaksi.pembelian.index");
     }
-	public function getPembelian(Request $request){
+	public function getDataPembelian(Request $request){
 			$draw = $request->get('draw');
 			$start = $request->get('start');
 			$rowperpage = $request->get('length');
-			
+
 			$columnIndex_arr = $request->get('order');
 			$columnName_arr = $request->get('columns');
 			$order_arr = $request->get('order');
 			$search_arr = $request->get('search');
-			
+
 			$columnIndex = $columnIndex_arr[0]['column'];
 			$columnName = $columnName_arr[$columnIndex]['data'];
 			$columnSortOrder = $order_arr[0]['dir'];
 			$searchValue =$search_arr['value'];
-			
+            // {data:'id_pembelian'},
+            // {data:'suplier'},
+            // {data:'tanggal'},
+            // {data:'total'},
+            // {data:'total_qty'},
+            // {data:'total_cash'},
+            // {data:'total_hutang'},
 			$totalRecords = Pembelian::select('count(*)  as allcount')->count();
 			$totalRecordswithFilter =  Pembelian::select('count(*)  as allcount')
-			->where('faktur','like','%'.$searchValue.'%')
 			->count();
-			
+
 			$records = Pembelian::orderBy($columnName,$columnSortOrder)
+            ->join('suplier','suplier.id','pembelian.suplier_id')
 			->where('pembelian.faktur','like','%'.$searchValue.'%')
-			->select('pembelian.*')
+			->select('pembelian.*','suplier.nama as suplier')
 			->skip($start)
 			->take($rowperpage)
 			->get();
-			
+
 			$data_arr = array();
 			foreach($records as $record){
-		
-				$id= $record->id;
-				$faktur= $record->faktur;
-				$tanggal = $record->tanggal_pembelian;         
-				$suplier_id= $record->suplier_id;
-				$total= $record->total; 
-				$status= $record->status;     				
-				
-				
-				
-				$data_arr[]=array('id'=>$id,'faktur'=>$faktur,'tanggal'=>$tanggal,'suplier_id'=>$suplier_id,'total'=>$total,'status'=>$status);
-				
+                $data_arr[]=array('id'=>$record->id,'faktur'=>$record->faktur,
+                'tanggal_pembelian'=>$record->tanggal_pembelian,'suplier'=>$record->suplier,
+                'total'=>$record->total,'status'=>$record->status);
 				$response = array(
 				"draw" => intval($draw),
 				"iTotalRecords" => $totalRecords,
 				"iTotalDisplayRecords" => $totalRecordswithFilter,
 				"aaData" => $data_arr
 				);
-			
+
 			}
 				echo json_encode($response);
 				exit();
@@ -108,6 +105,7 @@ class PembelianController extends Controller
             $pembelian->faktur = $request->faktur;
             $pembelian->suplier_id = $request->suplier_id;
             $pembelian->tanggal_pembelian = date('Y-m-d');
+            //dd($pembelian);
             $total = 0;
             foreach ($request->data as $row) {
                 $total += $row['subtotal'];
@@ -122,8 +120,8 @@ class PembelianController extends Controller
                 $detail->jumlah_beli = $row['jumlah'];
                 $detail->subtotal = $row['subtotal'];
                 $detail->save();
-                self::insertDataToHistory($row['kode_barang'], $request->suplier_id, $row['jumlah']);
-                self::updateStokbarang($row['kode_barang'], $row['jumlah']);
+               self::insertDataToHistory($row['kode_barang'], $request->suplier_id, $row['jumlah']);
+               self::updateStokbarang($row['kode_barang'], $row['jumlah']);
             }
             if ($request->status != "tunai") {
                 $hutang = new Hutang();
