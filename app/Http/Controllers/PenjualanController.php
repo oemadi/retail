@@ -146,7 +146,7 @@ class PenjualanController extends Controller
                 $hutang->sisa_hutang = $total;
                 $hutang->save();
             } else {
-                KasHelper::add($penjualan->faktur, 'pendapatan', 'penjualan', 0, $penjualan->total);
+                KasHelper::add($penjualan->faktur, 'pendapatan', 'penjualan', $penjualan->total,0);
             }
             DB::commit();
             //return response()->json(["success", "penjualan berhasil"]);

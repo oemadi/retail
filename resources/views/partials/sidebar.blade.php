@@ -41,9 +41,9 @@
                     <li class="{{ set_active(['barang.index','barang.create','barang.edit']) }}">
                         <a href="{{ route('barang.index') }}"><i class="fa fa-circle-o"></i> Barang</a>
                     </li>
-                    <li class="{{ set_active(['barang.masuk.index']) }}">
+                    {{-- <li class="{{ set_active(['barang.masuk.index']) }}">
                         <a href="{{ route('barang.masuk.index') }}"><i class="fa fa-circle-o"></i> Stok Masuk</a>
-                    </li>
+                    </li> --}}
                 </ul>
             </li>
             @endif
@@ -79,14 +79,14 @@
             </li>
             @endif
 
-            @if (Auth::user()->level == "Admin" or Auth::user()->level == "Petugas")
+            {{-- @if (Auth::user()->level == "Admin" or Auth::user()->level == "Petugas")
 
             <li class="{{ set_active(['kasir.index']) }}">
                 <a href="{{ route('kasir.index') }}">
                     <i class="fa fa-th"></i> <span>Kasir</span>
                 </a>
             </li>
-            @endif
+            @endif --}}
 
             @if (Auth::user()->level == "Admin" or Auth::user()->level == "Petugas")
             <li

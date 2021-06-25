@@ -1,5 +1,5 @@
 @extends('layouts.template')
-@section('page','Tambah Jabatan Pegawai')
+@section('page','Tambah Pegawai')
 @section('content')
 <div class="row">
     <div class="col-md-12">
@@ -49,15 +49,11 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group @error('jabatan_id') has-error @enderror">
-                                <label for="jabatan_id"> Jabatan</label>
-                                <select name="jabatan_id" id="jabatan_id" class="form-control">
-                                    <option disabled selected>Pilih Jabatan</option>
-                                    @foreach ($jabatan as $item)
-                                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
-                                    @endforeach
-                                </select>
-                                @error('jabatan_id')
+                            <div class="form-group @error('alamat') has-error @enderror">
+                                <label for="alamat">Alamat</label>
+                                <textarea name="alamat" id="alamat" cols="30" rows="10" class="form-control"
+                                    placeholder="alamat">{{ old('alamat') }}</textarea>
+                                @error('alamat')
                                 <span class="help-block">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -65,11 +61,11 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group @error('alamat') has-error @enderror">
-                                <label for="alamat">Alamat</label>
-                                <textarea name="alamat" id="alamat" cols="30" rows="10" class="form-control"
-                                    placeholder="alamat">{{ old('alamat') }}</textarea>
-                                @error('alamat')
+                            <div class="form-group @error('gaji') has-error @enderror">
+                                <label for="gaji">Gaji</label>
+                                <input type="number" class="form-control" name="gaji" id="gaji"
+                                    placeholder="Gaji " value="{{ old('gaji') }}">
+                                @error('gaji')
                                 <span class="help-block">{{ $message }}</span>
                                 @enderror
                             </div>

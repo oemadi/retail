@@ -91,7 +91,7 @@
 									<th>Keterangan</th>
 								</tr>
 							</thead>
-							
+
 						</table>
                         </div>
                     </div>
@@ -128,39 +128,43 @@
             var maxDate = new Date(selected.date.valueOf());
             $('#startdate').datepicker('setEndDate', maxDate);
         });
-		
+
         $('#filter1').click(function(){
 				$('#example-table').DataTable().destroy();
 				cekData();
 				loadKotakAtas("custom",$('#startdate').val(),$('#enddate').val());
         });
-		
+
 		function cekData(){
 		   $.fn.dataTable.ext.errMode = 'none';
 		   var  awal = $('#startdate').val();
 		   var  akhir = $('#enddate').val();
-		  
+
        $('#example-table')
 		.dataTable({
            processing:true,
 		   serverSide:true,
 		     ajax : {
 			 url:"{{route('getDataKas')}}",
-			 type:"POST",
+			 type:"get",
 			 data:{
 			  awal:awal,akhir:akhir
 			 }
 			},
-		
+
 		   columns:[
-		   {data:'id'},
+           {"data": "id",
+                 render: function (data, type, row, meta) {
+                 return meta.row + meta.settings._iDisplayStart + 1;
+                 }
+                },
 		   {data:'tanggal'},
    		   {data:'faktur'},
 		   {data:'jenis'},
 		   {data:'pemasukan'},
 		   {data:'pengeluaran'},
 		   {data:'keterangan'}
-		
+
 		   ]
         });
 		}

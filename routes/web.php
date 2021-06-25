@@ -56,6 +56,8 @@ Route::group(['middleware' => 'auth'], function ($app) use ($router) {
     $app->resource('pegawai', 'PegawaiController')->except(['show', 'destroy'])->middleware(['cek:Admin']);
     $app->prefix('pegawai')->middleware(['cek:Admin'])->name('pegawai.')->group(function ($app) use ($router) {
         $router->get('/{id}/delete', 'PegawaiController@destroy')->name('destroy');
+        $app->get('/create', 'PegawaiController@create')->name('create');
+        $app->get('/{id}/edit', 'PegawaiController@edit')->name('edit');
     });
     $app->prefix('setting')->middleware(['cek:Admin'])->name('setting.')->group(function ($app) use ($router) {
         $app->get('/', 'SettingController@index')->name('index');

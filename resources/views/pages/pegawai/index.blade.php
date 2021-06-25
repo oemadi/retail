@@ -30,12 +30,12 @@
                                         <th>Nama</th>
                                         <th>Email</th>
                                         <th>No HP</th>
-                                        <th>Jabatan</th>
                                         <th>Alamat</th>
+                                        <th>Gaji</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
-                         
+
                             </table>
                         </div>
                     </div>
@@ -69,10 +69,10 @@
 		   {data:'id'},
 		   {data:'nama'},
 		   {data:'email'},
-		   {data:'no_tlp'},
-		   {data:'jabatan_id'},
+		   {data:'no_hp'},
 		   {data:'alamat'},
-		   {data: 'aksi',
+           {data:'gaji'},
+		   {data: 'id',
             "render": function (data) {
             data1 = '<a href="/pegawai/' + data + '/edit" class="btn btn-sm btn-warning">Edit</a>';
 			 data2 = '<a href="/pegawai/' + data + '/delete" class="btn btn-sm btn-danger" onclick="javascript:return confirm(\'Anda yakin?\');">Delete</a>';
