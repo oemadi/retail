@@ -2,82 +2,169 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Gaji;
 use App\Pegawai;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Kas;
 
 class PenggajianController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
-        $years = Gaji::select(DB::raw('YEAR(tanggal_gaji) as year'))->distinct()->get();
-        $penggajian = Gaji::with('pegawai')->get();
-        return view("pages.transaksi.penggajian.index", compact('penggajian', 'years'));
+
+        return view("pages.transaksi.penggajian.index");
     }
+		public function getDataPenggajian(Request $request){
+			$draw = $request->get('draw');
+			$start = $request->get('start');
+			$rowperpage = $request->get('length');
+
+			$columnIndex_arr = $request->get('order');
+			$columnName_arr = $request->get('columns');
+			$order_arr = $request->get('order');
+			$search_arr = $request->get('search');
+
+			$columnIndex = $columnIndex_arr[0]['column'];
+			$columnName = $columnName_arr[$columnIndex]['data'];
+			$columnSortOrder = $order_arr[0]['dir'];
+			$searchValue =$search_arr['value'];
+
+			$totalRecords = Penggajian::select('count(*)  as allcount')->count();
+			$totalRecordswithFilter =  Penggajian::select('count(*)  as allcount')
+			->count();
+
+			$records = Penggajian::orderBy($columnName,$columnSortOrder)
+            ->join('pegawai','pegawai.id','gaji.pegawai_id')
+			->select('gaji.*','pegawai.nama','pegawai.gaji')
+			->skip($start)
+			->take($rowperpage)
+			->get();
+
+			$data_arr = array();
+			foreach($records as $record){
+
+				$data_arr[]=array('id'=>$record->id,'nama'=>$record->tanggal_gaji,'faktur'=>$record->faktur,
+                'nama'=>$record->nama,'total_gaji'=>$record->total_gaji,'potongan'=>$record->potongan,
+                'gaji_bersih'=>$record->gaji_bersih);
+
+				$response = array(
+				"draw" => intval($draw),
+				"iTotalRecords" => $totalRecords,
+				"iTotalDisplayRecords" => $totalRecordswithFilter,
+				"aaData" => $data_arr
+				);
+
+			}
+				echo json_encode($response);
+				exit();
+		}
+
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function create()
     {
         $faktur = Gaji::kodeFaktur();
-        $pegawai = Pegawai::with('jabatan')->get();
-        return view("pages.transaksi.penggajian.create", compact('pegawai', 'faktur'));
+        $pegawai = Pegawai::get();
+        return view("pages.transaksi.penggajian.create",compact('faktur','pegawai'));
     }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(Request $request)
     {
-        $cek = Gaji::where('pegawai_id', $request->id_pegawai)
-            ->whereMonth('tanggal_gaji', date('m'))
-            ->whereYear('tanggal_gaji', date('Y'))->first();
-        if ($cek == null) {
-            $pegawai = Pegawai::with('jabatan')->where('id', $request->id_pegawai)->first();
-            $gaji = new Gaji();
-            $gaji->faktur = Gaji::kodeFaktur();
-            $gaji->pegawai_id = $request->id_pegawai;
-            $gaji->tanggal_gaji = date('Y-m-d');
-            $gaji->total_gaji = $pegawai->jabatan->gaji_pokok;
-            $gaji->potongan = $request->potongan_gaji;
-            $gaji->gaji_bersih = $pegawai->jabatan->gaji_pokok - $request->potongan_gaji;
-            if ($gaji->save()) {
-                Kas::add($gaji->faktur, 'pengeluaran', 'penggajian', 0, $gaji->gaji_bersih);
-                return response()->json(['success', $gaji]);
+        $request->validate([
+            'nama' => 'required|min:3'
+        ]);
+        $penggajian = new penggajian();
+        $penggajian->nama = $request->nama;
+        if ($penggajian->save()) {
+            session()->flash('message', 'Data berhasil disimpan!');
+            return redirect()->route('penggajian.index')->with('status', 'success');
+        } else {
+            session()->flash('message', 'Data gagal disimpan!');
+            return redirect()->route('penggajian.index')->with('status', 'danger');
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $penggajian = penggajian::findOrFail($id);
+        return view("pages.penggajian.edit", compact('penggajian'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nama' => 'required|min:3'
+        ]);
+        $penggajian = penggajian::find($id);
+        $penggajian->nama = $request->nama;
+        if ($penggajian->save()) {
+            session()->flash('message', 'Data berhasil diubah!');
+            return redirect()->route('penggajian.index')->with('status', 'success');
+        } else {
+            session()->flash('message', 'Data gagal diubah!');
+            return redirect()->route('penggajian.index')->with('status', 'danger');
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $penggajian = penggajian::findOrFail($id);
+        $relasi = penggajian::with('barang')->find($id);
+        if (count($relasi->barang) < 1) {
+            if ($penggajian->delete()) {
+                session()->flash('message', 'Data berhasil dihapus!');
+                return redirect()->route('penggajian.index')->with('status', 'success');
             } else {
-                return response()->json(['error', 'Gagal Menyimpan data']);
+                session()->flash('message', 'Data gagal dihapus!');
+                return redirect()->route('penggajian.index')->with('status', 'danger');
             }
         } else {
-            return response()->json(['error', 'Gaji Bulan ini sudah dibayar']);
+            session()->flash('message', 'Data gagal dihapus!');
+            return redirect()->route('pelanggan.index')->with('status', 'danger');
         }
-    }
-    public function loadTable()
-    {
-        $penggajian = Gaji::with('pegawai');
-        if (request()->get('lanjut') == "all") {
-            $penggajian = $penggajian->whereMonth('tanggal_gaji', request()->get('bulan'));
-            $penggajian = $penggajian->whereYear('tanggal_gaji', request()->get('tahun'));
-        } else {
-            if (request()->get('lanjut') == "tahun") {
-                $penggajian->whereYear('tanggal_gaji', date('Y'));
-            } elseif (request()->get('lanjut') == "bulan") {
-                $penggajian->whereMonth('tanggal_gaji', date('m'));
-                $penggajian->whereYear('tanggal_gaji', date('Y'));
-            } else {
-                $penggajian = $penggajian;
-            }
-        }
-        $penggajian = $penggajian->get();
-        return view("pages.transaksi.penggajian.table", compact('penggajian'));
-    }
-    public function get_detail($id)
-    {
-        $cek = Gaji::where('pegawai_id', $id)->orderBy('id', 'DESC')->first();
-        if ($cek) {
-            return response()->json(Carbon::parse($cek->tanggal_gaji)->format('M'));
-        } else {
-            return response()->json('Belum ada history gaji');
-        }
-    }
-    public function slip($kode)
-    {
-        $penggajian = Gaji::where('faktur', $kode)->firstOrFail();
-        return view("pages.transaksi.penggajian.slip", compact('penggajian'));
     }
 }

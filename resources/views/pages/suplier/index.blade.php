@@ -30,16 +30,15 @@
                                     <th>#</th>
                                     <th>Nama Suplier</th>
                                     <th>Email</th>
-                                    <th>Website</th>
                                     <th>No Hp</th>
                                     <th>Kota</th>
                                     <th>Alamat</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
-                       
+
                         </table>
-                      
+
                     </div>
                 </div>
             </div>
@@ -72,7 +71,6 @@
 		   {data:'id'},
 		   {data:'nama'},
 		   {data:'email'},
-   		   {data:'website'},
 		   {data:'no_hp'},
 		   {data:'kota'},
 		   {data:'alamat'},

@@ -149,12 +149,13 @@
                                         <td>{{ $row->nama }}</td>
                                         <td>{{ $row->email }}</td>
                                         <td>{{ $row->no_telp }}</td>
+                                        <td>{{ $row->jabatan->nama }}</td>
                                         <td>{!! $row->alamat !!}</td>
                                         <td>
                                             <a href="#" class="btn btn-warning btn-sm btn-pilih"
                                                 data-id="{{ $row->id }}" data-telp="{{ $row->no_telp }}"
-                                                data-nama="{{ $row->nama }}"
-                                                data-gpokok="{{ $row->gaji }}">
+                                                data-nama="{{ $row->nama }}" data-jabatan="{{ $row->jabatan->nama }}"
+                                                data-gpokok="{{ $row->jabatan->gaji_pokok }}">
                                                 Pilih</a>
 
                                         </td>
@@ -199,7 +200,6 @@
     $(document).ready(function(){
         $('#example-table').dataTable();
         $('.showModal').click(function(){
-            alert();
             $('#modalPegawai').modal('show');
         });
         $(document).on('click','.btn-pilih',function(){

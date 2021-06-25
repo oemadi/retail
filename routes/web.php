@@ -23,6 +23,10 @@ Route::any('/getDataKategori', 'KategoriController@getKategori')->name('getDataK
 Route::any('/getDataJabatan', 'JabatanController@getJabatan')->name('getDataJabatan');
 Route::any('/getDataKas', 'KasController@getKas')->name('getDataKas');
 
+Route::any('/getDataPenggajian', 'PenggajianController@getDataPenggajian')->name('getDataPenggajian');
+
+
+
 Route::any('/getDataPembelian', 'PembelianController@getDataPembelian')->name('getDataPembelian');
 Route::any('/getDataPenjualan', 'PenjualanController@getDataPenjualan')->name('getDataPenjualan');
 

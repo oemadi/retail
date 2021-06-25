@@ -1,5 +1,5 @@
 @extends('layouts.template')
-@section('page','anggota')
+@section('page','Customer')
 @section('content')
 <div class="row">
     <div class="col-md-12">

@@ -1,5 +1,5 @@
 @extends('layouts.template')
-@section('page','Tambah Anggota')
+@section('page','Tambah Customer')
 @section('content')
 <div class="row">
     <div class="col-md-12">
@@ -16,7 +16,7 @@
                             <div class="form-group @error('nama') has-error @enderror">
                                 <label for="nama">Nama</label>
                                 <input type="text" class="form-control" name="nama" id="nama"
-                                    placeholder="Nama Anggota...." value="{{ old('nama') }}">
+                                    placeholder="Nama Customer...." value="{{ old('nama') }}">
                                 @error('nama')
                                 <span class="help-block">{{ $message }}</span>
                                 @enderror
@@ -28,7 +28,7 @@
                             <div class="form-group @error('email') has-error @enderror">
                                 <label for="email">Email</label>
                                 <input type="email" class="form-control" name="email" id="email"
-                                    placeholder="Email Anggota...." value="{{ old('email') }}">
+                                    placeholder="Email Customer...." value="{{ old('email') }}">
                                 @error('email')
                                 <span class="help-block">{{ $message }}</span>
                                 @enderror
@@ -40,7 +40,7 @@
                             <div class="form-group @error('no_hp') has-error @enderror">
                                 <label for="no_hp">No HP</label>
                                 <input type="text" class="form-control" name="no_hp" id="no_hp"
-                                    placeholder="No Hp Anggota...." value="{{ old('no_hp') }}">
+                                    placeholder="No Hp Customer...." value="{{ old('no_hp') }}">
                                 @error('no_hp')
                                 <span class="help-block">{{ $message }}</span>
                                 @enderror

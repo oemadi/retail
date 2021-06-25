@@ -50,18 +50,6 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
-                            <div class="form-group @error('website') has-error @enderror">
-                                <label for="website">Website *Optional</label>
-                                <input type="text" class="form-control" name="website" id="website"
-                                    placeholder="Website Suplier...." value="{{ $suplier->website }}">
-                                @error('website')
-                                <span class="help-block">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12">
                             <div class="form-group @error('kota') has-error @enderror">
                                 <label for="kota">Kota</label>
                                 <input type="text" class="form-control" name="kota" id="kota"

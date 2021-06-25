@@ -21,49 +21,48 @@ class SuplierController extends Controller
 			$draw = $request->get('draw');
 			$start = $request->get('start');
 			$rowperpage = $request->get('length');
-			
+
 			$columnIndex_arr = $request->get('order');
 			$columnName_arr = $request->get('columns');
 			$order_arr = $request->get('order');
 			$search_arr = $request->get('search');
-			
+
 			$columnIndex = $columnIndex_arr[0]['column'];
 			$columnName = $columnName_arr[$columnIndex]['data'];
 			$columnSortOrder = $order_arr[0]['dir'];
 			$searchValue =$search_arr['value'];
-			
+
 			$totalRecords = Suplier::select('count(*)  as allcount')->count();
 			$totalRecordswithFilter =  Suplier::select('count(*)  as allcount')
 			->where('nama','like','%'.$searchValue.'%')
 			->count();
-			
+
 			$records = Suplier::orderBy($columnName,$columnSortOrder)
 			->where('suplier.nama','like','%'.$searchValue.'%')
 			->select('suplier.*')
 			->skip($start)
 			->take($rowperpage)
 			->get();
-			
+
 			$data_arr = array();
 			foreach($records as $record){
-		
+
 				$id= $record->id;
 				$nama= $record->nama;
-				$email= $record->email;    
-				$website= $record->website;  
-				$kota= $record->kota;  
-				$alamat= $record->alamat;  
-				$no_hp= $record->no_hp;  
-				
-				$data_arr[]=array('id'=>$id,'nama'=>$nama,'email'=>$email,'website'=>$website,'kota'=>$kota,'alamat'=>$alamat,'no_hp'=>$no_hp);
-				
+				$email= $record->email;
+				$kota= $record->kota;
+				$alamat= $record->alamat;
+				$no_hp= $record->no_hp;
+
+				$data_arr[]=array('id'=>$id,'nama'=>$nama,'email'=>$email,'kota'=>$kota,'alamat'=>$alamat,'no_hp'=>$no_hp);
+
 				$response = array(
 				"draw" => intval($draw),
 				"iTotalRecords" => $totalRecords,
 				"iTotalDisplayRecords" => $totalRecordswithFilter,
 				"aaData" => $data_arr
 				);
-			
+
 			}
 				echo json_encode($response);
 				exit();

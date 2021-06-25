@@ -14,53 +14,51 @@ class KategoriController extends Controller
      */
     public function index()
     {
-
-        $kategori = Kategori::all();
-        return view("pages.kategori.index", compact('kategori'));
+        return view("pages.kategori.index");
     }
 		public function getKategori(Request $request){
 			$draw = $request->get('draw');
 			$start = $request->get('start');
 			$rowperpage = $request->get('length');
-			
+
 			$columnIndex_arr = $request->get('order');
 			$columnName_arr = $request->get('columns');
 			$order_arr = $request->get('order');
 			$search_arr = $request->get('search');
-			
+
 			$columnIndex = $columnIndex_arr[0]['column'];
 			$columnName = $columnName_arr[$columnIndex]['data'];
 			$columnSortOrder = $order_arr[0]['dir'];
 			$searchValue =$search_arr['value'];
-			
+
 			$totalRecords = Kategori::select('count(*)  as allcount')->count();
 			$totalRecordswithFilter =  Kategori::select('count(*)  as allcount')
 			->where('nama','like','%'.$searchValue.'%')
 			->count();
-			
+
 			$records = Kategori::orderBy($columnName,$columnSortOrder)
 			->where('kategori.nama','like','%'.$searchValue.'%')
 			->select('kategori.*')
 			->skip($start)
 			->take($rowperpage)
 			->get();
-			
+
 			$data_arr = array();
 			foreach($records as $record){
-		
+
 				$id= $record->id;
 				$nama= $record->nama;
-				$aksi= $record->id;         
-				
+				$aksi= $record->id;
+
 				$data_arr[]=array('id'=>$id,'nama'=>$nama);
-				
+
 				$response = array(
 				"draw" => intval($draw),
 				"iTotalRecords" => $totalRecords,
 				"iTotalDisplayRecords" => $totalRecordswithFilter,
 				"aaData" => $data_arr
 				);
-			
+
 			}
 				echo json_encode($response);
 				exit();

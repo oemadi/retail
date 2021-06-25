@@ -21,19 +21,19 @@ class KasController extends Controller
 			$rowperpage = $request->get('length');
 			$awal = $request->post('awal');
 			$akhir = $request->post('akhir');
-		
-			
-			
+
+
+
 			$columnIndex_arr = $request->get('order');
 			$columnName_arr = $request->get('columns');
 			$order_arr = $request->get('order');
 			$search_arr = $request->get('search');
-			
+
 			$columnIndex = $columnIndex_arr[0]['column'];
 			$columnName = $columnName_arr[$columnIndex]['data'];
 			$columnSortOrder = $order_arr[0]['dir'];
 			$searchValue =$search_arr['value'];
-			
+
 			$totalRecords = Kas::select('count(*)  as allcount')
 				->whereBetween('kas.tanggal', array($awal,$akhir))
 				->count();
@@ -41,7 +41,7 @@ class KasController extends Controller
 			->where('faktur','like','%'.$searchValue.'%')
 				->whereBetween('kas.tanggal', array($awal,$akhir))
 			->count();
-	
+
 			$records = Kas::orderBy($columnName,$columnSortOrder)
 			->where('kas.faktur','like','%'.$searchValue.'%')
 			->whereBetween('kas.tanggal', array($awal,$akhir))
@@ -49,10 +49,10 @@ class KasController extends Controller
 			->skip($start)
 			->take($rowperpage)
 			->get();
-			
+
 			$data_arr = array();
 			foreach($records as $record){
-		
+
 				$id= $record->id;
 				$tanggal = $record->tanggal;
 				$faktur = $record->faktur;
@@ -61,17 +61,17 @@ class KasController extends Controller
 				$pemasukan = $record->pemasukan;
 				$pengeluaran = $record->pengeluaran;
 				$keterangan = $record->keterangan;
-				
+
 				$data_arr[]=array('id'=>$id,'tanggal'=>$tanggal,'faktur'=>$faktur,'tipe'=>$tipe,
 				'jenis'=>$jenis,'pemasukan'=>$pemasukan,'pengeluaran'=>$pengeluaran,'keterangan'=>$keterangan);
-				
+
 				$response = array(
 				"draw" => intval($draw),
 				"iTotalRecords" => $totalRecords,
 				"iTotalDisplayRecords" => $totalRecordswithFilter,
 				"aaData" => $data_arr
 				);
-			
+
 			}
 				echo json_encode($response);
 				exit();
