@@ -23,6 +23,7 @@
                         <div class="form-group">
                             <label for="customer">Customer</label>
                                 <select name="id_customer" id="id_customer" class="form-control select2-customer" style="width: 100%;height:auto">
+                               <option></option>
                                 </select>
 
                         </div>
@@ -139,47 +140,6 @@
     </div>
 </div>
 
-<div id="modalcustomer" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Data customer</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover" id="dataTable">
-                                <thead>
-                                    <th>Nama customer</th>
-                                    <th>Alamat</th>
-                                    <th>No HP</th>
-                                    <th>Aksi</th>
-                                </thead>
-                                <tbody>
-                                    @foreach ($customer as $item)
-                                    <tr>
-                                        <td>{{ $item->nama }}</td>
-                                        <td>{{ $item->alamat }}</td>
-                                        <td>{{ $item->no_hp }}</td>
-                                        <td><button class="btn btn-warning btn-pilih-customer" data-id="{{ $item->id }}"
-                                                data-ncustomer="{{ $item->nama }}">Pilih</button></td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-window-close"></i>
-                    Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div id="modalBarang" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
@@ -281,12 +241,10 @@
 @endsection
 @push('style')
 <link rel="stylesheet" href="{{  url('public/adminlte') }}/plugins/sweetalert2/dist/sweetalert2.css">
-<link rel="stylesheet" href="{{url('public/adminlte')}}/bower_components/select2/dist/css/select2.min.css">
 
 @endpush
 @push('script')
 <script src="{{ url('public/adminlte') }}/plugins/sweetalert2/dist/sweetalert2.all.min.js"></script>
-<script src="{{ url('public/adminlte') }}/bower_components/select2/dist/js/select2.full.min.js"></script>
 <script type="text/javascript">
     $(function() {
         var cart = [];
@@ -323,6 +281,7 @@
 
 
        // alert();
+
         $(document).on('click','#minus',function(){
             minusCart($(this).data('kode'),$(this).data('i'));
         });
@@ -373,6 +332,10 @@
         });
 
         $('.newTrans').click(function(){
+            newTransaction();
+        });
+
+        function newTransaction(){
             for (var i in cart){  var item = cart[i];  cart.splice(item); }
             showCart();
             loadKotak()
@@ -380,8 +343,7 @@
             getNewFaktur();
             $('#id_customer').val(null).trigger('change');
             $('#modal-selesai').modal('hide');
-
-        });
+        }
         function resetFormTrans(){
 
             $('#id_barang').val('');
@@ -398,7 +360,6 @@
                             url: "{{ route('getKodeFakturJual') }}",
                             dataType: "json",
                             success: function (response) {
-                            // alert(response);
                                 $('#faktur').val(response);
                             }
 
@@ -507,7 +468,7 @@
         }
         $('.simpan').click(function(){
 
-            if($('#customer').val() == ""){
+            if($('#id_customer').val() == ""){
                 Swal.fire("Error!","customer belum diisi","error");
                 return;
             }
@@ -548,7 +509,7 @@
                 success: function (response) {
 
                     if(response[0] == "berhasil"){
-                        localStorage.removeItem('cart');
+                        //newTransaction();
                         console.log(response);
                         modalTransaksi(response[1]);
 

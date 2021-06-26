@@ -14,6 +14,8 @@
 <script src="{{ url('public/adminlte') }}/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="{{ url('public/adminlte') }}/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js">
 
+<script src="{{ asset('adminlte') }}/plugins/sweetalert2/dist/sweetalert2.all.min.js"></script>
+<script src="{{ url('public/adminlte') }}/bower_components/select2/dist/js/select2.full.min.js"></script>
 <script>
     $.ajaxSetup({
         headers: {

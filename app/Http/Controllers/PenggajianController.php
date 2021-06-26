@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Gaji;
 use App\Pegawai;
+use DB;
 
 class PenggajianController extends Controller
 {
@@ -17,6 +18,27 @@ class PenggajianController extends Controller
     {
 
         return view("pages.transaksi.penggajian.index");
+    }
+    public function getDataPegawaiSelect()
+    {
+        //$id_ship = Session::get('id_ship');
+        $id = request()->get('search');
+        $res = DB::select("SELECT a.* from pegawai a
+        where a.nama like '%".$id."%'
+         order by a.nama limit 10
+        ");
+       foreach($res as $row){
+           $data[] = array('id'=>$row->id,'text'=>$row->nama.'-'.$row->alamat);
+       }
+        return json_encode($data);
+    }
+    public function getDataPegawaiSelect2()
+    {
+        //$id_ship = Session::get('id_ship');
+        $id = request()->post('id_pegawai');
+        $res = DB::select("SELECT a.* from pegawai a where a.id=$id");
+       // dd($res);
+        return $res;
     }
 		public function getDataPenggajian(Request $request){
 			$draw = $request->get('draw');
@@ -33,11 +55,11 @@ class PenggajianController extends Controller
 			$columnSortOrder = $order_arr[0]['dir'];
 			$searchValue =$search_arr['value'];
 
-			$totalRecords = Penggajian::select('count(*)  as allcount')->count();
-			$totalRecordswithFilter =  Penggajian::select('count(*)  as allcount')
+			$totalRecords = Gaji::select('count(*)  as allcount')->count();
+			$totalRecordswithFilter =  Gaji::select('count(*)  as allcount')
 			->count();
 
-			$records = Penggajian::orderBy($columnName,$columnSortOrder)
+			$records = Gaji::orderBy($columnName,$columnSortOrder)
             ->join('pegawai','pegawai.id','gaji.pegawai_id')
 			->select('gaji.*','pegawai.nama','pegawai.gaji')
 			->skip($start)
@@ -47,7 +69,7 @@ class PenggajianController extends Controller
 			$data_arr = array();
 			foreach($records as $record){
 
-				$data_arr[]=array('id'=>$record->id,'nama'=>$record->tanggal_gaji,'faktur'=>$record->faktur,
+				$data_arr[]=array('id'=>$record->id,'tanggal_gaji'=>$record->tanggal_gaji,'faktur'=>$record->faktur,
                 'nama'=>$record->nama,'total_gaji'=>$record->total_gaji,'potongan'=>$record->potongan,
                 'gaji_bersih'=>$record->gaji_bersih);
 
@@ -85,10 +107,17 @@ class PenggajianController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required|min:3'
+            //'nama' => 'required|min:3'
         ]);
-        $penggajian = new penggajian();
-        $penggajian->nama = $request->nama;
+        $penggajian = new Gaji();
+        $penggajian->tanggal_gaji =  date('Y-m-d',strtotime($request->tanggal));
+      //  dd(date('Y-m-d',strtotime($request->tanggal)));
+        $penggajian->faktur = $request->faktur;
+        $penggajian->pegawai_id = $request->id_pegawai;
+        $penggajian->total_gaji = $request->gaji;
+        $penggajian->potongan = $request->potongan;
+        $penggajian->gaji_bersih = $request->gaji_bersih;
+
         if ($penggajian->save()) {
             session()->flash('message', 'Data berhasil disimpan!');
             return redirect()->route('penggajian.index')->with('status', 'success');

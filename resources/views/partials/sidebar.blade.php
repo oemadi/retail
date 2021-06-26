@@ -116,11 +116,11 @@
                     </li>
 
                     <li class="{{ set_active(['transaksi.piutang.index']) }}">
-                        <a href="{{ route('transaksi.piutang.index') }}"><i class="fa fa-calendar"></i> Piutang</a>
+                        <a href="{{ route('transaksi.piutang.index') }}"><i class="fa fa-calendar"></i>Pembayaran Piutang</a>
                     </li>
                     <li class="{{ set_active(['transaksi.hutang.index']) }}">
                         <a href="{{ route('transaksi.hutang.index') }}"><i class="fa fa-calendar-o"></i>
-                            Hutang</a>
+                            Pembayaran Hutang</a>
                     </li>
 
 

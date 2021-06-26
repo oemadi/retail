@@ -32,7 +32,6 @@
                                     <th>Total Gaji</th>
                                     <th>Potongan</th>
                                     <th>Gaji Bersih</th>
-                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -69,14 +68,7 @@
            {data:'nama'},
            {data:'total_gaji'},
            {data:'potongan'},
-           {data:'gaji_bersih'},
-		   {data: 'id',
-            "render": function (data) {
-            data1 = '<a href="/penggajian/' + data + '/edit" class="btn btn-sm btn-warning">Edit</a>';
-			 data2 = '<a href="/penggajian/' + data + '/delete" class="btn btn-sm btn-danger" onclick="javascript:return confirm(\'Anda yakin?\');">Delete</a>';
-			return data1+' '+data2;
-            }
-		   }
+           {data:'gaji_bersih'}
 		   ]
         });
     });

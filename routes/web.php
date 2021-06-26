@@ -24,6 +24,8 @@ Route::any('/getDataJabatan', 'JabatanController@getJabatan')->name('getDataJaba
 Route::any('/getDataKas', 'KasController@getKas')->name('getDataKas');
 
 Route::any('/getDataPenggajian', 'PenggajianController@getDataPenggajian')->name('getDataPenggajian');
+Route::any('/getDataPegawaiSelect', 'PenggajianController@getDataPegawaiSelect')->name('getDataPegawaiSelect');
+Route::any('/getDataPegawaiSelect2', 'PenggajianController@getDataPegawaiSelect2')->name('getDataPegawaiSelect2');
 
 
 
@@ -34,7 +36,6 @@ Route::any('/getDataCustomer', 'PenjualanController@getDataCustomer')->name('get
 
 Route::any('/getKodeFakturJual', 'PenjualanController@getKodeFakturJual')->name('getKodeFakturJual');
 
-Route::any('/getDataPenggajian', 'PenggajianController@getPenggajian')->name('getDataPenggajian');
 Route::any('/getDataAnggotaSelect', 'KasirController@getDataAnggotaSelect')->name('getDataAnggotaSelect');
 
 Route::any('/getDataStokMasuk', 'StokMasukController@getStokMasuk')->name('getDataStokMasuk');
