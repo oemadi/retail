@@ -115,12 +115,12 @@
                             Penggajian</a>
                     </li>
 
-                    <li class="{{ set_active(['transaksi.piutang.index']) }}">
-                        <a href="{{ route('transaksi.piutang.index') }}"><i class="fa fa-calendar"></i>Pembayaran Piutang</a>
-                    </li>
-                    <li class="{{ set_active(['transaksi.hutang.index']) }}">
-                        <a href="{{ route('transaksi.hutang.index') }}"><i class="fa fa-calendar-o"></i>
-                            Pembayaran Hutang</a>
+                    {{-- <li class="{{ set_active(['bayar.index']) }}">
+                        <a href="{{ route('bayar.index') }}"><i class="fa fa-calendar"></i>Pembayaran Piutang</a>
+                    </li> --}}
+                    <li class="{{ set_active(['transaksi.hutangCustomer.index']) }}">
+                        <a href="{{ route('transaksi.hutangCustomer.index') }}"><i class="fa fa-calendar-o"></i>
+                            Hutang Customer</a>
                     </li>
 
 

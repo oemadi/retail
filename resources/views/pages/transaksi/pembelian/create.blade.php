@@ -23,13 +23,9 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="suplier">Suplier</label>
-                            <div class="input-group">
-                                <input type="hidden" name="id_suplier" id="id_suplier">
-                                <input type="text" name="suplier" id="suplier" class="form-control" readonly>
-                                <div class="input-group-addon showModalSuplier" style="cursor: pointer;">
-                                    <i class="fa fa-search"></i>
-                                </div>
-                            </div>
+                                <select name="id_suplier" id="id_suplier" class="form-control select2-suplier" style="width: 100%;height:auto">
+                               <option></option>
+                                </select>
 
                         </div>
                     </div>
@@ -65,15 +61,10 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="barang">Kode Barang</label>
-                            <div class="input-group">
-                                <input type="hidden" name="id_barang" id="id_barang">
-                                <input type="hidden" name="hargabeli" id="hargabeli">
-                                <input type="text" name="barang" id="barang" class="form-control" readonly>
-                                <div class="input-group-addon showModalBarang" style="cursor: pointer;">
-                                    <i class="fa fa-search"></i>
-                                </div>
-                            </div>
+                            <label for="suplier">Kode Barang</label>
+                                <select name="id_barang" id="id_barang" class="form-control select2-barang" style="width: 100%;height:auto">
+                               <option></option>
+                                </select>
 
                         </div>
                     </div>
@@ -144,92 +135,6 @@
     </div>
 </div>
 
-<div id="modalSuplier" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Data Suplier</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover" id="dataTable">
-                                <thead>
-                                    <th>Nama Suplier</th>
-                                    <th>Alamat</th>
-                                    <th>No HP</th>
-                                    <th>Aksi</th>
-                                </thead>
-                                <tbody>
-                                    @foreach ($suplier as $item)
-                                    <tr>
-                                        <td>{{ $item->nama }}</td>
-                                        <td>{{ $item->alamat }}</td>
-                                        <td>{{ $item->no_hp }}</td>
-                                        <td><button class="btn btn-warning btn-pilih-suplier" data-id="{{ $item->id }}"
-                                                data-nsuplier="{{ $item->nama }}">Pilih</button></td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-window-close"></i>
-                    Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="modalBarang" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Data Suplier</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover" id="dataTable">
-                                <thead>
-                                    <th>Kode</th>
-                                    <th>Nama Barang</th>
-                                    <th>Harga Beli</th>
-                                    <th>Stok</th>
-                                    <th>Aksi</th>
-                                </thead>
-                                <tbody>
-                                    @foreach ($barang as $item)
-                                    <tr>
-                                        <td>{{ $item->id }}</td>
-                                        <td>{{ $item->nama }}</td>
-                                        <td>{{ $item->harga_beli }}</td>
-                                        <td>{{ $item->stok_akhir }}</td>
-                                        <td><button class="btn btn-warning btn-pilih-barang" data-id="{{ $item->id }}"
-                                                data-nbarang="{{ $item->nama }}"
-                                                data-hargabeli="{{ $item->harga_beli }}">Pilih</button></td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-window-close"></i>
-                    Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
 @push('style')
 <link rel="stylesheet" href="{{  url('public/adminlte') }}/plugins/sweetalert2/dist/sweetalert2.css">
@@ -243,6 +148,49 @@
         if(localStorage.cart){
             cart = JSON.parse(localStorage.cart);
         }
+        $(".select2-suplier").select2({
+        ajax: {
+        url: "{{ route('getDataSuplier') }}",
+        contentType: 'application/json',
+        dataType: 'json',
+        delay:50,
+        type:"get",
+        data: function(params) {
+            return {
+            search: params.term,_token: '{{csrf_token()}}'
+            };
+        },
+        processResults: function(data) {
+            return {
+            results: data
+            };
+        },
+        cache: true
+        },
+        placeholder:"Nama Suplier",
+        });
+
+        $(".select2-barang").select2({
+        ajax: {
+        url: "{{ route('getDataBarang') }}",
+        contentType: 'application/json',
+        dataType: 'json',
+        delay:50,
+        type:"get",
+        data: function(params) {
+            return {
+            search: params.term,_token: '{{csrf_token()}}'
+            };
+        },
+        processResults: function(data) {
+            return {
+            results: data
+            };
+        },
+        cache: true
+        },
+        placeholder:"Nama Barang",
+        });
 
         $(document).on('click','#minus',function(){
             minusCart($(this).data('kode'),$(this).data('i'));

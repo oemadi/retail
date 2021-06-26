@@ -27,12 +27,23 @@ Route::any('/getDataPenggajian', 'PenggajianController@getDataPenggajian')->name
 Route::any('/getDataPegawaiSelect', 'PenggajianController@getDataPegawaiSelect')->name('getDataPegawaiSelect');
 Route::any('/getDataPegawaiSelect2', 'PenggajianController@getDataPegawaiSelect2')->name('getDataPegawaiSelect2');
 
+Route::any('/getDataBayarCustomer', 'BayarCustomerController@getDataBayarCustomer')->name('getDataBayarCustomer');
 
+Route::any('/getDataFakturPenjualanSelect', 'PenjualanController@getDataFakturPenjualanSelect')->name('getDataFakturPenjualanSelect');
+Route::any('/getDataFakturPenjualan', 'PenjualanController@getDataFakturPenjualan')->name('getDataFakturPenjualan');
 
 Route::any('/getDataPembelian', 'PembelianController@getDataPembelian')->name('getDataPembelian');
 Route::any('/getDataPenjualan', 'PenjualanController@getDataPenjualan')->name('getDataPenjualan');
 
 Route::any('/getDataCustomer', 'PenjualanController@getDataCustomer')->name('getDataCustomer');
+Route::any('/getDataSuplier', 'PenjualanController@getDataSuplier')->name('getDataSuplier');
+Route::any('/getDataBarang', 'PenjualanController@getDataBarang')->name('getDataBarang');
+Route::any('/getDataBarangSelect2', 'PenjualanController@getDataBarangSelect2')->name('getDataBarangSelect2');
+
+
+Route::any('/getHutangCustomer', 'HutangCustomerController@getHutangCustomer')->name('getHutangCustomer');
+
+Route::any('/getDataHutangCustomer', 'BayarHutangController@getDataHutangCustomer')->name('getDataHutangCustomer');
 
 Route::any('/getKodeFakturJual', 'PenjualanController@getKodeFakturJual')->name('getKodeFakturJual');
 
@@ -115,59 +126,33 @@ Route::group(['middleware' => 'auth'], function ($app) use ($router) {
         $router->get('/{id}/delete', 'SuplierController@destroy')->name('destroy');
     });
 
-    $app->prefix('kasir')->middleware(['cek:Admin,Petugas'])->name('kasir.')->group(function ($app) use ($router) {
-        $app->get('/', 'KasirController@index')->name('index');
-        $app->get('/getBarangData', 'KasirController@getBarangData')->name('barang_data');
-        $app->get('/{id}/getBarangById', 'KasirController@getBarangById')->name('getBarangById');
-        $app->post('/addToCart', 'KasirController@addToCart')->name('add_to_cart');
-        $app->post('/deleteCart', 'KasirController@deleteCart')->name('delete_cart');
-        $app->get('/load_table', 'KasirController@loadTable')->name('load_table');
-        $app->post('/cancel', 'KasirController@cancel')->name('cancel');
-        $app->post('/change_qty', 'KasirController@changeQty')->name('change_qty');
-        $app->post('/store', 'KasirController@store')->name('store');
-        $app->get('/struk/{id}', 'KasirController@struk')->name('struk');
-    });
     $app->prefix('transaksi')->middleware(['cek:Admin,Petugas'])->name('transaksi.')->group(function ($app) use ($router) {
         $app->prefix('penggajian')->name('penggajian.')->group(function ($app) use ($router) {
             $app->get('/', 'PenggajianController@index')->name('index');
             $app->get('/create', 'PenggajianController@create')->name('create');
             $app->post('/store', 'PenggajianController@store')->name('store');
-            $app->get('/loadTable', 'PenggajianController@loadTable')->name('load_table');
-            $app->get('/getDetail/{id}', 'PenggajianController@get_detail')->name('get_detail');
+            // $app->get('/loadTable', 'PenggajianController@loadTable')->name('load_table');
+            // $app->get('/getDetail/{id}', 'PenggajianController@get_detail')->name('get_detail');
             $app->get('/slip/{id}', 'PenggajianController@slip')->name('slip');
         });
-        // $app->prefix('penjualan')->name('penjualan.')->group(function ($app) use ($router) {
-        //     $app->get('/', 'PenjualanController@index')->name('all');
-        //     $app->get('/nota/{id}', 'PenjualanController@nota')->name('nota');
-        //     $app->get('/cashback/nota/{id}', 'PenjualanController@notaCashback')->name('cashback_nota');
-        //     $app->get('/cashback/{id}', 'PenjualanController@cashback')->name('cashback');
-        //     $app->post('/cashback/{id}', 'PenjualanController@cashbackPost')->name('cashback_post');
-        //     $app->get('/loadTable', 'PenjualanController@loadTable')->name('load_table');
-        //     $app->prefix('periode')->name('periode.')->group(function ($app) use ($router) {
-        //         $app->get('/', 'PenjualanController@periode')->name('index');
-        //         $app->get('/loadTable', 'PenjualanController@periodeLoadTable')->name('load_table');
-        //     });
-        //     $app->prefix('barang')->name('barang.')->group(function ($app) use ($router) {
-        //         $app->get('/', 'PenjualanController@barang')->name('index');
-        //         $app->get('/loadTable', 'PenjualanController@barangLoadTable')->name('load_table');
-        //     });
+
+        $app->prefix('bayarCustomer')->name('bayarCustomer.')->group(function ($app) use ($router) {
+            // $app->get('/', 'BayarCustomerController@index')->name('index');
+            $router->get('/{id}/show', 'BayarCustomerController@show')->name('show');
+          //  $router->get('/{id}/view', 'BayarCustomerController@create')->name('view');
+            $app->post('/store', 'BayarCustomerController@store')->name('store');
+         });
+        $app->prefix('hutangCustomer')->name('hutangCustomer.')->group(function ($app) use ($router) {
+            $app->get('/', 'HutangCustomerController@index')->name('index');
+        });
+        // $app->prefix('piutang')->name('piutang.')->group(function ($app) use ($router) {
+        //     $app->get('/', 'PiutangController@index')->name('index');
+        //     $app->get('/loadTable', 'PiutangController@loadTable')->name('load_table');
+        //     $app->get('/loadModal/{id}', 'PiutangController@loadModal')->name('load_modal');
+        //     $app->get('/loadData/getPiutangById/{id}', 'PiutangController@getPiutangById')->name('get_piutang_by_id');
+        //     $app->get('/loadKotakAtas', 'PiutangController@loadKotakAtas')->name('load_kotak_atas');
+        //     $app->post('/update', 'PiutangController@updatePiutang')->name('proses_bayar_piutang');
         // });
-        $app->prefix('hutang')->name('hutang.')->group(function ($app) use ($router) {
-            $app->get('/', 'HutangController@index')->name('index');
-            $app->get('/loadTable', 'HutangController@loadTable')->name('load_table');
-            $app->get('/loadModal/{id}', 'HutangController@loadModal')->name('load_modal');
-            $app->get('/loadData/getHutangById/{id}', 'HutangController@getHutangById')->name('get_hutang_by_id');
-            $app->post('/update', 'HutangController@updateHutang')->name('proses_bayar_hutang');
-            $app->get('/loadKotakAtas', 'HutangController@loadKotakAtas')->name('load_kotak_atas');
-        });
-        $app->prefix('piutang')->name('piutang.')->group(function ($app) use ($router) {
-            $app->get('/', 'PiutangController@index')->name('index');
-            $app->get('/loadTable', 'PiutangController@loadTable')->name('load_table');
-            $app->get('/loadModal/{id}', 'PiutangController@loadModal')->name('load_modal');
-            $app->get('/loadData/getPiutangById/{id}', 'PiutangController@getPiutangById')->name('get_piutang_by_id');
-            $app->get('/loadKotakAtas', 'PiutangController@loadKotakAtas')->name('load_kotak_atas');
-            $app->post('/update', 'PiutangController@updatePiutang')->name('proses_bayar_piutang');
-        });
         $app->prefix('return')->name('return.')->group(function ($app) use ($router) {
             $app->prefix('penjualan')->name('penjualan.')->group(function ($app) use ($router) {
                 $app->get('/', 'ReturnPenjualanController@index')->name('index');

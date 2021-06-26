@@ -21,6 +21,7 @@ class PembelianController extends Controller
         //$total = Saldo::getTotalPembelian();
         return view("pages.transaksi.pembelian.index");
     }
+
 	public function getDataPembelian(Request $request){
 			$draw = $request->get('draw');
 			$start = $request->get('start');
@@ -93,9 +94,7 @@ class PembelianController extends Controller
     public function create()
     {
         $kodeFaktur = Pembelian::kodeFaktur();
-        $suplier = Suplier::get();
-        $barang = Barang::get();
-        return view("pages.transaksi.pembelian.create", compact('barang', 'suplier', 'kodeFaktur'));
+        return view("pages.transaksi.pembelian.create", compact('kodeFaktur'));
     }
     public function store(Request $request)
     {

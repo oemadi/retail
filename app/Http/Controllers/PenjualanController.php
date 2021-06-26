@@ -72,11 +72,72 @@ class PenjualanController extends Controller
             //$id_ship = Session::get('id_ship');
             $id = request()->get('search');
             $res = DB::select("SELECT a.* from customer a
-            ".($id!="" ?  "where a.nama like '%".$id."%'"  : "")."
+            where a.nama like '%".$id."%'
              order by a.nama limit 10
             ");
            foreach($res as $row){
                $data[] = array('id'=>$row->id,'text'=>$row->nama.'-'.$row->alamat);
+           }
+            return json_encode($data);
+        }
+        public function getDataSuplier()
+        {
+            //$id_ship = Session::get('id_ship');
+            $id = request()->get('search');
+            $res = DB::select("SELECT a.* from suplier a
+            where a.nama like '%".$id."%'
+             order by a.nama limit 10
+            ");
+           foreach($res as $row){
+               $data[] = array('id'=>$row->id,'text'=>$row->nama.'-'.$row->alamat);
+           }
+            return json_encode($data);
+        }
+        public function getDataBarang()
+        {
+            //$id_ship = Session::get('id_ship');
+            $id = request()->get('search');
+            $res = DB::select("SELECT a.* from barang a
+            where a.nama like '%".$id."%'
+             order by a.nama limit 10
+            ");
+           foreach($res as $row){
+               $data[] = array('id'=>$row->id,'text'=>$row->nama);
+           }
+            return json_encode($data);
+        }
+        public function getDataBarangSelect2()
+        {
+            //$id_ship = Session::get('id_ship');
+            $id = request()->post('id_barang');
+            $res = DB::select("SELECT a.* from barang a where a.id='".$id."'");
+           // dd($res);
+            return $res;
+        }
+        public function getDataFakturPenjualan()
+        {
+            //$id_ship = Session::get('id_ship');
+            // HutangCustomer::where('faktur')
+
+            $id = request()->post('faktur_penjualan');
+            $res = DB::select("SELECT a.*,b.sisa_hutang from penjualan a
+            left join bayar_hutang_customer b on a.id=b.id_penjualan
+            where a.status!='lunas' and a.id='".$id."' order by b.id");
+           // dd($res);
+            return $res;
+        }
+        public function getDataFakturPenjualanSelect()
+        {
+            //$id_ship = Session::get('id_ship');
+            $id = request()->get('search');
+            $id_customer = request()->get('id_customer');
+            $res = DB::select("SELECT a.* from penjualan a
+            where a.customer_id='".$id_customer."' and a.status='hutang'
+            and a.faktur like '%".$id."%'
+             order by a.tanggal_penjualan
+            ");
+           foreach($res as $row){
+               $data[] = array('id'=>$row->id,'text'=>$row->faktur.'-'.$row->tanggal_penjualan);
            }
             return json_encode($data);
         }
@@ -102,10 +163,7 @@ class PenjualanController extends Controller
     }
     public function create()
     {
-
-        $customer = Customer::get();
-        $barang = Barang::get();
-        return view("pages.transaksi.penjualan.create", compact('barang', 'customer'));
+        return view("pages.transaksi.penjualan.create");
     }
     public function store(Request $request)
     {
@@ -134,17 +192,26 @@ class PenjualanController extends Controller
               // self::insertDataToHistory($row['kode_barang'], $request->customer_id, $row['jumlah']);
                self::updateStokbarang($row['kode_barang'], $row['jumlah']);
             }
+
             if ($request->status != "tunai") {
+                $datahutang  = HutangCustomer::where('customer_id',$request->customer_id);
+                if($datahutang->count()>0){
+                    $data = $datahutang->first();
+                    $kodefaktur = $data->faktur;
+                    $data->total_hutang = $data->total_hutang+$total;
+                    $data->sisa_hutang =  $data->total_hutang-$data->total_pembayaran_hutang;
+                    $data->save();
+                }else{
                 $hutang = new HutangCustomer();
                 $hutang->faktur = HutangCustomer::kodeFaktur();
-                $hutang->tanggal_hutang = date('Y-m-d');
-                $hutang->tanggal_tempo = $request->tempo;
+                $kodefaktur = $hutang->faktur;
                 $hutang->customer_id = $request->customer_id;
-                $hutang->penjualan_id = $penjualan->id;
                 $hutang->total_hutang = $total;
-                $hutang->pembayaran_hutang = 0;
+                $hutang->total_pembayaran_hutang = 0;
                 $hutang->sisa_hutang = $total;
                 $hutang->save();
+                }
+                KasHelper::add($kodefaktur, 'pengeluaran', 'penjualan', $penjualan->total,0);
             } else {
                 KasHelper::add($penjualan->faktur, 'pendapatan', 'penjualan', $penjualan->total,0);
             }

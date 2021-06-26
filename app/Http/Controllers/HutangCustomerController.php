@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Gaji;
-use App\Pegawai;
+use App\HutangCustomer;
+// use App\Pembelian;
 use DB;
 
-class PenggajianController extends Controller
+class HutangCustomerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,30 +17,10 @@ class PenggajianController extends Controller
     public function index()
     {
 
-        return view("pages.transaksi.penggajian.index");
+        return view("pages.transaksi.hutang_customer.index");
     }
-    public function getDataPegawaiSelect()
-    {
-        //$id_ship = Session::get('id_ship');
-        $id = request()->get('search');
-        $res = DB::select("SELECT a.* from pegawai a
-        where a.nama like '%".$id."%'
-         order by a.nama limit 10
-        ");
-       foreach($res as $row){
-           $data[] = array('id'=>$row->id,'text'=>$row->nama.'-'.$row->alamat);
-       }
-        return json_encode($data);
-    }
-    public function getDataPegawaiSelect2()
-    {
-        //$id_ship = Session::get('id_ship');
-        $id = request()->post('id_pegawai');
-        $res = DB::select("SELECT a.* from pegawai a where a.id=$id");
-       // dd($res);
-        return $res;
-    }
-		public function getDataPenggajian(Request $request){
+
+		public function getHutangCustomer(Request $request){
 			$draw = $request->get('draw');
 			$start = $request->get('start');
 			$rowperpage = $request->get('length');
@@ -55,23 +35,21 @@ class PenggajianController extends Controller
 			$columnSortOrder = $order_arr[0]['dir'];
 			$searchValue =$search_arr['value'];
 
-			$totalRecords = Gaji::select('count(*)  as allcount')->count();
-			$totalRecordswithFilter =  Gaji::select('count(*)  as allcount')
+			$totalRecords = HutangCustomer::select('count(*)  as allcount')->count();
+			$totalRecordswithFilter =  HutangCustomer::select('count(*)  as allcount')
 			->count();
-
-			$records = Gaji::orderBy($columnName,$columnSortOrder)
-            ->join('pegawai','pegawai.id','gaji.pegawai_id')
-			->select('gaji.*','pegawai.nama','pegawai.gaji')
+            $records = HutangCustomer::orderBy($columnName,$columnSortOrder)
+            ->join('customer','customer.id','hutang_customer.customer_id')
+			->select('hutang_customer.*','customer.nama as customer')
 			->skip($start)
 			->take($rowperpage)
 			->get();
-
 			$data_arr = array();
 			foreach($records as $record){
 
-				$data_arr[]=array('id'=>$record->id,'tanggal_gaji'=>$record->tanggal_gaji,'faktur'=>$record->faktur,
-                'nama'=>$record->nama,'total_gaji'=>$record->total_gaji,'potongan'=>$record->potongan,
-                'gaji_bersih'=>$record->gaji_bersih);
+				$data_arr[]=array('id'=>$record->id,'customer'=>$record->customer,'customer_id'=>$record->customer_id,
+                'total_hutang'=>$record->total_hutang,'total_pembayaran_hutang'=>$record->total_pembayaran_hutang,
+                'sisa_hutang'=>$record->sisa_hutang);
 
 				$response = array(
 				"draw" => intval($draw),
@@ -93,8 +71,8 @@ class PenggajianController extends Controller
      */
     public function create()
     {
-        $faktur = Gaji::kodeFaktur();
-        return view("pages.transaksi.penggajian.create",compact('faktur'));
+        $faktur = HutangCustomer::kodeFaktur();
+        return view("pages.transaksi.hutang_customer.create",compact('faktur'));
     }
 
     /**
@@ -108,21 +86,20 @@ class PenggajianController extends Controller
         $request->validate([
             //'nama' => 'required|min:3'
         ]);
-        $penggajian = new Gaji();
-        $penggajian->tanggal_gaji =  date('Y-m-d',strtotime($request->tanggal));
-      //  dd(date('Y-m-d',strtotime($request->tanggal)));
-        $penggajian->faktur = $request->faktur;
-        $penggajian->pegawai_id = $request->id_pegawai;
-        $penggajian->total_gaji = $request->gaji;
-        $penggajian->potongan = $request->potongan;
-        $penggajian->gaji_bersih = $request->gaji_bersih;
+        $BayarCustomer = new HutangCustomer();
+        $BayarCustomer->tanggal_bayar =  date('Y-m-d',strtotime($request->tanggal));
+        $BayarCustomer->id_bayar_hutang_customer = $request->faktur;
+        $BayarCustomer->id_customer = $request->id_customer;
+        $BayarCustomer->id_penjualan = $request->id_penjualan;
+        $BayarCustomer->jumlah_bayar = $request->jumlah_bayar;
+        $BayarCustomer->sisa_hutang = $request->sisa_hutang;
 
-        if ($penggajian->save()) {
+        if ($BayarCustomer->save()) {
             session()->flash('message', 'Data berhasil disimpan!');
-            return redirect()->route('penggajian.index')->with('status', 'success');
+            return redirect()->route('bayarCustomer')->with('status', 'success');
         } else {
             session()->flash('message', 'Data gagal disimpan!');
-            return redirect()->route('penggajian.index')->with('status', 'danger');
+            return redirect()->route('bayarCustomer')->with('status', 'danger');
         }
     }
 
@@ -145,8 +122,8 @@ class PenggajianController extends Controller
      */
     public function edit($id)
     {
-        $penggajian = penggajian::findOrFail($id);
-        return view("pages.penggajian.edit", compact('penggajian'));
+        $BayarCustomer = HutangCustomer::findOrFail($id);
+        return view("pages.BayarCustomer.edit", compact('BayarCustomer'));
     }
 
     /**
@@ -161,14 +138,14 @@ class PenggajianController extends Controller
         $request->validate([
             'nama' => 'required|min:3'
         ]);
-        $penggajian = penggajian::find($id);
-        $penggajian->nama = $request->nama;
-        if ($penggajian->save()) {
+        $BayarCustomer = HutangCustomer::find($id);
+        $BayarCustomer->nama = $request->nama;
+        if ($BayarCustomer->save()) {
             session()->flash('message', 'Data berhasil diubah!');
-            return redirect()->route('penggajian.index')->with('status', 'success');
+            return redirect()->route('BayarCustomer.index')->with('status', 'success');
         } else {
             session()->flash('message', 'Data gagal diubah!');
-            return redirect()->route('penggajian.index')->with('status', 'danger');
+            return redirect()->route('BayarCustomer.index')->with('status', 'danger');
         }
     }
 
@@ -180,19 +157,19 @@ class PenggajianController extends Controller
      */
     public function destroy($id)
     {
-        $penggajian = penggajian::findOrFail($id);
-        $relasi = penggajian::with('barang')->find($id);
+        $BayarCustomer = HutangCustomer::findOrFail($id);
+        $relasi = HutangCustomer::with('barang')->find($id);
         if (count($relasi->barang) < 1) {
-            if ($penggajian->delete()) {
+            if ($BayarCustomer->delete()) {
                 session()->flash('message', 'Data berhasil dihapus!');
-                return redirect()->route('penggajian.index')->with('status', 'success');
+                return redirect()->route('bayarCustomer.index')->with('status', 'success');
             } else {
                 session()->flash('message', 'Data gagal dihapus!');
-                return redirect()->route('penggajian.index')->with('status', 'danger');
+                return redirect()->route('bayarCustomer.index')->with('status', 'danger');
             }
         } else {
             session()->flash('message', 'Data gagal dihapus!');
-            return redirect()->route('pelanggan.index')->with('status', 'danger');
+            return redirect()->route('bayarCustomer.index')->with('status', 'danger');
         }
     }
 }

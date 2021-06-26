@@ -60,16 +60,11 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="barang">Barang</label>
-                            <div class="input-group">
-                                <input type="hidden" name="id_barang" id="id_barang">
-                                <input type="hidden" name="namabarang" id="namabarang">
-                                <input type="hidden" name="hargajual" id="hargajual">
-                                <input type="text" name="barang" id="barang" class="form-control" readonly>
-                                <div class="input-group-addon showModalBarang" style="cursor: pointer;">
-                                    <i class="fa fa-search"></i>
-                                </div>
-                            </div>
+                            <label for="barang">Kode Barang</label>
+                            <input type="hidden" name="nama_barang" id="nama_barang" class="form-control" >
+                                <select name="id_barang" id="id_barang" class="form-control select2-barang" style="width: 100%;height:auto">
+                               <option></option>
+                                </select>
 
                         </div>
                     </div>
@@ -140,51 +135,6 @@
     </div>
 </div>
 
-
-<div id="modalBarang" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Data customer</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover" id="dataTable">
-                                <thead>
-                                    <th>Kode</th>
-                                    <th>Nama Barang</th>
-                                    <th>Harga Jual</th>
-                                    <th>Stok</th>
-                                    <th>Aksi</th>
-                                </thead>
-                                <tbody>
-                                    @foreach ($barang as $item)
-                                    <tr>
-                                        <td>{{ $item->id }}</td>
-                                        <td>{{ $item->nama }}</td>
-                                        <td>{{ $item->harga_jual }}</td>
-                                        <td>{{ $item->stok_akhir }}</td>
-                                        <td><button class="btn btn-warning btn-pilih-barang" data-id="{{ $item->id }}"
-                                                data-nbarang="{{ $item->nama }}"
-                                                data-hargajual="{{ $item->harga_jual }}">Pilih</button></td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-window-close"></i>
-                    Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="modal fade" id="modal-selesai">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -255,7 +205,6 @@
        getNewFaktur();
 
         $(".select2-customer").select2({
-
         ajax: {
         url: "{{ route('getDataCustomer') }}",
         contentType: 'application/json',
@@ -278,9 +227,46 @@
 
         placeholder:"Nama Customer",
         });
+        $(".select2-barang").select2({
+        ajax: {
+        url: "{{ route('getDataBarang') }}",
+        contentType: 'application/json',
+        dataType: 'json',
+        delay:50,
+        type:"get",
+        data: function(params) {
+            return {
+            search: params.term,_token: '{{csrf_token()}}'
+            };
+        },
+        processResults: function(data) {
+            return {
+            results: data
+            };
+        },
+        cache: true
+        },
 
+        placeholder:"Nama Barang",
+        });
 
-       // alert();
+        $('#id_barang').change(function(){
+            // /alert();
+            let url = `{{ route('getDataBarangSelect2') }}`;
+            $.ajax({
+                type: "POST",
+                url: url,
+                data:{ id_barang : $('#id_barang').val() },_token: '{{csrf_token()}}',
+                dataType: "json",
+                success: function (response) {
+                 //  alert(response);
+                   // console.log(response);
+                     $("#nama_barang").val(response[0].nama);
+                     $("#harga_barang").val(response[0].harga_jual);
+                     $("#jumlah").val(1);
+                    }
+                })
+        });
 
         $(document).on('click','#minus',function(){
             minusCart($(this).data('kode'),$(this).data('i'));
@@ -342,6 +328,7 @@
             resetFormTrans();
             getNewFaktur();
             $('#id_customer').val(null).trigger('change');
+            $('#id_barang').val(null).trigger('change');
             $('#modal-selesai').modal('hide');
         }
         function resetFormTrans(){
@@ -368,7 +355,7 @@
           function addToCart(){
 
             var kode_barang = $('#id_barang').val();
-            var nama_barang = $('#namabarang').val();
+            var nama_barang = $('#nama_barang').val();
             var jumlah = $('#jumlah').val();
             var harga = $('#harga_barang').val();
             for (var i in cart){
@@ -509,7 +496,7 @@
                 success: function (response) {
 
                     if(response[0] == "berhasil"){
-                        //newTransaction();
+                        newTransaction();
                         console.log(response);
                         modalTransaksi(response[1]);
 
