@@ -14,10 +14,10 @@ class BayarHutangCustomer extends Model
             $hutang = BayarHutangCustomer::orderBy('id', 'DESC')->first();
             $nourut = (int) substr($hutang->faktur, -8, 8);
             $nourut++;
-            $char = "HCS";
+            $char = "HC";
             $number = $char  .  sprintf("%08s", $nourut);
         } else {
-            $number = "HCS"  . "00000001";
+            $number = "HC"  . "00000001";
         }
         return $number;
     }

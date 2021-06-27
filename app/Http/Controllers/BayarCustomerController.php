@@ -10,6 +10,7 @@ use App\Customer;
 // use App\Pembelian;
 use DB;
 use Session;
+use Kas as KasHelper;
 
 class BayarCustomerController extends Controller
 {
@@ -57,19 +58,19 @@ class BayarCustomerController extends Controller
         return $res;
     }
 		public function getDataBayarCustomer(Request $request){
-			$draw = $request->get('draw');
-			$start = $request->get('start');
-			$rowperpage = $request->get('length');
+            $draw = $request->get('draw');
+            $start = $request->get('start');
+            $rowperpage = $request->get('length');
 
-			$columnIndex_arr = $request->get('order');
-			$columnName_arr = $request->get('columns');
-			$order_arr = $request->get('order');
-			$search_arr = $request->get('search');
+            $columnIndex_arr = $request->get('order');
+            $columnName_arr = $request->get('columns');
+            $order_arr = $request->get('order');
+            $search_arr = $request->get('search');
 
-			$columnIndex = $columnIndex_arr[0]['column'];
-			$columnName = $columnName_arr[$columnIndex]['data'];
-			$columnSortOrder = $order_arr[0]['dir'];
-			$searchValue =$search_arr['value'];
+            $columnIndex = $columnIndex_arr[0]['column'];
+            $columnName = $columnName_arr[$columnIndex]['data'];
+            $columnSortOrder = $order_arr[0]['dir'];
+            $searchValue =$search_arr['value'];
 
 			$totalRecords = BayarHutangCustomer::select('count(*)  as allcount')->count();
 			$totalRecordswithFilter =  BayarHutangCustomer::select('count(*)  as allcount')
@@ -84,6 +85,7 @@ class BayarCustomerController extends Controller
 			->skip($start)
 			->take($rowperpage)
 			->get();
+          //  dd($records);
 			$data_arr = array();
 			foreach($records as $record){
 
@@ -117,7 +119,7 @@ class BayarCustomerController extends Controller
       // dd($res->nama);
         Session::put(array('id_customer'=>$id,'nama_customer'=>$res->nama));
         $faktur = BayarHutangCustomer::kodeFaktur();
-        return view("pages.transaksi.bayar_hutang.create",compact('faktur'));
+        return view("pages.transaksi.bayar_customer.create",compact('faktur'));
     }
 
     /**
@@ -148,11 +150,12 @@ class BayarCustomerController extends Controller
             $UpdateCustomer->total_pembayaran_hutang =  $UpdateCustomer->total_pembayaran_hutang + $request->jumlah_bayar;
             $UpdateCustomer->sisa_hutang = $UpdateCustomer->total_hutang -  $UpdateCustomer->total_pembayaran_hutang ;
             $UpdateCustomer->save();
-
+            KasHelper::add($request->faktur, 'pendapatan', 'bayar hutang',$request->jumlah_bayar,0);
             echo json_encode(array('status'=>'success'));
         } else {
             echo json_encode(array('status'=>'failed'));
         }
+
     }
 
     /**

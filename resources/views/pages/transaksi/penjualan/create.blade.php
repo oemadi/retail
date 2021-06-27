@@ -206,7 +206,7 @@
 
         $(".select2-customer").select2({
         ajax: {
-        url: "{{ route('getDataCustomer') }}",
+        url: "{{ route('getDataCustomerSelect') }}",
         contentType: 'application/json',
 
         dataType: 'json',
@@ -293,13 +293,7 @@
             showCart();
             loadKotak();
         });
-        $(document).on('click','.btn-pilih-barang',function(){
-            $('#id_barang').val($(this).data('id'));
-            $('#namabarang').val($(this).data('nbarang'));
-            $('#barang').val($(this).data('id')+'-'+$(this).data('nbarang'));
-            $('#harga_barang').val($(this).data('hargajual'));
-            $('#modalBarang').modal('hide');
-        });
+
         $('#metode1').click(function(){
             $('.kotakTanggal').css({display:"none"})
         })

@@ -15,7 +15,7 @@ class BarangController extends Controller
     {
         return view("pages.barang.index");
     }
-	public function getBarang(Request $request){
+	public function getDataMasterBarang(Request $request){
 		$draw = $request->get('draw');
 		$start = $request->get('start');
 		$rowperpage = $request->get('length');
@@ -40,7 +40,6 @@ class BarangController extends Controller
 		$records = Barang::select('barang.*','kategori.nama as kategori_nama','satuan.nama as satuan_nama')
         ->join('satuan', 'satuan.id', '=', 'barang.satuan_id')
         ->join('kategori', 'kategori.id', '=', 'barang.kategori_id')
-
 		->orderBy($columnName,$columnSortOrder)
         ->where('barang.branch',$branch)
 		->where('barang.nama','like','%'.$searchValue.'%')

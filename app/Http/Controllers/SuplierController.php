@@ -17,7 +17,7 @@ class SuplierController extends Controller
         $suplier = Suplier::orderBy("created_at", "DESC")->paginate(10);
         return view("pages.suplier.index", compact('suplier'));
     }
-		public function getSuplier(Request $request){
+		public function getDataMasterSuplier(Request $request){
 			$draw = $request->get('draw');
 			$start = $request->get('start');
 			$rowperpage = $request->get('length');
@@ -49,12 +49,12 @@ class SuplierController extends Controller
 
 				$id= $record->id;
 				$nama= $record->nama;
-				$email= $record->email;
-				$kota= $record->kota;
+				$kontak= $record->kontak;
 				$alamat= $record->alamat;
 				$no_hp= $record->no_hp;
 
-				$data_arr[]=array('id'=>$id,'nama'=>$nama,'email'=>$email,'kota'=>$kota,'alamat'=>$alamat,'no_hp'=>$no_hp);
+				$data_arr[]=array('id'=>$id,'nama'=>$nama,'kontak'=>$kontak,
+                'alamat'=>$alamat,'no_hp'=>$no_hp);
 
 				$response = array(
 				"draw" => intval($draw),

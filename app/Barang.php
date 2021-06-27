@@ -3,13 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+//use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Barang extends Model
 {
-    use SoftDeletes;
+   // use SoftDeletes;
     protected $table = 'barang';
-    public $incrementing = false;
+   // public $incrementing = false;
     public static function kodeBarang()
     {
         $cek = Barang::withTrashed()->get();
@@ -25,16 +25,16 @@ class Barang extends Model
         return $number;
     }
 
-    public function kategori()
-    {
-        return $this->belongsTo(Kategori::class, 'kategori_id', 'id');
-    }
-    public function satuan()
-    {
-        return $this->belongsTo(Satuan::class, 'satuan_id', 'id');
-    }
-    public function detail_penjualan()
-    {
-        return $this->hasMany(Detail_penjualan::class, 'barang_id', 'id');
-    }
+    // public function kategori()
+    // {
+    //     return $this->belongsTo(Kategori::class, 'kategori_id', 'id');
+    // }
+    // public function satuan()
+    // {
+    //     return $this->belongsTo(Satuan::class, 'satuan_id', 'id');
+    // }
+    // public function detail_penjualan()
+    // {
+    //     return $this->hasMany(Detail_penjualan::class, 'barang_id', 'id');
+    // }
 }

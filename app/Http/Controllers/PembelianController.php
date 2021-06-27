@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Barang;
-use App\Detail_pembelian;
+use App\Detail_Pembelian;
 use App\History_stok_barang_masuk;
-use App\Hutang;
+use App\HutangSuplier;
 use App\Pembelian;
 use App\Suplier;
 use Illuminate\Http\Request;
@@ -36,13 +36,7 @@ class PembelianController extends Controller
 			$columnName = $columnName_arr[$columnIndex]['data'];
 			$columnSortOrder = $order_arr[0]['dir'];
 			$searchValue =$search_arr['value'];
-            // {data:'id_pembelian'},
-            // {data:'suplier'},
-            // {data:'tanggal'},
-            // {data:'total'},
-            // {data:'total_qty'},
-            // {data:'total_cash'},
-            // {data:'total_hutang'},
+
 			$totalRecords = Pembelian::select('count(*)  as allcount')->count();
 			$totalRecordswithFilter =  Pembelian::select('count(*)  as allcount')
 			->count();
@@ -71,26 +65,33 @@ class PembelianController extends Controller
 				echo json_encode($response);
 				exit();
 		}
-    public function loadTable()
-    {
-        $pembelian = Pembelian::with('suplier');
-        if (request()->get('tanggal_awal') != "all") {
-            $pembelian = $pembelian->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'));
+        public function getDataFakturPembelian()
+        {
+            //$id_ship = Session::get('id_ship');
+            // HutangCustomer::where('faktur')
+
+            $id = request()->post('faktur_pembelian');
+            $res = DB::select("SELECT a.*,b.sisa_hutang from pembelian a
+            left join bayar_hutang_suplier b on a.id=b.id_pembelian
+            where a.status!='lunas' and a.id='".$id."' order by b.id");
+           // dd($res);
+            return $res;
         }
-        if (request()->get('tanggal_akhir') != "all") {
-            $pembelian = $pembelian->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'));
+     public function getDataFakturPembelianSelect()
+        {
+            //$id_ship = Session::get('id_ship');
+            $id = request()->get('search');
+            $id_suplier = request()->get('id_suplier');
+            $res = DB::select("SELECT a.* from pembelian a
+            where a.suplier_id='".$id_suplier."' and a.status='hutang'
+            and a.faktur like '%".$id."%'
+             order by a.tanggal_pembelian
+            ");
+           foreach($res as $row){
+               $data[] = array('id'=>$row->id,'text'=>$row->faktur.'-'.$row->tanggal_pembelian);
+           }
+            return json_encode($data);
         }
-        if (request()->get('pembelian') != "all") {
-            $pembelian = $pembelian->where('status', request()->get('pembelian'));
-        }
-        $pembelian = $pembelian->get();
-        return view("pages.transaksi.pembelian.table", compact('suplier', 'pembelian'));
-    }
-    public function loadKotakAtas()
-    {
-        $total = Saldo::getTotalPembelian();
-        return view("pages.transaksi.pembelian.kotak_atas", compact('total'));
-    }
     public function create()
     {
         $kodeFaktur = Pembelian::kodeFaktur();
@@ -113,26 +114,34 @@ class PembelianController extends Controller
             $pembelian->status = $request->status;
             $pembelian->save();
             foreach ($request->data as $row) {
-                $detail = new Detail_pembelian();
+                $detail = new Detail_Pembelian();
                 $detail->pembelian_id = $pembelian->id;
                 $detail->barang_id = $row['kode_barang'];
                 $detail->jumlah_beli = $row['jumlah'];
                 $detail->subtotal = $row['subtotal'];
                 $detail->save();
-               self::insertDataToHistory($row['kode_barang'], $request->suplier_id, $row['jumlah']);
-               self::updateStokbarang($row['kode_barang'], $row['jumlah']);
+             //  self::insertDataToHistory($row['kode_barang'], $request->suplier_id, $row['jumlah']);
+              // self::updateStokbarang($row['kode_barang'], $row['jumlah']);
             }
             if ($request->status != "tunai") {
-                $hutang = new Hutang();
-                $hutang->faktur = Hutang::kodeFaktur();
-                $hutang->tanggal_hutang = date('Y-m-d');
-                $hutang->tanggal_tempo = $request->tempo;
+                $datahutang  = HutangSuplier::where('suplier_id',$request->suplier_id);
+                if($datahutang->count()>0){
+                    $data = $datahutang->first();
+                    $kodefaktur = $data->faktur;
+                    $data->total_hutang = $data->total_hutang+$total;
+                    $data->sisa_hutang =  $data->total_hutang-$data->total_pembayaran_hutang;
+                    $data->save();
+                }else{
+                $hutang = new HutangSuplier();
+                $hutang->faktur = HutangSuplier::kodeFaktur();
+                $kodefaktur = $hutang->faktur;
                 $hutang->suplier_id = $request->suplier_id;
-                $hutang->pembelian_id = $pembelian->id;
                 $hutang->total_hutang = $total;
-                $hutang->pembayaran_hutang = 0;
+                $hutang->total_pembayaran_hutang = 0;
                 $hutang->sisa_hutang = $total;
                 $hutang->save();
+                }
+
             } else {
                 KasHelper::add($pembelian->faktur, 'pengeluaran', 'pembelian', 0, $pembelian->total);
             }
@@ -143,11 +152,7 @@ class PembelianController extends Controller
             return response()->json(["error", "Pembelian gagal"]);
         }
     }
-    public function loadModal($id)
-    {
-        $pembelian = Pembelian::with('suplier', 'detail_pembelian.barang')->find($id);
-        return view("pages.transaksi.pembelian.modal", compact('pembelian'));
-    }
+
     public static function updateStokbarang($barang_id, $qty)
     {
         $barang = Barang::find($barang_id);

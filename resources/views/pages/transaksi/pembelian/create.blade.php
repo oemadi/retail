@@ -62,6 +62,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="suplier">Kode Barang</label>
+                            <input type="hidden" name="nama_barang" id="nama_barang" class="form-control" >
                                 <select name="id_barang" id="id_barang" class="form-control select2-barang" style="width: 100%;height:auto">
                                <option></option>
                                 </select>
@@ -70,8 +71,8 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="nama_barang">Nama Barang</label>
-                            <input type="text" name="nama_barang" id="nama_barang" class="form-control" readonly>
+                            <label for="harga_barang">Harga Barang</label>
+                            <input type="text" name="harga_barang" id="harga_barang" class="form-control" >
                         </div>
                     </div>
                     <div class="col-md-12">
@@ -191,7 +192,23 @@
         },
         placeholder:"Nama Barang",
         });
-
+        $('#id_barang').change(function(){
+            // /alert();
+            let url = `{{ route('getDataBarangSelect2') }}`;
+            $.ajax({
+                type: "POST",
+                url: url,
+                data:{ id_barang : $('#id_barang').val() },_token: '{{csrf_token()}}',
+                dataType: "json",
+                success: function (response) {
+                 //  alert(response);
+                   // console.log(response);
+                     $("#nama_barang").val(response[0].nama);
+                     $("#harga_barang").val(response[0].harga_beli);
+                     $("#jumlah").val(1);
+                    }
+                })
+        });
         $(document).on('click','#minus',function(){
             minusCart($(this).data('kode'),$(this).data('i'));
         });
@@ -239,10 +256,10 @@
 
     function addToCart(){
 
-            var kode_barang = $('#barang').val();
+            var kode_barang = $('#id_barang').val();
             var nama_barang = $('#nama_barang').val();
             var jumlah = $('#jumlah').val();
-            var harga = $('#hargabeli').val();
+            var harga = $('#harga_barang').val();
             for (var i in cart){
                 if(cart[i].kode_barang == kode_barang){
                     cart[i].jumlah = parseInt(cart[i].jumlah)+parseInt(jumlah);

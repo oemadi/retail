@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes(['register' => false, 'reset' => false]);
 Route::any('/getDataSuplier', 'SuplierController@getSuplier')->name('getDataSuplier');
-Route::any('/getDataAnggota', 'AnggotaController@getAnggota')->name('getDataAnggota');
+Route::any('/getDataCustomer', 'CustomerController@getDataCustomer')->name('getDataCustomer');
 Route::any('/getDataPegawai', 'PegawaiController@getPegawai')->name('getDataPegawai');
 Route::any('/getDataBarang', 'BarangController@getBarang')->name('getDataBarang');
 Route::any('/getDataSatuan', 'SatuanController@getSatuan')->name('getDataSatuan');
@@ -27,27 +27,34 @@ Route::any('/getDataPenggajian', 'PenggajianController@getDataPenggajian')->name
 Route::any('/getDataPegawaiSelect', 'PenggajianController@getDataPegawaiSelect')->name('getDataPegawaiSelect');
 Route::any('/getDataPegawaiSelect2', 'PenggajianController@getDataPegawaiSelect2')->name('getDataPegawaiSelect2');
 
+Route::any('/getDataBayarSuplier', 'BayarSuplierController@getDataBayarSuplier')->name('getDataBayarSuplier');
 Route::any('/getDataBayarCustomer', 'BayarCustomerController@getDataBayarCustomer')->name('getDataBayarCustomer');
 
+Route::any('/getDataFakturPembelianSelect', 'PembelianController@getDataFakturPembelianSelect')->name('getDataFakturPembelianSelect');
 Route::any('/getDataFakturPenjualanSelect', 'PenjualanController@getDataFakturPenjualanSelect')->name('getDataFakturPenjualanSelect');
+Route::any('/getDataFakturPembelian', 'PembelianController@getDataFakturPembelian')->name('getDataFakturPembelian');
 Route::any('/getDataFakturPenjualan', 'PenjualanController@getDataFakturPenjualan')->name('getDataFakturPenjualan');
 
 Route::any('/getDataPembelian', 'PembelianController@getDataPembelian')->name('getDataPembelian');
 Route::any('/getDataPenjualan', 'PenjualanController@getDataPenjualan')->name('getDataPenjualan');
 
-Route::any('/getDataCustomer', 'PenjualanController@getDataCustomer')->name('getDataCustomer');
+Route::any('/getDataCustomerSelect', 'PenjualanController@getDataCustomerSelect')->name('getDataCustomerSelect');
+Route::any('/getDataMasterSuplier', 'SuplierController@getDataMasterSuplier')->name('getDataMasterSuplier');
 Route::any('/getDataSuplier', 'PenjualanController@getDataSuplier')->name('getDataSuplier');
+
+Route::any('/getDataMasterBarang', 'BarangController@getDataMasterBarang')->name('getDataMasterBarang');
+
 Route::any('/getDataBarang', 'PenjualanController@getDataBarang')->name('getDataBarang');
 Route::any('/getDataBarangSelect2', 'PenjualanController@getDataBarangSelect2')->name('getDataBarangSelect2');
 
 
 Route::any('/getHutangCustomer', 'HutangCustomerController@getHutangCustomer')->name('getHutangCustomer');
+Route::any('/getHutangSuplier', 'HutangSuplierController@getHutangSuplier')->name('getHutangSuplier');
+
 
 Route::any('/getDataHutangCustomer', 'BayarHutangController@getDataHutangCustomer')->name('getDataHutangCustomer');
 
 Route::any('/getKodeFakturJual', 'PenjualanController@getKodeFakturJual')->name('getKodeFakturJual');
-
-Route::any('/getDataAnggotaSelect', 'KasirController@getDataAnggotaSelect')->name('getDataAnggotaSelect');
 
 Route::any('/getDataStokMasuk', 'StokMasukController@getStokMasuk')->name('getDataStokMasuk');
 
@@ -109,10 +116,14 @@ Route::group(['middleware' => 'auth'], function ($app) use ($router) {
     $app->prefix('kategori')->middleware(['cek:Admin'])->name('kategori.')->group(function ($app) use ($router) {
         $router->get('/{id}/delete', 'KategoriController@destroy')->name('destroy');
     });
+    $app->resource('customer', 'CustomerController')->except(['show'])->middleware(['cek:Admin']);
+    $app->prefix('customer')->middleware(['cek:Admin'])->name('customer.')->group(function ($app) use ($router) {
+        $app->get('/', 'CustomerController@index')->name('index');
+        $router->get('/{id}/delete', 'CustomerController@destroy')->name('destroy');
+        $app->get('/{id}/edit', 'CustomerController@edit')->name('edit');
+        $app->get('/{id}/show', 'CustomerController@show')->name('show');
 
-    $app->resource('anggota', 'anggotaController')->except('show')->middleware(['cek:Admin']);
-    $app->prefix('anggota')->middleware(['cek:Admin'])->name('anggota.')->group(function ($app) use ($router) {
-        $router->get('/{id}/delete', 'anggotaController@destroy')->name('destroy');
+
     });
 
     $app->resource('user', 'UserController')->except('show')->middleware(['cek:Admin']);
@@ -137,22 +148,19 @@ Route::group(['middleware' => 'auth'], function ($app) use ($router) {
         });
 
         $app->prefix('bayarCustomer')->name('bayarCustomer.')->group(function ($app) use ($router) {
-            // $app->get('/', 'BayarCustomerController@index')->name('index');
             $router->get('/{id}/show', 'BayarCustomerController@show')->name('show');
-          //  $router->get('/{id}/view', 'BayarCustomerController@create')->name('view');
             $app->post('/store', 'BayarCustomerController@store')->name('store');
          });
         $app->prefix('hutangCustomer')->name('hutangCustomer.')->group(function ($app) use ($router) {
             $app->get('/', 'HutangCustomerController@index')->name('index');
         });
-        // $app->prefix('piutang')->name('piutang.')->group(function ($app) use ($router) {
-        //     $app->get('/', 'PiutangController@index')->name('index');
-        //     $app->get('/loadTable', 'PiutangController@loadTable')->name('load_table');
-        //     $app->get('/loadModal/{id}', 'PiutangController@loadModal')->name('load_modal');
-        //     $app->get('/loadData/getPiutangById/{id}', 'PiutangController@getPiutangById')->name('get_piutang_by_id');
-        //     $app->get('/loadKotakAtas', 'PiutangController@loadKotakAtas')->name('load_kotak_atas');
-        //     $app->post('/update', 'PiutangController@updatePiutang')->name('proses_bayar_piutang');
-        // });
+        $app->prefix('bayarSuplier')->name('bayarSuplier.')->group(function ($app) use ($router) {
+            $router->get('/{id}/show', 'BayarSuplierController@show')->name('show');
+            $app->post('/store', 'BayarSuplierController@store')->name('store');
+         });
+        $app->prefix('hutangSuplier')->name('hutangSuplier.')->group(function ($app) use ($router) {
+            $app->get('/', 'HutangSuplierController@index')->name('index');
+        });
         $app->prefix('return')->name('return.')->group(function ($app) use ($router) {
             $app->prefix('penjualan')->name('penjualan.')->group(function ($app) use ($router) {
                 $app->get('/', 'ReturnPenjualanController@index')->name('index');

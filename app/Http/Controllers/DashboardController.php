@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Barang;
-use App\Anggota;
+use App\Customer;
 use App\Return_penjualan;
 use App\Suplier;
 use App\Transaksi;
@@ -16,12 +16,12 @@ class DashboardController extends Controller
     public function dashboard()
     {
         $totalBarang = Barang::count();
-        $totalAnggota = Anggota::count();
+        $totalCustomer = Customer::count();
         $omsetBulanIni = Saldo::getOmsetBulanIni();
         $labaRugi = Saldo::getLabaBulanIni();
         $pengingat  = Barang::where('stok_akhir', '<', 5)->orderBy('stok_akhir', 'ASC')->get();
         $terlaris = Barang::orderBy('stok_keluar', 'DESC')->get();;
-        return view('pages.dashboard', compact('totalBarang', 'totalAnggota', 'omsetBulanIni', 'labaRugi', 'pengingat', 'terlaris'));
+        return view('pages.dashboard', compact('totalBarang', 'totalCustomer', 'omsetBulanIni', 'labaRugi', 'pengingat', 'terlaris'));
     }
 
     public function grafikLabaRugi()

@@ -9,7 +9,7 @@ class Customer extends Model
     protected $table = 'customer';
     public function hutang()
     {
-        return $this->hasMany(Hutang::class, 'customer_id', 'id');
+        return $this->hasMany(HutangCustomer::class, 'customer_id', 'id');
     }
     public function penjualan()
     {

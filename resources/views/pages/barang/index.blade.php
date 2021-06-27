@@ -184,7 +184,7 @@
 		.dataTable({
            processing:true,
 		   serverSide:true,
-		   ajax:"{{route('getDataBarang')}}",
+		   ajax:"{{route('getDataMasterBarang')}}",
 		   columns:[
 		   {data:'id'},
 		   {data:'nama'},

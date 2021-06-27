@@ -1,5 +1,5 @@
 @extends('layouts.template')
-@section('page','Input Bayar Customer')
+@section('page','Input Bayar Suplier')
 @section('content')
 <div class="row">
     <div class="col-md-12">
@@ -38,16 +38,16 @@
                         <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="customer">Customer</label>
-                                            <input type="hidden" name="id_customer" id="id_customer" class="form-control" value="{{Session::get('id_customer')}}" readonly>
-                                            <input type="text" name="nama_customer" id="nama_customer" class="form-control" value="{{Session::get('nama_customer')}}" readonly>
+                                            <label for="suplier">suplier</label>
+                                            <input type="hidden" name="id_suplier" id="id_suplier" class="form-control" value="{{Session::get('id_suplier')}}" readonly>
+                                            <input type="text" name="nama_suplier" id="nama_suplier" class="form-control" value="{{Session::get('nama_suplier')}}" readonly>
 
                                     </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="faktur_penjualan">No.Faktur Penjualan</label>
-                                                <select name="faktur_penjualan" id="faktur_penjualan" class="select2-faktur-penjualan" style="width: 100%;height:100%">
+                                            <label for="faktur_pembelian">No.Faktur Pembelian</label>
+                                                <select name="faktur_pembelian" id="faktur_pembelian" class="select2-faktur-pembelian" style="width: 100%;height:100%">
                                                 </select>
 
                                     </div>
@@ -81,7 +81,7 @@
                                         <div class="form-group" align="right">
                                                 <br>
                                                 <button class="btn btn-primary" id="simpan"><i class="fa fa-save"></i> Simpan</button>
-                                                <a href="{{ route('transaksi.hutangCustomer.index') }}" class="btn btn-danger">Kembali</a>
+                                                <a href="{{ route('transaksi.hutangSuplier.index') }}" class="btn btn-danger">Kembali</a>
                                         </div>
                                     </div>
                                     </div>
@@ -94,9 +94,9 @@
             <thead>
                 <tr>
                     <th>No.Bayar</th>
-                    <th>Customer</th>
+                    <th>Suplier</th>
                     <th>Tanggal Bayar</th>
-                    <th>Faktur Penjualan</th>
+                    <th>Faktur Pembelian</th>
                     <th>Jumlah Bayar</th>
                     <th>Sisa Hutang</th>
                 </tr>
@@ -119,9 +119,9 @@
 <script>
     $(document).ready(function(){
         loadTable();
-      $(".select2-customer").select2({
+      $(".select2-Suplier").select2({
         ajax: {
-        url: "{{ route('getDataCustomer') }}",
+        url: "{{ route('getDataSuplier') }}",
         contentType: 'application/json',
         dataType: 'json',
         delay:50,
@@ -138,20 +138,20 @@
         },
         cache: true
         },
-        placeholder:"Nama Customer",
+        placeholder:"Nama Suplier",
         });
 
-        $(".select2-faktur-penjualan").select2({
-       // let id_customer = $("#id_customer").val();
+        $(".select2-faktur-pembelian").select2({
+       // let id_Suplier = $("#id_Suplier").val();
         ajax: {
-        url: "{{ route('getDataFakturPenjualanSelect') }}",
+        url: "{{ route('getDataFakturPembelianSelect') }}",
         contentType: 'application/json',
         dataType: 'json',
         delay:50,
         type:"get",
         data: function(params) {
             return {
-            search: params.term,id_customer: $("#id_customer").val(),_token: '{{csrf_token()}}'
+            search: params.term,id_suplier: $("#id_suplier").val(),_token: '{{csrf_token()}}'
             };
         },
         processResults: function(data) {
@@ -161,15 +161,15 @@
         },
         cache: true
         },
-        placeholder:"Faktur Penjualan",
+        placeholder:"Faktur Pembelian",
         });
 
-        $('#faktur_penjualan').change(function(){
-            let url = `{{ route('getDataFakturPenjualan') }}`;
+        $('#faktur_pembelian').change(function(){
+            let url = `{{ route('getDataFakturPembelian') }}`;
             $.ajax({
                 type: "POST",
                 url: url,
-                data:{ faktur_penjualan :  $('#faktur_penjualan').val(),_token: '{{csrf_token()}}', },
+                data:{ faktur_pembelian :  $('#faktur_pembelian').val(),_token: '{{csrf_token()}}', },
                 dataType: "json",
                 success: function (response) {
                    //console.log(response);
@@ -194,19 +194,19 @@
         }
         $('#simpan').click(function(){
 
-            if($('#id_pegawai').val() == ""){
+            if($('#bayar_sekarang').val() == 0){
                 alert('Form masih kosong');
                 return;
             }
-            let url = `{{ route('transaksi.bayarCustomer.store') }}`;
+            let url = `{{ route('transaksi.bayarSuplier.store') }}`;
             $.ajax({
                 type: "POST",
                 url: url,
                 data:{
                     faktur : $('#faktur').val(),
                     tanggal : $('#tanggal').val(),
-                    id_customer : $('#id_customer').val(),
-                    id_penjualan : $('#faktur_penjualan').val(),
+                    id_suplier : $('#id_suplier').val(),
+                    id_pembelian : $('#faktur_pembelian').val(),
                     jumlah_bayar : $('#bayar_sekarang').val(),
                     sisa_hutang : $('#sisa_hutang').val(),
                     _token: '{{csrf_token()}}',
@@ -218,7 +218,7 @@
                         $("#bayar_sekarang").val('');
                         $("#total_hutang").val('');
                         $("#sisa_hutang").val('');
-                        $('#faktur_penjualan').val(null).trigger('change');
+                        $('#faktur_pembelian').val(null).trigger('change');
                         loadTable();
                         Swal.fire("Success","Sukses saving pembayaran","success");
                     }
@@ -230,19 +230,20 @@
 
     })
     function loadTable(){
+        $.fn.dataTable.ext.errMode = 'none';
         $('#example-table').dataTable().fnDestroy();
             $('#example-table')
             .dataTable({
                 ordering: true,
                 processing:true,
                 serverSide:true,
-            ajax:"{{route('getDataBayarCustomer')}}",
+            ajax:"{{route('getDataBayarSuplier')}}",
             columns:[
 
-            {data:'id_bayar_hutang_customer'},
-            {data:'customer'},
+            {data:'id_bayar_hutang_suplier'},
+            {data:'suplier'},
             {data:'tanggal_bayar'},
-            {data:'faktur_penjualan'},
+            {data:'faktur_pembelian'},
             {data:'jumlah_bayar'},
             {data:'sisa_hutang'}
             ]

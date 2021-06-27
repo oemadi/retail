@@ -1,9 +1,7 @@
 @extends('layouts.template')
 @section('page','Pembelian')
 @section('content')
-<div class="row kotak-atas">
-    @include('pages.transaksi.pembelian.kotak_atas')
-</div>
+
 
 
 <div class="row">
@@ -80,6 +78,7 @@
 @push('script')
 <script>
     $(document).ready(function(){
+        $.fn.dataTable.ext.errMode = 'none';
         $('#example-table')
 		.on( 'error.dt', function ( e, settings, techNote, message ) {
         console.log( 'An error has been reported by DataTables: ', message );

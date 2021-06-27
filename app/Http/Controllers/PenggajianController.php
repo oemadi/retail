@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Gaji;
 use App\Pegawai;
 use DB;
+use Kas as KasHelper;
 
 class PenggajianController extends Controller
 {
@@ -118,11 +119,10 @@ class PenggajianController extends Controller
         $penggajian->gaji_bersih = $request->gaji_bersih;
 
         if ($penggajian->save()) {
-            session()->flash('message', 'Data berhasil disimpan!');
-            return redirect()->route('penggajian.index')->with('status', 'success');
+            KasHelper::add($penggajian->faktur, 'pengeluaran', 'penggajian',0,$request->gaji);
+            return json_encode(array("status"=>"berhasil"));
         } else {
-            session()->flash('message', 'Data gagal disimpan!');
-            return redirect()->route('penggajian.index')->with('status', 'danger');
+            return json_encode(array("status"=>"gagal"));
         }
     }
 

@@ -29,9 +29,8 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Nama Suplier</th>
-                                    <th>Email</th>
+                                    <th>Kontak</th>
                                     <th>No Hp</th>
-                                    <th>Kota</th>
                                     <th>Alamat</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -48,13 +47,8 @@
 
 @endsection
 @push('style')
-<link rel="stylesheet"
-    href="{{ asset('adminlte') }}/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
 @endpush
 @push('script')
-<script src="{{ asset('adminlte') }}/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="{{ asset('adminlte') }}/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js">
-</script>
 <!-- SlimScroll -->
 <script type="text/javascript">
     $(function() {
@@ -66,13 +60,12 @@
 		.dataTable({
            processing:true,
 		   serverSide:true,
-		   ajax:"{{route('getDataSuplier')}}",
+		   ajax:"{{route('getDataMasterSuplier')}}",
 		   columns:[
 		   {data:'id'},
 		   {data:'nama'},
-		   {data:'email'},
+           {data:'kontak'},
 		   {data:'no_hp'},
-		   {data:'kota'},
 		   {data:'alamat'},
 		   {data: 'id',
             "render": function (data) {

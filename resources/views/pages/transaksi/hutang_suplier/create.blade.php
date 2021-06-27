@@ -1,5 +1,5 @@
 @extends('layouts.template')
-@section('page','Input Penggajian')
+@section('page','Input Bayar Customer')
 @section('content')
 <div class="row">
     <div class="col-md-12">
@@ -10,14 +10,14 @@
                         <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="Faktur">Faktur</label>
+                                            <label for="Faktur">Faktur Bayar</label>
                                             <input type="text" name="faktur" class="form-control" id="faktur" readonly
                                                 style="cursor:no-drop" value="{{ $faktur }}">
                                         </div>
                                     </div>
                                     <div class="col-md-4 ">
                                         <div class="form-group">
-                                            <label for="tanggal">Tanggal Penggajian</label>
+                                            <label for="tanggal">Tanggal Bayar</label>
                                             <input type="text" name="tanggal" class="form-control" id="tanggal" readonly
                                                 style="cursor:no-drop" value="{{ date('Y-m-d') }}">
                                         </div>
@@ -38,23 +38,24 @@
                         <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="pegawai">Pegawai</label>
-                                                <select name="id_pegawai" id="id_pegawai" class="select2-pegawai" style="width: 100%;height:100%">
+                                            <label for="customer">Customer</label>
+                                                <select name="id_customer" id="id_customer" class="select2-customer" style="width: 100%;height:100%">
                                                 </select>
 
                                     </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="no_telp">No Telp</label>
-                                            <input type="text" name="no_telp" id="no_telp" class="form-control"
-                                                readonly>
-                                        </div>
+                                            <label for="faktur_penjualan">No.Faktur Penjualan</label>
+                                                <select name="faktur_penjualan" id="faktur_penjualan" class="select2-faktur-penjualan" style="width: 100%;height:100%">
+                                                </select>
+
+                                    </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="gaji">Gaji</label>
-                                            <input type="text" name="gaji" id="gaji" class="form-control" >
+                                            <label for="gaji">Total Hutang</label>
+                                            <input type="text" name="total_hutang" id="total_hutang" class="form-control" >
                                         </div>
 
                                     </div>
@@ -64,15 +65,15 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="potongan_gaji">Potongan Gaji</label>
-                                            <input type="text" name="potongan_gaji" id="potongan_gaji"
+                                            <label for="bayar_sekarang">Bayar Sekarang</label>
+                                            <input type="text" name="bayar_sekarang" id="bayar_sekarang"
                                                 class="form-control" value="0">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                                <label for="gaji_bersih">Gaji Bersih</label>
-                                                <input type="text" name="gaji_bersih" id="gaji_bersih"
+                                                <label for="sisa_hutang">Sisa Hutang</label>
+                                                <input type="text" name="sisa_hutang" id="sisa_hutang"
                                                     class="form-control" readonly>
                                         </div>
                                     </div>
@@ -92,19 +93,20 @@
     </div>
 </div>
 
+
+
+
+<!-- /.modal -->
 @endsection
-@push('style')
-<link rel="stylesheet" href="{{  url('public/adminlte') }}/plugins/sweetalert2/dist/sweetalert2.css">
-@endpush
 @push('script')
-<script src="{{ url('public/adminlte') }}/plugins/sweetalert2/dist/sweetalert2.all.min.js"></script>
+
 <script>
     $(document).ready(function(){
         // alert();
       //  $('#example-table').dataTable();
-      $(".select2-pegawai").select2({
+      $(".select2-customer").select2({
         ajax: {
-        url: "{{ route('getDataPegawaiSelect') }}",
+        url: "{{ route('getDataCustomer') }}",
         contentType: 'application/json',
         dataType: 'json',
         delay:50,
@@ -121,69 +123,91 @@
         },
         cache: true
         },
-
-        placeholder:"Nama Pegawai",
+        placeholder:"Nama Customer",
         });
-        $('#id_pegawai').change(function(){
-            let url = `{{ route('getDataPegawaiSelect2') }}`;
+
+        $(".select2-faktur-penjualan").select2({
+       // let id_customer = $("#id_customer").val();
+        ajax: {
+        url: "{{ route('getDataFakturPenjualanSelect') }}",
+        contentType: 'application/json',
+        dataType: 'json',
+        delay:50,
+        type:"get",
+        data: function(params) {
+            return {
+            search: params.term,id_customer: $("#id_customer").val(),_token: '{{csrf_token()}}'
+            };
+        },
+        processResults: function(data) {
+            return {
+            results: data
+            };
+        },
+        cache: true
+        },
+        placeholder:"Faktur Penjualan",
+        });
+
+        $('#faktur_penjualan').change(function(){
+            let url = `{{ route('getDataFakturPenjualan') }}`;
             $.ajax({
                 type: "POST",
                 url: url,
-                data:{ id_pegawai : $('#id_pegawai').val() },_token: '{{csrf_token()}}',
+                data:{ faktur_penjualan :  $('#faktur_penjualan').val(),_token: '{{csrf_token()}}', },
                 dataType: "json",
                 success: function (response) {
-                   // console.log(response);
-                     $("#gaji").val(response[0].gaji);
-                     $("#no_telp").val(response[0].no_telp);
-                     $("#gaji_bersih").val(response[0].gaji);
+                   //console.log(response);
+                   //alert(response);
+                      $("#total_hutang").val(response[0].total);
                     }
                 })
         });
-        $('#gaji').keyup(function(){
-            potongGaji();
+        $('#bayar_sekarang').keyup(function(){
+            potongHutang();
         });
-        $('#potongan_gaji').keyup(function(){
-            potongGaji();
-        });
-        function potongGaji(){
-            const gaji = $('#gaji').val();
-            const potongan = $('#potongan_gaji').val();
-            $('#gaji_bersih').val(gaji - potongan);
+        function potongHutang(){
+            const total = $('#total_hutang').val();
+            const potongan = $('#bayar_sekarang').val();
+            $('#sisa_hutang').val(total - potongan);
         }
         $('#simpan').click(function(){
-
-            if($('#id_pegawai').val()==""){
+            alert();
+            if($('#id_pegawai').val() == ""){
                 alert('Form masih kosong');
                 return;
             }
-            //alert();
-            let url = `{{ route('transaksi.penggajian.store') }}`;
+            let url = `{{ route('transaksi.bayarCustomer.store') }}`;
             $.ajax({
                 type: "POST",
                 url: url,
                 data:{
                     faktur : $('#faktur').val(),
                     tanggal : $('#tanggal').val(),
-                    id_pegawai : $('#id_pegawai').val(),
-                    gaji : $('#gaji').val(),
-                    potongan : $('#potongan_gaji').val(),
-                    gaji_bersih : $('#gaji').val(),
-                    _token: '{{csrf_token()}}'
+                    id_customer : $('#id_customer').val(),
+                    id_penjualan : $('#faktur_penjualan').val(),
+                    jumlah_bayar : $('#bayar_sekarang').val(),
+                    sisa_hutang : $('#sisa_hutang').val(),
+                    _token: '{{csrf_token()}}',
+                },
+                beforeSend:function(){
                 },
                 dataType: "json",
                 success: function (response) {
-
-                    if(response.status == "berhasil"){
-                        $('#gaji').val(0);
-                        $('#potongan_gaji').val(0);
-                        $('#gaji').val(0);
-                        $('#gaji_bersih').val(0);
-                        $('#no_telp').val(0);
-                        $('#id_pegawai').val(null).trigger('change');
-                        Swal.fire("Success","Sukses menggaji pegawai","success");
-                      //alert('Saving success');
-                        }
+                    Swal.close();
+                    if(response[0]=="success"){
+                        Swal.fire("Success","Sukses menggaji pegawai","success").then(()=>{
+                            let url = `{{ route('transaksi.penggajian.slip',':id') }}`;
+                            url  = url.replace(':id',response[1].faktur);
+                            window.open(url,'_blank');
+                            location.href = `{{ route('transaksi.penggajian.index') }}`;
+                        });
+                    }else{
+                        Swal.fire("Error",response[1],"error").then(()=>{
+                            location.href = `{{ route('transaksi.penggajian.index') }}`;
+                        });
                     }
+                }
             });
         });
     })

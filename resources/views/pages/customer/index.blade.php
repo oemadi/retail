@@ -22,7 +22,7 @@
                         @endif
                     </div>
                 </div>
-                <a href=" {{ route('anggota.create') }}" class="btn btn-primary mb-2"><i class="fa fa-plus"></i>
+                <a href=" {{ route('customer.create') }}" class="btn btn-primary mb-2"><i class="fa fa-plus"></i>
                     Tambah
                     Data</a>
 
@@ -38,7 +38,6 @@
                                         <th>Nama</th>
                                         <th>Alamat</th>
                                         <th>No Hp</th>
-                                        <th>Email</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -73,17 +72,16 @@
 		.dataTable({
            processing:true,
 		   serverSide:true,
-		   ajax:"{{route('getDataAnggota')}}",
+		   ajax:"{{route('getDataCustomer')}}",
 		   columns:[
 		   {data:'id'},
 		   {data:'nama'},
 		   {data:'alamat'},
 		   {data:'no_hp'},
-		   {data:'email'},
 		   {data: 'id',
             "render": function (data) {
-            data1 = '<a href="/anggota/' + data + '/edit" class="btn btn-sm btn-warning">Edit</a>';
-			 data2 = '<a href="/anggota/' + data + '/delete" class="btn btn-sm btn-danger" onclick="javascript:return confirm(\'Anda yakin?\');">Delete</a>';
+            data1 = '<a href="/customer/' + data + '/edit" class="btn btn-sm btn-warning">Edit</a>';
+			 data2 = '<a href="/customer/' + data + '/delete" class="btn btn-sm btn-danger" onclick="javascript:return confirm(\'Anda yakin?\');">Delete</a>';
 			return data1+' '+data2;
             }
 		   }

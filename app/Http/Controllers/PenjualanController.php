@@ -67,7 +67,7 @@ class PenjualanController extends Controller
             $data =  penjualan::kodeFaktur();
             return json_encode($data);
         }
-        public function getDataCustomer()
+        public function getDataCustomerSelect()
         {
             //$id_ship = Session::get('id_ship');
             $id = request()->get('search');
@@ -84,8 +84,8 @@ class PenjualanController extends Controller
         {
             //$id_ship = Session::get('id_ship');
             $id = request()->get('search');
+            //dd($id);
             $res = DB::select("SELECT a.* from suplier a
-            where a.nama like '%".$id."%'
              order by a.nama limit 10
             ");
            foreach($res as $row){
@@ -98,7 +98,7 @@ class PenjualanController extends Controller
             //$id_ship = Session::get('id_ship');
             $id = request()->get('search');
             $res = DB::select("SELECT a.* from barang a
-            where a.nama like '%".$id."%'
+
              order by a.nama limit 10
             ");
            foreach($res as $row){
@@ -126,6 +126,7 @@ class PenjualanController extends Controller
            // dd($res);
             return $res;
         }
+
         public function getDataFakturPenjualanSelect()
         {
             //$id_ship = Session::get('id_ship');
@@ -210,8 +211,9 @@ class PenjualanController extends Controller
                 $hutang->total_pembayaran_hutang = 0;
                 $hutang->sisa_hutang = $total;
                 $hutang->save();
+
                 }
-                KasHelper::add($kodefaktur, 'pengeluaran', 'penjualan', $penjualan->total,0);
+
             } else {
                 KasHelper::add($penjualan->faktur, 'pendapatan', 'penjualan', $penjualan->total,0);
             }

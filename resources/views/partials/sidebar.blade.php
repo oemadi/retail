@@ -51,7 +51,7 @@
 
             @if (Auth::user()->level == "Admin")
             <li
-                class="treeview {{ set_active(['jabatan.index','jabatan.create','jabatan.edit','suplier.index','suplier.create','suplier.edit','anggota.create','anggota.index','anggota.edit','pegawai.create','pegawai.index','pegawai.edit']) }}">
+                class="treeview {{ set_active(['suplier.index','suplier.create','suplier.edit','customer.create','customer.index','customer.edit','pegawai.create','pegawai.index','pegawai.edit']) }}">
                 <a href="#">
                     <i class="fa fa-folder"></i>
                     <span>Master Data</span>
@@ -65,8 +65,8 @@
                             <i class="fa fa-truck"></i> <span>Suplier</span>
                         </a>
                     </li>
-                    <li class="{{ set_active(['anggota.create','anggota.index','anggota.edit']) }}">
-                        <a href="{{ route('anggota.index') }}">
+                    <li class="{{ set_active(['customer.create','customer.index','customer.edit']) }}">
+                        <a href="{{ route('customer.index') }}">
                             <i class="fa fa-user"></i> <span>Customer</span>
                         </a>
                     </li>
@@ -115,9 +115,11 @@
                             Penggajian</a>
                     </li>
 
-                    {{-- <li class="{{ set_active(['bayar.index']) }}">
-                        <a href="{{ route('bayar.index') }}"><i class="fa fa-calendar"></i>Pembayaran Piutang</a>
-                    </li> --}}
+                    <li class="{{ set_active(['transaksi.hutangSuplier.index']) }}">
+                        <a href="{{ route('transaksi.hutangSuplier.index') }}"><i class="fa fa-calendar-o"></i>
+                            Hutang Suplier</a>
+                    </li>
+
                     <li class="{{ set_active(['transaksi.hutangCustomer.index']) }}">
                         <a href="{{ route('transaksi.hutangCustomer.index') }}"><i class="fa fa-calendar-o"></i>
                             Hutang Customer</a>

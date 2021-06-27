@@ -1,5 +1,5 @@
 @extends('layouts.template')
-@section('page','Kategori Barang')
+@section('page','Hutang Suplier')
 @section('content')
 <div class="row">
     <div class="col-md-12">
@@ -17,33 +17,23 @@
                         @endif
                     </div>
                 </div>
-                <a href="{{ route('kategori.create') }}" class="btn btn-primary mb-2"><i class="fa fa-plus"></i> Tambah
-                    Data</a>
+
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-md-12">
                         <table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0"
                             width="100%">
                             <thead>
                                 <tr>
+                                    {{-- No.bayar_hutang	Suplier	ID Pembelian	Tanggal	Jumlah Bayar	Sisa Hutang	Aks? --}}
                                     <th>#</th>
-                                    <th>Nama</th>
+                                    <th>Suplier</th>
+                                    <th>Total Hutang</th>
+                                    <th>Total Pembayaran</th>
+                                    <th>Sisa Hutang</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($errors as $row)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $row->nama }}</td>
-                                    <td>
-                                        <a href="{{ route("kategori.edit",$row->id) }}"
-                                            class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> Edit</a>
-                                        <a href="{{ route("kategori.destroy",$row->id) }}"
-                                            class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</a>
-
-                                    </td>
-                                </tr>
-                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -55,7 +45,6 @@
 @endsection
 @push('script')
 
-<!-- SlimScroll -->
 <script type="text/javascript">
     $(function() {
 		$.fn.dataTable.ext.errMode = 'none';
@@ -66,19 +55,26 @@
 		.dataTable({
            processing:true,
 		   serverSide:true,
-		   ajax:"{{route('getDataKategori')}}",
+		   ajax:"{{route('getHutangSuplier')}}",
 		   columns:[
-		   {data:'id'},
-		   {data:'nama'},
-		   {data: 'id',
+           {"data": "id",
+                 render: function (data, type, row, meta) {
+                 return meta.row + meta.settings._iDisplayStart + 1;
+                 }
+           },
+           {data:'suplier'},
+           {data:'total_hutang'},
+           {data:'total_pembayaran_hutang'},
+           {data:'sisa_hutang'},
+           {data: 'suplier_id',
             "render": function (data) {
-            data1 = '<a href="/kategori/' + data + '/edit" class="btn btn-sm btn-warning">Edit</a>';
-			 data2 = '<a href="/kategori/' + data + '/delete" class="btn btn-sm btn-danger" onclick="javascript:return confirm(\'Anda yakin?\');">Delete</a>';
-			return data1+' '+data2;
+            data1 = '<a href="/transaksi/bayarSuplier/' + data + '/show" class="btn btn-sm btn-warning">View</a>';
+			return data1;
             }
-		   }
+           }
 		   ]
         });
     });
 </script>
 @endpush
+  {{-- No.bayar_hutang	Suplier	ID Pembelian	Tanggal	Jumlah Bayar	Sisa Hutang	Aks? --}}

@@ -22,14 +22,14 @@
         <!-- small box -->
         <div class="small-box bg-yellow">
             <div class="inner">
-                <h3>{{ $totalAnggota }}</h3>
+                <h3>{{ $totalCustomer }}</h3>
 
                 <p>Customer</p>
             </div>
             <div class="icon">
                 <i class="fa fa-users"></i>
             </div>
-            <a href="{{ route('anggota.index') }}" class="small-box-footer">More info <i
+            <a href="{{ route('customer.index') }}" class="small-box-footer">More info <i
                     class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
