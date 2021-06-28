@@ -230,6 +230,11 @@
                     <i class="fa fa-users"></i> <span>Pengguna</span>
                 </a>
             </li>
+            <li class="{{ set_active(['user.create','user.index','user.edit']) }}">
+                <a href="{{ route('user.index') }}">
+                    <i class="fa fa-users"></i> <span>Cabang</span>
+                </a>
+            </li>
             <li class="{{ set_active(['setting.index']) }}">
                 <a href="{{ route('setting.index') }}">
                     <i class="fa fa-gear"></i> <span>Pengaturan Toko</span>
