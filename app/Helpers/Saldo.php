@@ -82,14 +82,14 @@ class Saldo
         $value_keuntungan = 0;
         foreach ($data as $row) {
             if ($row->status == "hutang") {
-                foreach ($row->detail_transaksi as $detail_transaksi) {
+                foreach ($row->detail_penjualan as $detail_transaksi) {
                     $ppn_pph = 11.5;
                     $keuntungan_persentase = $detail_transaksi->barang->persentase_pph_ppn_keuntungan - $ppn_pph;
                     $value_keuntungan += (($detail_transaksi->harga / 100) * $keuntungan_persentase) * $detail_transaksi->jumlah_jual;
                 }
                 $value_keuntungan -= $row->piutang->sisa_hutang;
             } else {
-                foreach ($row->detail_transaksi as $detail_transaksi) {
+                foreach ($row->detail_penjualan as $detail_transaksi) {
                     $ppn_pph = 11.5;
                     $keuntungan_persentase = $detail_transaksi->barang->persentase_pph_ppn_keuntungan - $ppn_pph;
                     $value_keuntungan += (($detail_transaksi->harga / 100) * $keuntungan_persentase) * $detail_transaksi->jumlah_jual;
