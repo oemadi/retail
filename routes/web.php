@@ -21,7 +21,7 @@ Route::any('/getDataBarang', 'BarangController@getBarang')->name('getDataBarang'
 Route::any('/getDataSatuan', 'SatuanController@getSatuan')->name('getDataSatuan');
 Route::any('/getDataKategori', 'KategoriController@getKategori')->name('getDataKategori');
 Route::any('/getDataJabatan', 'JabatanController@getJabatan')->name('getDataJabatan');
-Route::any('/getDataKas', 'KasController@getKas')->name('getDataKas');
+Route::any('/getDataKas', 'KasController@getDataKas')->name('getDataKas');
 
 Route::any('/getDataPenggajian', 'PenggajianController@getDataPenggajian')->name('getDataPenggajian');
 Route::any('/getDataPegawaiSelect', 'PenggajianController@getDataPegawaiSelect')->name('getDataPegawaiSelect');

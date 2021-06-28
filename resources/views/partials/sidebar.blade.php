@@ -106,7 +106,7 @@
                         <a href="{{ route('transaksi.pembelian.index') }}"><i class="fa fa-shopping-basket"></i>
                             Pembelian</a>
                     </li>
-                    <li class="{{ set_active(['transaksi.penjualan.all']) }}">
+                    <li class="{{ set_active(['transaksi.penjualan.all','transaksi.penjualan.all']) }}">
                         <a href="{{ route('transaksi.penjualan.index') }}"><i class="fa fa-credit-card"></i>
                             Penjualan</a>
                     </li>

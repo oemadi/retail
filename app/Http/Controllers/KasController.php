@@ -15,7 +15,7 @@ class KasController extends Controller
         $pengeluaran = DB::table('kas')->sum('pengeluaran');
         return view("pages.laporan.kas.index", compact('kas', 'pendapatan', 'pengeluaran'));
     }
-	public function getKas(Request $request){
+	public function getDataKas(Request $request){
 			$draw = $request->get('draw');
 			$start = $request->get('start');
 			$rowperpage = $request->get('length');
@@ -49,7 +49,7 @@ class KasController extends Controller
 			->skip($start)
 			->take($rowperpage)
 			->get();
-
+//dd($records);
 			$data_arr = array();
 			foreach($records as $record){
 

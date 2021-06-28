@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Kas extends Model
 {
+    protected $table = 'kas';
     public static function kodeFaktur()
     {
         $cek = Kas::where('faktur', 'LIKE', 'KAS%')->get();

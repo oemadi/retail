@@ -80,19 +80,8 @@
 </div>
 
 @endsection
-@push('style')
-<link rel="stylesheet"
-    href="{{ asset('adminlte') }}/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
-<link rel="stylesheet"
-    href="{{ asset('adminlte') }}/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
-@endpush
+
 @push('script')
-<script src="{{ asset('adminlte') }}/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js">
-</script>
-<script src="{{ asset('adminlte') }}/bower_components/datatables.net/js/jquery.dataTables.min.js">
-</script>
-<script src="{{ asset('adminlte') }}/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js">
-</script>
 <script>
     $(document).ready(function(){
         $('#example-table').dataTable();
@@ -116,22 +105,22 @@
             loadTable("custom");
         });
         $('.print').click(function(){
-           
+
             tanggal_awal = $('#startdate').val();
             tanggal_akhir = $('#enddate').val();
-            
-            
+
+
             let url = `{{ url('report/kas/print?tanggal_awal=${tanggal_awal}&tanggal_akhir=${tanggal_akhir}') }}`;
             const parseResult = new DOMParser().parseFromString(url, "text/html");
             const parsedUrl = parseResult.documentElement.textContent;
             window.open(parsedUrl,'_blank');
         });
         $('.excel').click(function(){
-            
+
             tanggal_awal = $('#startdate').val();
             tanggal_akhir = $('#enddate').val();
-            
-            
+
+
             let url = `{{ url('report/kas/excel?tanggal_awal=${tanggal_awal}&tanggal_akhir=${tanggal_akhir}') }}`;
             const parseResult = new DOMParser().parseFromString(url, "text/html");
             const parsedUrl = parseResult.documentElement.textContent;
@@ -140,7 +129,7 @@
         function loadTable(filter){
             tanggal_awal = $('#startdate').val();
             tanggal_akhir = $('#enddate').val();
-            
+
             if(filter=="all"){
                 filter = filter;
             }else{
