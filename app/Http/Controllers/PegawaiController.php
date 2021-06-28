@@ -64,16 +64,15 @@ class PegawaiController extends Controller
 	}
     public function create()
     {
-        $jabatan = Jabatan::all();
-        return view("pages.pegawai.create", compact('jabatan'));
+        return view("pages.pegawai.create");
     }
     public function store(Request $request)
     {
         $request->validate([
             'nama' => 'required',
-            'no_telp' => 'required|min:9',
+            'no_telp' => 'required',
             'gaji' => 'required',
-            'alamat' => 'required|min:10'
+            'alamat' => 'required'
         ]);
         $pegawai = new Pegawai();
         $pegawai->nama = $request->nama;
@@ -100,9 +99,9 @@ class PegawaiController extends Controller
     {
         $request->validate([
             'nama' => 'required',
-            'no_telp' => 'required|min:9',
+            'no_telp' => 'required',
             'gaji' => 'required',
-            'alamat' => 'required|min:10'
+            'alamat' => 'required'
         ]);
         $pegawai->nama = $request->nama;
         $pegawai->no_telp = $request->no_telp;
