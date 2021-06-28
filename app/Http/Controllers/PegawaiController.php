@@ -12,7 +12,7 @@ class PegawaiController extends Controller
     {
         return view("pages.pegawai.index");
     }
-	public function getPegawai(Request $request){
+	public function getDataMasterPegawai(Request $request){
 		$draw = $request->get('draw');
 		$start = $request->get('start');
 		$rowperpage = $request->get('length');
@@ -38,7 +38,7 @@ class PegawaiController extends Controller
 		->skip($start)
 		->take($rowperpage)
 		->get();
-
+//dd($records);
 		$data_arr = array();
 		foreach($records as $record){
 
