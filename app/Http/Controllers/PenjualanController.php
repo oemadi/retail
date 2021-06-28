@@ -15,9 +15,25 @@ use Saldo;
 
 class PenjualanController extends Controller
 {
+    protected $page = "pages.transaksi.penjualan.";
     public function index()
     {
         return view("pages.transaksi.penjualan.index");
+    }
+    public function faktur($kode)
+    {
+            $atas = Penjualan::where('penjualan.id',$kode)
+            ->join('customer','customer.id','penjualan.customer_id')
+            ->select('penjualan.*','customer.nama as namacustomer','customer.alamat')
+			->first();
+// dd($atas->faktur);
+			$detail = Penjualan::where('penjualan.id',$kode)
+            ->join('detail_penjualan','penjualan.id','detail_penjualan.penjualan_id')
+            ->join('barang','barang.id','detail_penjualan.barang_id')
+            ->select('barang.*','detail_penjualan.jumlah_jual','detail_penjualan.harga',
+            'detail_penjualan.subtotal')
+			->get();
+        return view($this->page . "faktur", compact('atas','detail'));
     }
 	public function getDataPenjualan(Request $request){
 			$draw = $request->get('draw');
@@ -142,26 +158,8 @@ class PenjualanController extends Controller
            }
             return json_encode($data);
         }
-    public function loadTable()
-    {
-        $penjualan = penjualan::with('Customer');
-        if (request()->get('tanggal_awal') != "all") {
-            $penjualan = $penjualan->whereDate('tanggal_penjualan', ">=", request()->get('tanggal_awal'));
-        }
-        if (request()->get('tanggal_akhir') != "all") {
-            $penjualan = $penjualan->whereDate('tanggal_penjualan', "<=", request()->get('tanggal_akhir'));
-        }
-        if (request()->get('penjualan') != "all") {
-            $penjualan = $penjualan->where('status', request()->get('penjualan'));
-        }
-        $penjualan = $penjualan->get();
-        return view("pages.transaksi.penjualan.table", compact('Customer', 'penjualan'));
-    }
-    public function loadKotakAtas()
-    {
-        $total = Saldo::getTotalpenjualan();
-        return view("pages.transaksi.penjualan.kotak_atas", compact('total'));
-    }
+
+
     public function create()
     {
         return view("pages.transaksi.penjualan.create");

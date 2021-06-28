@@ -25,8 +25,12 @@ class Return_penjualan extends Model
     {
         return $this->hasMany(Detail_return_jual::class, 'return_jual_id', 'id');
     }
-    public function transaksi()
+    public function penjualan()
     {
-        return $this->belongsTo(Transaksi::class, 'transaksi_id', 'id');
+        return $this->belongsTo(Penjualan::class, 'penjualan_id', 'id');
+    }
+    public function detail_penjualan()
+    {
+        return $this->hasMany(Detail_penjualan::class, 'penjualan_id', 'id');
     }
 }

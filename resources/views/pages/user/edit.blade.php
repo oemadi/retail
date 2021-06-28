@@ -72,7 +72,22 @@
                                     <option value="Manager" {{ ($user->level == "Manager") ? "selected":"" }}>Manager
                                     </option>
                                 </select>
-                                @error('password')
+                                @error('level')
+                                <span class="help-block">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group @error('branch') has-error @enderror">
+                                <label for="branch">Cabang</label>
+                                <select name="branch" id="branch" class="form-control">
+                                    @foreach ($cabang as $item)
+                                    <option <?php if($item->id==$user->branch){ echo "selected='selected'"; } ?> value="{{$item->id}}">{{$item->nama}}</option>
+                                    @endforeach
+                                </select>
+                                @error('branch')
                                 <span class="help-block">{{ $message }}</span>
                                 @enderror
                             </div>

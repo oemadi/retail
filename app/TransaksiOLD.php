@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaksi extends Model
 {
-    protected $table = 'transaksi';
+    protected $table = 'penjualan';
     public static function kode()
     {
         $cek = Transaksi::all();
@@ -23,7 +23,7 @@ class Transaksi extends Model
     }
     public function pelanggan()
     {
-        return $this->belongsTo(Anggota::class, 'anggota_id', 'id');
+        return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
     public function user()
     {
@@ -31,18 +31,18 @@ class Transaksi extends Model
     }
     public function return_jual()
     {
-        return $this->hasOne(Return_penjualan::class, 'transaksi_id', 'id');
+        return $this->hasOne(Return_penjualan::class, 'penjualan_id', 'id');
     }
     public function detail_transaksi()
     {
-        return $this->hasMany(Detail_transaksi::class, 'transaksi_id', 'id');
+        return $this->hasMany(Detail_transaksi::class, 'penjualan_id', 'id');
     }
-    public function piutang()
-    {
-        return $this->hasOne(Piutang::class, 'transaksi_id', 'id');
-    }
-    public function cashback()
-    {
-        return $this->hasOne(Cashback::class, 'transaksi_id', 'id');
-    }
+    // public function piutang()
+    // {
+    //     return $this->hasOne(Piutang::class, 'penjualan_id', 'id');
+    // }
+    // public function cashback()
+    // {
+    //     return $this->hasOne(Cashback::class, 'penjualan_id', 'id');
+    // }
 }

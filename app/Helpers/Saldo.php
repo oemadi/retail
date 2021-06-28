@@ -4,7 +4,7 @@ use App\Cashback;
 use App\Helpers\Rekap;
 use App\Piutang;
 use App\Return_penjualan;
-use App\Transaksi;
+use App\Penjualan;
 use Illuminate\Support\Facades\DB;
 
 class Saldo
@@ -28,7 +28,7 @@ class Saldo
 
     public static function getSaldoTransaksiTunai()
     {
-        $total = DB::table('transaksi')->sum('transaksi')->where('status', 'tunai');
+        $total = DB::table('penjualan')->sum('total')->where('status', 'tunai');
         return $total;
     }
 
@@ -64,7 +64,7 @@ class Saldo
     }
     public static function getOmsetBulanIni()
     {
-        $transaksi = Transaksi::whereMonth('tanggal_transaksi', date('m'))->whereYear('tanggal_transaksi', date('Y'))->get();
+        $transaksi = Penjualan::whereMonth('tanggal_penjualan', date('m'))->whereYear('tanggal_penjualan', date('Y'))->get();
         $ret = 0;
         foreach ($transaksi as $row) {
             $ret += $row->total - ($row->ppn + $row->pph);
@@ -78,21 +78,21 @@ class Saldo
     }
     public static function getLabaBulanIni()
     {
-        $data = Transaksi::whereMonth('tanggal_transaksi', date('m'))->whereYear('tanggal_transaksi', date('Y'))->get();
+        $data = Penjualan::whereMonth('tanggal_penjualan', date('m'))->whereYear('tanggal_penjualan', date('Y'))->get();
         $value_keuntungan = 0;
         foreach ($data as $row) {
             if ($row->status == "hutang") {
                 foreach ($row->detail_transaksi as $detail_transaksi) {
                     $ppn_pph = 11.5;
                     $keuntungan_persentase = $detail_transaksi->barang->persentase_pph_ppn_keuntungan - $ppn_pph;
-                    $value_keuntungan += (($detail_transaksi->harga / 100) * $keuntungan_persentase) * $detail_transaksi->jumlah_beli;
+                    $value_keuntungan += (($detail_transaksi->harga / 100) * $keuntungan_persentase) * $detail_transaksi->jumlah_jual;
                 }
                 $value_keuntungan -= $row->piutang->sisa_hutang;
             } else {
                 foreach ($row->detail_transaksi as $detail_transaksi) {
                     $ppn_pph = 11.5;
                     $keuntungan_persentase = $detail_transaksi->barang->persentase_pph_ppn_keuntungan - $ppn_pph;
-                    $value_keuntungan += (($detail_transaksi->harga / 100) * $keuntungan_persentase) * $detail_transaksi->jumlah_beli;
+                    $value_keuntungan += (($detail_transaksi->harga / 100) * $keuntungan_persentase) * $detail_transaksi->jumlah_jual;
                 }
             }
         }

@@ -69,14 +69,27 @@
                                     <option value="Petugas">Petugas</option>
                                     <option value="Manager">Manager</option>
                                 </select>
-                                @error('password')
+                                @error('level')
                                 <span class="help-block">{{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
                     </div>
-
-
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group @error('branch') has-error @enderror">
+                                <label for="branch">Cabang</label>
+                                <select name="branch" id="branch" class="form-control">
+                                    @foreach ($cabang as $item)
+                                    <option  value="{{$item->id}}">{{$item->nama}}</option>
+                                    @endforeach
+                                </select>
+                                @error('branch')
+                                <span class="help-block">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
                     <button class="btn btn-primary" style="cursor:pointer"><i class="fa fa-save"></i> Simpan</button>
                 </form>
             </div>

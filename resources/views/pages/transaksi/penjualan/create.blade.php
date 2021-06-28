@@ -198,11 +198,7 @@
 <script type="text/javascript">
     $(function() {
         var cart = [];
-            if(localStorage.cart){
-                cart = JSON.parse(localStorage.cart);
-            }
-
-       getNewFaktur();
+        newTransaction();
 
         $(".select2-customer").select2({
         ajax: {

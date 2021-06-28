@@ -8,7 +8,7 @@
             <th>Tanggal</th>
             <th>Invoice Return</th>
             <th>Invoice Penjualan</th>
-            <th>Pelanggan</th>
+            <th>Customer</th>
             <th>Return Dibayar</th>
             <th>Aksi</th>
         </tr>
@@ -17,13 +17,13 @@
         @php
         $total=0
         @endphp
-        @foreach ($return as $key => $row)
+        {{-- @foreach ($return ?? '' as $key => $row)
         <tr>
             <td>{{ $loop->iteration }}</td>
             <td>{{ $row->tanggal_return_jual }}</td>
             <td>{{ $row->faktur }}</td>
-            <td>{{ $row->transaksi->kode }}</td>
-            <td>{{ $row->transaksi->pelanggan->nama }}</td>
+            <td>{{ $row->transaksi->faktur }}</td>
+            <td>{{ $row->transaksi->customer->nama }}</td>
             <td>@rupiah($row->total_bayar)</td>
             <td><button class="btn btn-success btn-xs info" data-id="{{ $row->id }}"><i class="fa fa-gear"></i></button>
             </td>
@@ -31,7 +31,7 @@
         @php
         $total+=$row->total_bayar
         @endphp
-        @endforeach
+        @endforeach --}}
 
     </tbody>
     <tfoot>

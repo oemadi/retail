@@ -194,11 +194,11 @@
                                     @foreach ($transaksi as $key=>$item)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->tanggal_transaksi }}</td>
-                                        <td>{{ $item->kode }}</td>
+                                        <td>{{ $item->tanggal_penjualan }}</td>
+                                        <td>{{ $item->faktur }}</td>
                                         <td>{{ $item->total }}</td>
                                         <td>{{ $item->status }}</td>
-                                        <td>{{ $item->pelanggan->nama }}</td>
+                                        <td>{{ $item->customer->nama }}</td>
                                         <td>
                                             <button class="btn btn-warning btn-sm btn-pilih"
                                                 data-id="{{ $item->id }}"><i class="fa fa-check-square-o"></i>
@@ -218,15 +218,10 @@
 </div>
 @endsection
 @push('style')
-<link rel="stylesheet"
-    href="{{ asset('adminlte') }}/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
-<link rel="stylesheet" href="{{ asset('adminlte') }}/plugins/sweetalert2/dist/sweetalert2.css">
+<link rel="stylesheet" href="{{ url('public/adminlte') }}/plugins/sweetalert2/dist/sweetalert2.css">
 @endpush
 @push('script')
-<script src="{{ asset('adminlte') }}/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="{{ asset('adminlte') }}/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js">
-</script>
-<script src="{{ asset('adminlte') }}/plugins/sweetalert2/dist/sweetalert2.all.min.js"></script>
+<script src="{{ url('public/adminlte') }}/plugins/sweetalert2/dist/sweetalert2.all.min.js"></script>
 <script>
     $(document).ready(function(){
         $('#table_transaksi').dataTable();
@@ -241,9 +236,9 @@
                 url: url,
                 dataType: "json",
                 success: function (response) {
-                    $('#kode_transaksi').val(response[0].kode);
-                    $('#tanggal_transaksi').val(response[0].tanggal_transaksi);
-                    $('#pelanggan').val(response[0].pelanggan.nama);
+                    $('#kode_transaksi').val(response[0].faktur);
+                    $('#tanggal_transaksi').val(response[0].tanggal_penjualan);
+                    $('#pelanggan').val(response[0].customer.nama);
                     $('#loadDataTransaksi').html(response[1]);
                     if(response[2] != []){
                         $('#loadDataReturn').html(response[2]);
@@ -254,9 +249,11 @@
             });
         });
         $(document).on('click','.btn-pilih-barang',function(){
+
             const kode_barang = $(this).data('kbarang');
             const nama_barang = $(this).data('nbarang');
             const qty_detail = $(this).data('qty');
+
             $('#qty_detail').val(qty_detail);
             $('#kodeBarang').val(kode_barang);
             $('#namaBarang').val(nama_barang);
@@ -279,17 +276,18 @@
                         faktur:$('#faktur').val(),
                         kode_transaksi:kode_transaksi,
                         kode_barang:kode_barang,
-                        qty:qty 
+                        qty:qty
                     },
                     dataType: "json",
                     success: function (response) {
                        Swal.fire(response[0],response[1],response[0]);
                        if(response[0]=="success"){
+                        //   alert('ok');
                            loadDataReturn(response[2]);
                        }
                     }
                 });
-            
+
         });
         function loadDataReturn(param){
             let url = "{{ route('transaksi.return.penjualan.load_data_return',':id') }}";
@@ -314,6 +312,7 @@
         }
         $(document).on('click','.btn-delete-return',function(){
             const id = $(this).data('id');
+            //alert(id);
             let url = "{{ route('transaksi.return.penjualan.delete_return') }}";
             $.ajax({
                 type: "POST",
@@ -334,7 +333,7 @@
             tanggal = $('#tanggal').val();
             $.ajax({
                 type: "POST",
-                url: "{{ route('transaksi.return.penjualan.submit') }}",
+                url: "{{ route('transaksi.return.penjualan.store') }}",
                 data: {tanggal:tanggal,kode_transaksi:$('#kode_transaksi').val()},
                 dataType: "json",
                 beforeSend:function(){

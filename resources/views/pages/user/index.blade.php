@@ -38,6 +38,7 @@
                                         <th>Email</th>
                                         <th>Username</th>
                                         <th>Level</th>
+                                        <th>Cabang</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -49,6 +50,7 @@
                                         <td>{{ $row->email }}</td>
                                         <td>{{ $row->username }}</td>
                                         <td>{{ $row->level }}</td>
+                                        <td>{{ $row->namacabang }}</td>
                                         <td>
                                             @if ($row->id != Auth::user()->id)
                                             <a href="{{ route('user.destroy',$row->id) }}" class="btn btn-sm btn-danger"

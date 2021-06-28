@@ -45,18 +45,18 @@
                     @foreach ($return->detail_return_jual as $item)
                     @php
                     $detail_tr =
-                    \App\Detail_transaksi::where("barang_id",$item->barang_id)->where('transaksi_id',$return->transaksi_id)->first();
+                    \App\Detail_penjualan::where("barang_id",$item->barang_id)->where('penjualan_id',$return->penjualan_id)->first();
                     @endphp
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->barang->id }}</td>
                         <td>{{ $item->barang->nama }}</td>
                         <td>{{ $detail_tr->harga }}</td>
-                        <td>{{ $item->jumlah_beli }}</td>
-                        <td>{{ $item->jumlah_beli *$detail_tr->harga}}</td>
+                        <td>{{ $item->jumlah_jual }}</td>
+                        <td>{{ $item->jumlah_jual *$detail_tr->harga}}</td>
                     </tr>
                     @php
-                    $total+=$item->jumlah_beli*$detail_tr->harga;
+                    $total+=$item->jumlah_jual*$detail_tr->harga;
                     @endphp
                     @endforeach
                     <tr>

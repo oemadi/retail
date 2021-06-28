@@ -45,7 +45,7 @@
                                             <h3>Total Return Penjualan</h3>
                                         </td>
                                         <td>
-                                            <h3>@rupiah($total)</h3>
+                                            <h3></h3>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -100,19 +100,13 @@
 @endsection
 @push('style')
 <link rel="stylesheet"
-    href="{{ asset('adminlte') }}/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
-<link rel="stylesheet"
     href="{{ asset('adminlte') }}/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
-<link rel="stylesheet" href="{{ asset('adminlte') }}/plugins/print/print.css">
+
 <link rel="stylesheet" href="{{ asset('adminlte') }}/plugins/sweetalert2/dist/sweetalert2.css">
 @endpush
 @push('script')
 <script src="{{ asset('adminlte') }}/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js">
 </script>
-<script src="{{ asset('adminlte') }}/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="{{ asset('adminlte') }}/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js">
-</script>
-<script src="{{ asset('adminlte') }}/plugins/print/print.js"></script>
 <script src="{{ asset('adminlte') }}/plugins/sweetalert2/dist/sweetalert2.all.min.js"></script>
 <script>
     $(document).ready(function(){
@@ -125,7 +119,7 @@
             var minDate = new Date(selected.date.valueOf());
             $('#enddate').datepicker('setStartDate', minDate);
         });
-        
+
         $("#enddate").datepicker({format : 'yyyy-mm-dd'}).on('changeDate', function (selected) {
             var maxDate = new Date(selected.date.valueOf());
             $('#startdate').datepicker('setEndDate', maxDate);

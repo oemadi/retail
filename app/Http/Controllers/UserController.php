@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Cabang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -16,7 +17,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::paginate(10);
+        $users = User::join('cabang','cabang.id','users.branch')
+        ->select('users.*','cabang.nama as namacabang')->paginate(10);
+
         return view("pages.user.index", compact('users'));
     }
 
@@ -27,7 +30,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view("pages.user.create");
+        $cabang = Cabang::get();
+        //dd($cabang[0]->nama);
+        return view("pages.user.create",compact('cabang'));
     }
 
     /**
@@ -43,6 +48,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'username' => 'required|min:3|unique:users,username',
             'password' => 'required|min:6',
+            'branch' => 'required',
             'level' => [
                 'required', Rule::in(['Admin', 'Manager', 'Petugas'])
             ]
@@ -51,6 +57,7 @@ class UserController extends Controller
         $user->nama = $request->nama;
         $user->email = $request->email;
         $user->username = $request->username;
+        $user->branch = $request->branch;
         $user->password = Hash::make($request->password);
         $user->level = $request->level;
         if ($user->save()) {
@@ -82,7 +89,8 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        return view("pages.user.edit", compact('user'));
+        $cabang = Cabang::get();
+        return view("pages.user.edit", compact('user','cabang'));
     }
 
     /**
@@ -96,6 +104,7 @@ class UserController extends Controller
     {
         $request->validate([
             'nama' => 'required|min:3',
+            'branch' => 'required',
             'email' => [
                 'required', 'email', Rule::unique('users')->ignore($id)
             ],
@@ -110,6 +119,7 @@ class UserController extends Controller
         $user->nama = $request->nama;
         $user->email = $request->email;
         $user->username = $request->username;
+        $user->branch = $request->branch;
         if ($request->password) {
             $user->password = Hash::make($request->password);
         }

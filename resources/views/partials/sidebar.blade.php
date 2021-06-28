@@ -106,7 +106,7 @@
                         <a href="{{ route('transaksi.pembelian.index') }}"><i class="fa fa-shopping-basket"></i>
                             Pembelian</a>
                     </li>
-                    <li class="{{ set_active(['transaksi.penjualan.all','transaksi.penjualan.all']) }}">
+                    <li class="{{ set_active(['transaksi.penjualan.index','transaksi.penjualan.index']) }}">
                         <a href="{{ route('transaksi.penjualan.index') }}"><i class="fa fa-credit-card"></i>
                             Penjualan</a>
                     </li>
@@ -230,9 +230,9 @@
                     <i class="fa fa-users"></i> <span>Pengguna</span>
                 </a>
             </li>
-            <li class="{{ set_active(['user.create','user.index','user.edit']) }}">
-                <a href="{{ route('user.index') }}">
-                    <i class="fa fa-users"></i> <span>Cabang</span>
+            <li class="{{ set_active(['cabang.create','cabang.index','cabang.edit']) }}">
+                <a href="{{ route('cabang.index') }}">
+                    <i class="fa fa-gear"></i> <span>Cabang</span>
                 </a>
             </li>
             <li class="{{ set_active(['setting.index']) }}">

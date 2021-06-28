@@ -99,7 +99,7 @@
            {data:'status'},
 		   {data: 'id',
             "render": function (data) {
-         	 data1 = '<a href="/penjualan/' + data + '/delete" class="btn btn-sm btn-danger" onclick="javascript:return confirm(\'Anda yakin?\');">Delete</a>';
+         	 data1 = '<a href="/transaksi/penjualan/' + data + '/faktur" target="_blank" class="btn btn-sm btn-primary fa fa-print" >&nbsp;Print</a>';
 			return data1;
             }
 		   }

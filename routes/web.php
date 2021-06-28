@@ -22,6 +22,7 @@ Route::any('/getDataSatuan', 'SatuanController@getSatuan')->name('getDataSatuan'
 Route::any('/getDataKategori', 'KategoriController@getKategori')->name('getDataKategori');
 Route::any('/getDataJabatan', 'JabatanController@getJabatan')->name('getDataJabatan');
 Route::any('/getDataKas', 'KasController@getDataKas')->name('getDataKas');
+Route::any('/getDataCabang', 'CabangController@getDataCabang')->name('getDataCabang');
 
 Route::any('/getDataPenggajian', 'PenggajianController@getDataPenggajian')->name('getDataPenggajian');
 Route::any('/getDataPegawaiSelect', 'PenggajianController@getDataPegawaiSelect')->name('getDataPegawaiSelect');
@@ -116,6 +117,10 @@ Route::group(['middleware' => 'auth'], function ($app) use ($router) {
     $app->prefix('kategori')->middleware(['cek:Admin'])->name('kategori.')->group(function ($app) use ($router) {
         $router->get('/{id}/delete', 'KategoriController@destroy')->name('destroy');
     });
+    $app->resource('cabang', 'CabangController')->except(['show'])->middleware(['cek:Admin']);
+    $app->prefix('cabang')->middleware(['cek:Admin'])->name('cabang.')->group(function ($app) use ($router) {
+        $router->get('/{id}/delete', 'CabangController@destroy')->name('destroy');
+    });
     $app->resource('customer', 'CustomerController')->except(['show'])->middleware(['cek:Admin']);
     $app->prefix('customer')->middleware(['cek:Admin'])->name('customer.')->group(function ($app) use ($router) {
         $app->get('/', 'CustomerController@index')->name('index');
@@ -172,7 +177,7 @@ Route::group(['middleware' => 'auth'], function ($app) use ($router) {
                 $app->get('/loadDataReturn/{id}', 'ReturnPenjualanController@loadDataReturn')->name('load_data_return');
                 $app->post('/addCart', 'ReturnPenjualanController@addCart')->name('add_cart');
                 $app->post('/deleteReturn', 'ReturnPenjualanController@deleteReturn')->name('delete_return');
-                $app->post('/store', 'ReturnPenjualanController@store')->name('submit');
+                $app->post('/store', 'ReturnPenjualanController@store')->name('store');
                 $app->get('/loadModal/{id}', 'ReturnPenjualanController@loadModal')->name('load_modal');
             });
             $app->prefix('pembelian')->name('pembelian.')->group(function ($app) use ($router) {
@@ -207,6 +212,7 @@ Route::group(['middleware' => 'auth'], function ($app) use ($router) {
             $app->get('/', 'PenjualanController@index')->name('index');
             $app->get('/create', 'PenjualanController@create')->name('create');
             $app->post('/store', 'PenjualanController@store')->name('store');
+            $router->get('/{id}/faktur', 'PenjualanController@faktur')->name('faktur');
             $app->get('/loadKotak', 'PenjualanController@loadKotakAtas')->name('load_kotak_atas');
             $app->get('/loadTable', 'PenjualanController@loadTable')->name('load_table');
             $app->get('/loadModal/{id}', 'PenjualanController@loadModal')->name('load_modal');
