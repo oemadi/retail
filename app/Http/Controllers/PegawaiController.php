@@ -33,8 +33,8 @@ class PegawaiController extends Controller
 		->count();
 
 		$records = Pegawai::orderBy($columnName,$columnSortOrder)
-		->where('Pegawai.nama','like','%'.$searchValue.'%')
-		->select('Pegawai.*')
+		->where('pegawai.nama','like','%'.$searchValue.'%')
+		->select('pegawai.*')
 		->skip($start)
 		->take($rowperpage)
 		->get();
