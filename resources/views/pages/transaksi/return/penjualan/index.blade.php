@@ -70,7 +70,19 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="table-responsive">
-                            @include('pages.transaksi.return.penjualan.table')
+                            <table class="table table-striped table-bordered table-hover" cellspacing="0" width="100%" id="example-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Tanggal Return</th>
+                                        <th>Faktur Return</th>
+                                        <th>Faktur Penjualan</th>
+                                        <th>Customer</th>
+                                        <th>Return Dibayar</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -99,73 +111,42 @@
 </div>
 @endsection
 @push('style')
-<link rel="stylesheet"
-    href="{{ asset('adminlte') }}/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
-
-<link rel="stylesheet" href="{{ asset('adminlte') }}/plugins/sweetalert2/dist/sweetalert2.css">
+<link rel="stylesheet" href="{{ url('public/adminlte') }}/plugins/sweetalert2/dist/sweetalert2.css">
 @endpush
 @push('script')
-<script src="{{ asset('adminlte') }}/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js">
-</script>
-<script src="{{ asset('adminlte') }}/plugins/sweetalert2/dist/sweetalert2.all.min.js"></script>
+
+<script src="{{ url('public/adminlte') }}/plugins/sweetalert2/dist/sweetalert2.all.min.js"></script>
 <script>
     $(document).ready(function(){
-        $('#example-table').dataTable();
-        $("#startdate").datepicker({
-            todayBtn: 1,
-            format : 'yyyy-mm-dd',
-            autoclose: true,
-        }).on('changeDate', function (selected) {
-            var minDate = new Date(selected.date.valueOf());
-            $('#enddate').datepicker('setStartDate', minDate);
-        });
-
-        $("#enddate").datepicker({format : 'yyyy-mm-dd'}).on('changeDate', function (selected) {
-            var maxDate = new Date(selected.date.valueOf());
-            $('#startdate').datepicker('setEndDate', maxDate);
-        });
-
-        $('#filter1').click(function(){
-            if($('#startdate').val()!=""){
-                tanggal_awal = $('#startdate').val();
-            }else{
-                tanggal_awal ="all";
+        $.fn.dataTable.ext.errMode = 'none';
+        $('#example-table')
+		.on( 'error.dt', function ( e, settings, techNote, message ) {
+        console.log( 'An error has been reported by DataTables: ', message );
+         })
+		.dataTable({
+           processing:true,
+		   serverSide:true,
+		   ajax:"{{route('getDataReturnPenjualan')}}",
+		   columns:[
+		    {"data": "id",
+                 render: function (data, type, row, meta) {
+                 return meta.row + meta.settings._iDisplayStart + 1;
+                 }
+                },
+           {data:'tanggal_return_jual'},
+           {data:'faktur'},
+           {data:'faktur_penjualan'},
+		   {data:'customer'},
+		   {data:'total_bayar'},
+		   {data: 'id',
+            "render": function (data) {
+         	 data1 = '<a href="/transaksi/penjualan/' + data + '/faktur" target="_blank" class="btn btn-sm btn-primary fa fa-print" >&nbsp;Print</a>';
+			return data1;
             }
-            if($('#enddate').val()!=""){
-                tanggal_akhir = $('#enddate').val();
-            }else{
-                tanggal_akhir ="all";
-            }
-            let url =
-            `{{ url('transaksi/return/penjualan/loadTable?tanggal_awal=`+tanggal_awal+`&tanggal_akhir=`+tanggal_akhir+`') }}`;
-            const parseResult = new DOMParser().parseFromString(url, "text/html");
-            const parsedUrl = parseResult.documentElement.textContent;
-            $('.table-responsive').load(parsedUrl);
+		   }
+		   ]
+
         });
-        function loadTable(filter="default"){
-            let url = `{{ url('transaksi/return/penjualan/loadTable') }}`;
-            const parseResult = new DOMParser().parseFromString(url, "text/html");
-            const parsedUrl = parseResult.documentElement.textContent;
-            $('.table-responsive').load(parsedUrl);
-        }
-        $(document).on('click','.info',function(){
-            let url = `{{ route('transaksi.return.penjualan.load_modal',':id') }}`;
-            url = url.replace(":id",$(this).data('id'));
-            const parseResult = new DOMParser().parseFromString(url, "text/html");
-            const parsedUrl = parseResult.documentElement.textContent;
-            $('.bodyModal').load(parsedUrl);
-            $('#modal-info').modal('show');
-        });
-        $('.btn-print').click(function(){
-            print();
-        });
-        function print() {
-            printJS({
-                printable: 'printArea',
-                type: 'html',
-                targetStyles: ['*']
-            })
-        }
     });
 </script>
 @endpush

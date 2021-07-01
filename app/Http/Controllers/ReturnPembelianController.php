@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Barang;
 use App\Detail_pembelian;
 use App\Detail_return_pembelian;
-use App\Hutang;
+use App\HutangSuplier;
 use App\Pembelian;
 use App\Return_pembelian;
 use Illuminate\Http\Request;
@@ -17,9 +17,52 @@ class ReturnPembelianController extends Controller
 {
     public function index()
     {
-        $total = Saldo::getReturnPembelian();
-        $return = Return_pembelian::with('pembelian.suplier')->get();
-        return view("pages.transaksi.return.pembelian.index", compact('return', 'total'));
+        // $total = Saldo::getReturnPembelian();
+        // $return = Return_pembelian::with('pembelian.suplier')->get();
+        return view("pages.transaksi.return.pembelian.index");
+    }
+    public function getDataReturnPembelian(Request $request){
+        $draw = $request->get('draw');
+        $start = $request->get('start');
+        $rowperpage = $request->get('length');
+
+        $columnIndex_arr = $request->get('order');
+        $columnName_arr = $request->get('columns');
+        $order_arr = $request->get('order');
+        $search_arr = $request->get('search');
+
+        $columnIndex = $columnIndex_arr[0]['column'];
+        $columnName = $columnName_arr[$columnIndex]['data'];
+        $columnSortOrder = $order_arr[0]['dir'];
+        $searchValue =$search_arr['value'];
+
+        $totalRecords = Return_pembelian::select('count(*)  as allcount')->count();
+        $totalRecordswithFilter =  Return_pembelian::select('count(*)  as allcount')->count();
+
+        $records = Return_pembelian::orderBy($columnName,$columnSortOrder)
+        ->join('pembelian','pembelian.id','return_pembelian.pembelian_id')
+        ->join('suplier','suplier.id','pembelian.suplier_id')
+        ->where('return_pembelian.faktur','like','%'.$searchValue.'%')
+        ->select('return_pembelian.*','pembelian.faktur as faktur_pembelian','suplier.nama as suplier')
+        ->skip($start)
+        ->take($rowperpage)
+        ->get();
+
+        $data_arr = array();
+        foreach($records as $record){
+            $data_arr[]=array('id'=>$record->id,'faktur'=>$record->faktur,'faktur_pembelian'=>$record->faktur_pembelian,
+            'tanggal_return_pembelian'=>$record->tanggal_return_pembelian,'suplier'=>$record->suplier,
+            'total_bayar'=>$record->total_bayar,'status'=>$record->status);
+            $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordswithFilter,
+            "aaData" => $data_arr
+            );
+
+        }
+            echo json_encode($response);
+            exit();
     }
     public function create()
     {
@@ -45,26 +88,20 @@ class ReturnPembelianController extends Controller
     }
     public function store(Request $request)
     {
+
         try {
             DB::beginTransaction();
             $pembelian = Pembelian::where('faktur', $request->faktur_pembelian)->first();
             $new = [];
-
+            $total = 0;
             foreach ($request->data as $key => $row) {
                 if ($request->faktur_pembelian == $row['faktur_pembelian']) {
-                    $new[$key]['faktur_pembelian'] = $row['faktur_pembelian'];
                     $new[$key]['kode_barang'] = $row['kode_barang'];
-                    $new[$key]['nama_barang'] = $row['nama_barang'];
-                    $new[$key]['harga'] = $row['harga'];
                     $new[$key]['jumlah_dikembalikan'] = $row['jumlah_dikembalikan'];
-                    $new[$key]['subtotal'] = $row['subtotal'];
+                    $total += $row['subtotal'];
                 }
             }
-            $total = 0;
 
-            foreach ($new as $row) {
-                $total += $row['subtotal'];
-            }
             $return = new Return_pembelian();
             $return->faktur = $request->faktur;
             $return->pembelian_id = $pembelian->id;
@@ -72,6 +109,7 @@ class ReturnPembelianController extends Controller
             $return->tanggal_return_pembelian = date('Y-m-d');
             $return->total_bayar = $total;
             $return->save();
+
             foreach ($new as $row) {
                 $detail = new Detail_return_pembelian();
                 $detail->barang_id = $row['kode_barang'];
@@ -117,7 +155,7 @@ class ReturnPembelianController extends Controller
                 $barang->stok_masuk -= $row->jumlah_beli;
                 $barang->save();
             }
-            $hutang = Hutang::where('pembelian_id', $pembelian->id)->first();
+            $hutang = HutangSuplier::where('pembelian_id', $pembelian->id)->first();
             $th = $hutang->total_hutang;
             $hutang->total_hutang -= $kurangi;
             $hutang->sisa_hutang -= $th - $hutang->pembayaran_hutang;

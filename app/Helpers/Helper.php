@@ -15,3 +15,8 @@ function set_active($uri, $output = "active")
         }
     }
 }
+
+function getBranch()
+{
+   return Session::get('branch');
+}

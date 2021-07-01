@@ -32,11 +32,11 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="kode_transaksi">Kode Transaksi</label>
+                            <label for="faktur_penjualan">Faktur Penjualan</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" name="kode_transaksi" id="kode_transaksi">
+                                <input type="text" class="form-control" name="faktur_penjualan" id="faktur_penjualan">
 
-                                <div class="input-group-addon showModalTransaksi" style="cursor:pointer">
+                                <div class="input-group-addon showModalPenjualan" style="cursor:pointer">
                                     <i class="fa fa-search"></i>
                                 </div>
                             </div>
@@ -46,8 +46,8 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="tanggal_transaksi">Tanggal Transaksi</label>
-                            <input type="text" name="tanggal_transaksi" id="tanggal_transaksi" class="form-control"
+                            <label for="tanggal_penjualan">Tanggal Penjualan</label>
+                            <input type="text" name="tanggal_penjualan" id="tanggal_penjualan" class="form-control"
                                 readonly>
                         </div>
                     </div>
@@ -55,8 +55,8 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="pelanggan">Pelanggan</label>
-                            <input type="text" name="pelanggan" id="pelanggan" class="form-control" readonly>
+                            <label for="customer">customer</label>
+                            <input type="text" name="customer" id="customer" class="form-control" readonly>
                         </div>
                     </div>
                 </div>
@@ -91,7 +91,7 @@
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody id="loadDataTransaksi">
+                                <tbody id="loadDataPenjualan">
                                     <tr>
                                         <td colspan="6" class="text-danger">
                                             <center>Tidak ada data</center>
@@ -109,15 +109,17 @@
                                 <tr>
                                     <td>
                                         <div class="input-group">
-                                            <input type="hidden" name="qty_akhir" id="qty_akhir">
                                             <input type="hidden" name="qty_detail" id="qty_detail">
+                                            <input type="hidden" name="harga_hidden" id="harga_hidden">
                                             <span class="input-group-btn"><button class="btn " type="button">Kode Barang
                                                 </button></span>
-                                            <input class="form-control" type="text" id="kodeBarang" title="kode barang">
+                                            <input class="form-control" type="text" id="kodeBarang" title="kode barang"
+                                                readonly>
 
                                             <span class="input-group-btn"><button class="btn " type="button">Nama Barang
                                                 </button></span>
-                                            <input class="form-control" type="text" id="namaBarang" title="nama barang">
+                                            <input class="form-control" type="text" id="namaBarang" title="nama barang"
+                                                readonly>
 
 
                                             <span class="input-group-btn"><button class="btn "
@@ -157,7 +159,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <button class="btn btn-primary pull-right btn-submit">Submit</button>
+                        <button class="btn btn-primary pull-right btn-submit btn-store">Submit</button>
                     </div>
                 </div>
             </div>
@@ -172,7 +174,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Data Transaksi</h4>
+                <h4 class="modal-title">Data Penjualan</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -186,22 +188,25 @@
                                         <th>Invoice</th>
                                         <th>Penjualan</th>
                                         <th>Pembayaran</th>
-                                        <th>Pelanggan</th>
+                                        <th>Customer</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($transaksi as $key=>$item)
+                                    @foreach ($penjualan as $key=>$item)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $item->tanggal_penjualan }}</td>
                                         <td>{{ $item->faktur }}</td>
-                                        <td>{{ $item->total }}</td>
+                                        <td>@rupiah($item->total)</td>
                                         <td>{{ $item->status }}</td>
                                         <td>{{ $item->customer->nama }}</td>
                                         <td>
-                                            <button class="btn btn-warning btn-sm btn-pilih"
-                                                data-id="{{ $item->id }}"><i class="fa fa-check-square-o"></i>
+                                            <button class="btn btn-warning btn-sm btn-pilih" data-id="{{ $item->id }}"
+                                                data-faktur="{{ $item->faktur }}"
+                                                data-tanggal="{{ $item->tanggal_penjualan }}"
+                                                data-customer="{{ $item->customer->nama }}"><i
+                                                    class="fa fa-check-square-o"></i>
                                                 Pilih</button>
                                         </td>
                                     </tr>
@@ -224,136 +229,220 @@
 <script src="{{ url('public/adminlte') }}/plugins/sweetalert2/dist/sweetalert2.all.min.js"></script>
 <script>
     $(document).ready(function(){
-        $('#table_transaksi').dataTable();
-        $(".showModalTransaksi").click(function(){
+        var cart_return_penjualan = [];
+        if(localStorage.cart_return_penjualan){
+            cart_return_penjualan = JSON.parse(localStorage.cart_return_penjualan);
+        }
+        function showCart(){
+            faktur_penjualan = $('#faktur_penjualan').val();
+            if (cart_return_penjualan.length == 0) {
+                $("#loadDataReturn").html(`<tr>
+                    <td colspan="6">Data Tidak ada</td>
+                </tr>`);
+                return;
+            }
+            var row = '';
+            for (var i in cart_return_penjualan){
+                var item = cart_return_penjualan[i];
+                if(faktur_penjualan == item.faktur_penjualan){
+                    row += `<tr>
+                        <td>${item.kode_barang}</td>
+                        <td>${item.nama_barang}</td>
+                        <td>${item.harga}</td>
+                        <td>${item.jumlah_dikembalikan}</td>
+                        <td>${item.subtotal}</td>
+                        <td><button id="delete" data-i="${i}" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button></td>
+                    </tr>`;
+                }
+            }
+            $('#loadDataReturn').html(row);
+        }
+
+        function saveCart(){
+            if(window.localStorage){
+                localStorage.cart_return_penjualan = JSON.stringify(cart_return_penjualan);
+            }
+        }
+
+        function addCart(){
+
+            var faktur_penjualan = $('#faktur_penjualan').val();
+            var kode_barang = $('#kodeBarang').val();
+            var nama_barang = $('#namaBarang').val();
+            var jumlah_dikembalikan = $('#qty').val();
+            var harga = $('#harga_hidden').val();
+
+            for (i in cart_return_penjualan){
+                if(cart_return_penjualan[i].faktur_penjualan == faktur_penjualan){
+                    if(cart_return_penjualan[i].kode_barang == kode_barang){
+                        cart_return_penjualan[i].jumlah_dikembalikan = parseInt(cart_return_penjualan[i].jumlah_dikembalikan) + parseInt(jumlah_dikembalikan);
+
+                        cart_return_penjualan[i].subtotal = parseInt(cart_return_penjualan[i].harga) * parseInt(cart_return_penjualan[i].jumlah_dikembalikan);
+                        showCart();
+                        saveCart();
+                        loadKotak();
+                        return;
+                    }
+                }
+            }
+            const item = {
+                faktur_penjualan:faktur_penjualan,
+                kode_barang :kode_barang,
+                nama_barang:nama_barang,
+                jumlah_dikembalikan:jumlah_dikembalikan,
+                harga:harga,
+                subtotal:parseInt(jumlah_dikembalikan)*parseInt(harga)
+            };
+            cart_return_penjualan.push(item);
+            saveCart();
+            showCart();
+            loadKotak();
+        }
+        $(document).on('click','#delete',function(){
+            cart_return_penjualan.splice($(this).data('i'),1);
+            saveCart();
+            showCart();
+            loadKotak();
+        });
+
+        function loadKotak(){
+            if (cart_return_penjualan.length == 0) {
+                $('#grand_total2').text(0);
+                return;
+            }
+            var grandtotal = 0;
+            for (var i in cart_return_penjualan){
+                if($('#faktur_penjualan').val() == cart_return_penjualan[i].faktur_Penjualan){
+                    grandtotal += cart_return_penjualan[i].subtotal;
+                }
+            }
+            $('#grand_total2').text(grandtotal);
+        }
+
+        $('#table_Penjualan').dataTable();
+        $('.showModalPenjualan').click(function(){
             $('#myModal').modal('show');
         });
         $(document).on('click','.btn-pilih',function(){
-            let url = "{{ route('transaksi.return.penjualan.get_transaksi_by_id',':id') }}";
-            url = url.replace(":id",$(this).data('id'));
+            $('#faktur_penjualan').val($(this).data('faktur'));
+            $('#tanggal_penjualan').val($(this).data('tanggal'));
+            $('#customer').val($(this).data('customer'));
+            loadBarangPenjualan($(this).data('id'));
+            $('#myModal').modal('hide');
+            showCart();
+            loadKotak();
+        });
+        function loadBarangPenjualan(penjualan_id){
+            let url = "{{ route('transaksi.return.penjualan.load_barang',':id') }}";
+            url = url.replace(":id",penjualan_id);
             $.ajax({
                 type: "GET",
                 url: url,
                 dataType: "json",
                 success: function (response) {
-                    $('#kode_transaksi').val(response[0].faktur);
-                    $('#tanggal_transaksi').val(response[0].tanggal_penjualan);
-                    $('#pelanggan').val(response[0].customer.nama);
-                    $('#loadDataTransaksi').html(response[1]);
-                    if(response[2] != []){
-                        $('#loadDataReturn').html(response[2]);
-                        loadTotal();
-                    }
-                    $('#myModal').modal('hide');
+                    $('#loadDataPenjualan').html(response[1]);
+                    $('#kodeBarang').val('');
+                    $('#namaBarang').val('');
+                    $('#qty').val(1);
                 }
             });
-        });
+        }
         $(document).on('click','.btn-pilih-barang',function(){
-
             const kode_barang = $(this).data('kbarang');
             const nama_barang = $(this).data('nbarang');
             const qty_detail = $(this).data('qty');
-
             $('#qty_detail').val(qty_detail);
             $('#kodeBarang').val(kode_barang);
             $('#namaBarang').val(nama_barang);
             $('#qty').val(1);
+            $('#harga_hidden').val($(this).data('harga'));
         });
         $('#qty').keyup(function(){
-            if(parseInt($(this).val()) >= parseInt($('#qty_detail').val())){
-                $(this).val(0);
-                Swal.fire("Error!","Quantity lebih besar dari quantity transaksi","error");
+            if($('#kodeBarang').val()!=""){
+                if(parseInt($(this).val()) >= parseInt($('#qty_detail').val())){
+                    $(this).val(0);
+                    Swal.fire("Error!","Terlalu banyak barang yang direturn","error");
+                }
+            }else{
+                Swal.fire("Error!","Barang belum dipilih","error");
             }
         });
         $('#addCart').click(function(){
-            kode_transaksi = $('#kode_transaksi').val();
-            kode_barang=$('#kodeBarang').val();
-            qty=$('#qty').val()
+            if($('#faktur_penjualan').val()!=""){
+                if($('#kodeBarang').val() != "" && $('#namaBarang').val() && $('#qty').val()!=""){
+                    if(cart_return_penjualan.length == 0){
+                        addCart();
+                        return;
+                    }else{
+                        for(i in cart_return_penjualan){
+                            item = cart_return_penjualan[i];
+                            if(item.faktur_Penjualan == $('#faktur_penjualan').val()){
+                                if(item.kode_barang == $('#kodeBarang').val()){
+                                    ini = parseInt(item.jumlah_dikembalikan) + parseInt($('#qty').val());
+                                    console.log(ini);
+                                    if(ini >= $('#qty_detail').val()){
+                                        Swal.fire("Error!","Qty terlalu banyak!","error");
+                                        return;
+                                    }
+                                }
+                                addCart();
+                                return;
+                            }
+
+                        }
+                        addCart();
+                    }
+                }else{
+                    Swal.fire("Error!","Form masih kosong","error");
+                }
+            }else{
+                Swal.fire("Error!","Form Transaksi masih kosong","error");
+            }
+        });
+
+        $('.btn-store').click(function(){
+            faktur_Penjualan = $('#faktur_penjualan').val();
+            faktur = $('#faktur').val();
+
+            if(faktur_Penjualan != "" && cart_return_penjualan.length != 0){
+
                 $.ajax({
                     type: "POST",
-                    url: "{{ route('transaksi.return.penjualan.add_cart') }}",
+                    url: "{{ route('transaksi.return.penjualan.store') }}",
                     data: {
-                        faktur:$('#faktur').val(),
-                        kode_transaksi:kode_transaksi,
-                        kode_barang:kode_barang,
-                        qty:qty
+                        faktur_penjualan:faktur_penjualan,
+                        faktur:faktur,
+                        data : cart_return_penjualan,
+                        _token: '{{csrf_token()}}'
+                    },
+                    beforeSend:function(){
+                        Swal.fire({
+                            title: 'Loading .....',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                            onOpen: () => {
+                                Swal.showLoading()
+                            }
+                        })
                     },
                     dataType: "json",
                     success: function (response) {
-                       Swal.fire(response[0],response[1],response[0]);
-                       if(response[0]=="success"){
-                        //   alert('ok');
-                           loadDataReturn(response[2]);
-                       }
+
+                        Swal.close();
+                        if(response[0] == "success"){
+                            Swal.fire(response[0],response[1],response[0]).then(()=>{
+                                localStorage.removeItem('cart_return_penjualan');
+                                location.href = "{{ route('transaksi.return.penjualan.index') }}";
+                            });
+                        }else{
+                            Swal.fire(response[0],response[1],response[0]);
+                        }
                     }
                 });
-
+            }else{
+                Swal.fire("Error!","Form Transaksi masih kosong","error");
+            }
         });
-        function loadDataReturn(param){
-            let url = "{{ route('transaksi.return.penjualan.load_data_return',':id') }}";
-            url = url.replace(":id",param);
-            $.ajax({
-                type: "GET",
-                url: url,
-                dataType: "json",
-                success: function (response) {
-                    $('#loadDataReturn').html(response);
-                    loadTotal();
-                }
-            });
-        }
-        function loadTotal(){
-            subtotal=0;
-            $('#loadDataReturn tr').each(function(){
-                subtotal += parseInt($(this).find('#total_text').text());
-                console.log(subtotal);
-            });
-            $('#grand_total2').text(parseInt(subtotal));
-        }
-        $(document).on('click','.btn-delete-return',function(){
-            const id = $(this).data('id');
-            //alert(id);
-            let url = "{{ route('transaksi.return.penjualan.delete_return') }}";
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: {id:id},
-                dataType: "json",
-                success: function (response) {
-                    if(response[0]=="oke"){
-                        Swal.fire("Success","Success Menghapus data","success");
-                        loadDataReturn(response[1]);
-                    }else{
-                        Swal.fire("Error","Gagal Menghapus data","error");
-                    }
-                }
-            });
-        });
-        $('.btn-submit').click(function(){
-            tanggal = $('#tanggal').val();
-            $.ajax({
-                type: "POST",
-                url: "{{ route('transaksi.return.penjualan.store') }}",
-                data: {tanggal:tanggal,kode_transaksi:$('#kode_transaksi').val()},
-                dataType: "json",
-                beforeSend:function(){
-                    Swal.fire({
-                        title: 'Loading .....',
-                        allowEscapeKey: false,
-                        allowOutsideClick: false,
-                        onOpen: () => {
-                            Swal.showLoading()
-                        }
-                    })
-                },
-                success: function (response) {
-                    Swal.close();
-                    Swal.fire(response[0],response[1],response[0]).then(()=>{
-                        location.href = "{{ route('transaksi.return.penjualan.index') }}";
-                    });
-                }
-            });
-        })
     });
 </script>
 @endpush

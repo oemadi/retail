@@ -3,272 +3,169 @@
 namespace App\Http\Controllers;
 
 use App\Barang;
-use App\Detail_return_jual;
 use App\Detail_penjualan;
-use App\Pembelian;
-use App\Piutang;
-use App\Return_penjualan;
+use App\Detail_return_jual;
+use App\HutangCustomer;
 use App\Penjualan;
+use App\Return_penjualan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Saldo;
+use Illuminate\Support\Facades\DB;
 use Kas as KasHelper;
+use Saldo;
 
 class ReturnPenjualanController extends Controller
 {
     public function index()
     {
-        // $return = Return_penjualan::with('transaksi.pelanggan')->get();
-        // $total = Saldo::getReturnPenjualan();
-        // , compact('return', 'total')
         return view("pages.transaksi.return.penjualan.index");
     }
-    public function loadTable()
-    {
-        $return = Return_penjualan::with('penjualan.customer');
-        if (request()->get('tanggal_awal') != "all") {
-            $return = $return->whereDate('tanggal_return_jual', ">=", request()->get('tanggal_awal'));
+    public function getDataReturnPenjualan(Request $request){
+        $draw = $request->get('draw');
+        $start = $request->get('start');
+        $rowperpage = $request->get('length');
+
+        $columnIndex_arr = $request->get('order');
+        $columnName_arr = $request->get('columns');
+        $order_arr = $request->get('order');
+        $search_arr = $request->get('search');
+
+        $columnIndex = $columnIndex_arr[0]['column'];
+        $columnName = $columnName_arr[$columnIndex]['data'];
+        $columnSortOrder = $order_arr[0]['dir'];
+        $searchValue =$search_arr['value'];
+
+        $totalRecords = Return_penjualan::select('count(*)  as allcount')->count();
+        $totalRecordswithFilter =  Return_penjualan::select('count(*)  as allcount')->count();
+
+        $records = Return_penjualan::orderBy($columnName,$columnSortOrder)
+        ->join('penjualan','penjualan.id','return_penjualan.penjualan_id')
+        ->join('customer','customer.id','penjualan.customer_id')
+        ->where('return_penjualan.faktur','like','%'.$searchValue.'%')
+        ->select('return_penjualan.*','penjualan.faktur as faktur_penjualan','customer.nama as customer')
+        ->skip($start)
+        ->take($rowperpage)
+        ->get();
+
+        $data_arr = array();
+        foreach($records as $record){
+            $data_arr[]=array('id'=>$record->id,'faktur'=>$record->faktur,
+            'faktur_penjualan'=>$record->faktur_penjualan,'tanggal_return_jual'=>$record->tanggal_return_jual,
+            'customer'=>$record->customer,'total_bayar'=>$record->total_bayar,'status'=>$record->status);
+            $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordswithFilter,
+            "aaData" => $data_arr
+            );
+
         }
-        if (request()->get('tanggal_akhir') != "all") {
-            $return = $return->whereDate('tanggal_return_jual', "<=", request()->get('tanggal_akhir'));
-        }
-        $return->get();
-        return view("pages.transaksi.return.penjualan.table", compact('return'));
+            echo json_encode($response);
+            exit();
     }
     public function create()
     {
-        $pmb = Return_penjualan::select('penjualan_id')->where('status', 'finish')->get()->toArray();
-        $penjualan_id = [];
-        foreach ($pmb as $row) {
-            $penjualan_id[] = $row['penjualan_id'];
-        }
-        $transaksi = Penjualan::with('customer')->whereNotIn('id', $penjualan_id)->get();
-
         $faktur = Return_penjualan::kodeFaktur();
-        $cart = Detail_return_jual::with('barang')->where('return_jual_id', $faktur)->first();
-        return view("pages.transaksi.return.penjualan.create", compact('faktur', 'transaksi'));
+        $penjualan = penjualan::with('customer')->whereDoesntHave('return_penjualan')->get();
+        return view("pages.transaksi.return.penjualan.create", compact('penjualan', 'faktur'));
     }
-    public function loadModal($id)
+    public function loadBarang($id)
     {
-        $return = Return_penjualan::with('transaksi.pelanggan', 'detail_return_jual.barang')->find($id);
-        return view('pages.transaksi.return.penjualan.loadModal', compact('return'));
-    }
-    public function getTransaksyById($id)
-    {
-        $transaksi = Penjualan::with('customer', 'detail_penjualan.barang')->find($id);
+        $penjualan = Penjualan::with('detail_penjualan.barang')->find($id);
+
         $html = '';
-        foreach ($transaksi->detail_penjualan as $key => $row) {
+        foreach ($penjualan->detail_penjualan as $key => $row) {
             $html .= '<tr>';
             $html .= '<td>' . $row->barang->id . '</td>';
             $html .= '<td>' . $row->barang->nama . '</td>';
-            $html .= '<td>' . $row->harga . '</td>';
+            $html .= '<td>' . $row->barang->harga_jual . '</td>';
             $html .= '<td>' . $row->jumlah_jual . '</td>';
             $html .= '<td>' . $row->subtotal . '</td>';
-
-            $html .= '<td><button class="btn btn-sm btn-warning btn-pilih-barang" data-id="' . $row->id . '" data-kbarang="' . $row->barang->id . '" data-nbarang="' . $row->barang->nama . '" data-qty="' . $row->jumlah_jual . '"><i class="fa fa-check-square-o"></i></button></td>';
-            $html .= '</tr>';
+            $html .= '<td><button class="btn btn-sm btn-warning btn-pilih-barang" data-id="' . $row->id . '" data-kbarang="' . $row->barang->id . '" data-nbarang="' . $row->barang->nama . '" data-qty="' . $row->jumlah_jual . '" data-harga="' . $row->barang->harga_jual . '"><i class="fa fa-check-square-o"></i></button></td>';
+            $html .= '</td>';
         }
-
-        $cek = Return_penjualan::where('penjualan_id', $transaksi->id)->first();
-        $html2 = '';
-        if ($cek != null) {
-            $return_penjualan = Return_penjualan::with('detail_return_jual')->where('penjualan_id', $transaksi->id)->first();
-            foreach ($return_penjualan->detail_return_jual as $key => $row) {
-                $data2 = Detail_penjualan::with('barang')->where('penjualan_id', $transaksi->id)->where('barang_id', $row->barang_id)->first();
-                $html2 .= '<tr>';
-                $html2 .= '<td id="kodeBarangck">' . $data2->barang->id . '</td>';
-                $html2 .= '<td>' . $data2->barang->nama . '</td>';
-                $html2 .= '<td>' . $data2->harga . '</td>';
-                $html2 .= '<td>' . $row->jumlah_jual . '</td>';
-                $html2 .= '<td id="total_text">' . $row->jumlah_jual *  $data2->harga . '</td>';
-                $html2 .= '<td><button class="btn btn-danger btn-delete-return" data-id="' . $row->id . '"><i class="fa fa-trash"></i></button></td>';
-                $html2 .= '</tr>';
-            }
-        }
-        if ($html2 != "") {
-            $html2 = $html2;
-        } else {
-            $html2 = [];
-        }
-        return response()->json([$transaksi, $html, $html2]);
+      //  dd($html);
+        return response()->json([$penjualan, $html]);
     }
-    public function addCart(Request $request)
-    {
-        $transaksi = Penjualan::where('faktur', $request->kode_transaksi)->first();
-        $return_penjualan = Return_penjualan::where('penjualan_id', $transaksi->id)->first();
-        $detail_transaksi = Detail_penjualan::where('barang_id', $request->kode_barang)->where('penjualan_id', $transaksi->id)->first();
 
-
-        if ($return_penjualan) {
-            $detail_return_penjualan = Detail_return_jual::where('barang_id', $request->kode_barang)->where('return_jual_id', $return_penjualan->id)->first();
-            if ($detail_return_penjualan) {
-                if ($detail_return_penjualan->jumlah_jual + $request->qty  > $detail_transaksi->jumlah_jual) {
-                    return response()->json(["error", "Quantity return penjualan melebihi jumlah beli"]);
-                } else {
-                    $detail_return_penjualan->jumlah_jual += $request->qty;
-                    if ($detail_return_penjualan->save()) {
-                        $return_penjualan->total_bayar += $detail_transaksi->harga * $request->qty;
-                        $return_penjualan->save();
-                        return response()->json(["success", "Success menambah ke list return", $transaksi->id]);
-                    }
-                }
-            } else {
-                if ($request->qty  > $detail_transaksi->jumlah_jual) {
-                    return response()->json(["error", "Quantity return penjualan melebihi jumlah beli"]);
-                } else {
-                    $insertDetail = new Detail_return_jual();
-                    $insertDetail->barang_id = $request->kode_barang;
-                    $insertDetail->return_jual_id = $return_penjualan->id;
-                    $insertDetail->jumlah_jual = $request->qty;
-                    $insertDetail->save();
-                    if ($insertDetail->save()) {
-                        $return_penjualan->total_bayar += $detail_transaksi->harga * $request->qty;
-                        $return_penjualan->save();
-                        return response()->json(["success", "Success menambah ke list return", $transaksi->id]);
-                    }
-                }
-            }
-        } else {
-            $return = new Return_penjualan();
-            $return->tanggal_return_jual = date('Y-m-d');
-            $return->penjualan_id = $transaksi->id;
-            $return->faktur = $request->faktur;
-            $return->user_id = Auth::user()->id;
-            $return->total_bayar = 0;
-            if ($return->save()) {
-                if ($request->qty  > $detail_transaksi->jumlah_jual) {
-                    return response()->json(["error", "Quantity return penjualan melebihi jumlah beli"]);
-                } else {
-                    $insertDetail = new Detail_return_jual();
-                    $insertDetail->barang_id = $request->kode_barang;
-                    $insertDetail->return_jual_id = $return->id;
-                    $insertDetail->jumlah_jual = $request->qty;
-                    $insertDetail->save();
-                    if ($insertDetail->save()) {
-                        $update = Return_penjualan::find($return->id);
-                        $update->total_bayar += $request->qty * $detail_transaksi->harga;
-                        $update->save();
-                        return response()->json(["success", "Success menambah ke list return", $transaksi->id]);
-                    }
-                }
-            }
-        }
-    }
-    public function loadDataReturn($id)
-    {
-        $return_penjualan = Return_penjualan::with('detail_return_jual')->where('penjualan_id', $id)->first();
-        $html2 = '';
-        foreach ($return_penjualan->detail_return_jual as $key => $row) {
-            $data2 = Detail_penjualan::with('barang')->where('penjualan_id', $id)->where('barang_id', $row->barang_id)->first();
-            $html2 .= '<tr>';
-            $html2 .= '<td id="kodeBarangck">' . $data2->barang->id . '</td>';
-            $html2 .= '<td>' . $data2->barang->nama . '</td>';
-            $html2 .= '<td>' . $data2->harga . '</td>';
-            $html2 .= '<td>' . $row->jumlah_jual . '</td>';
-            $html2 .= '<td id="total_text">' . $row->jumlah_jual *  $data2->harga . '</td>';
-            $html2 .= '<td><button class="btn btn-danger btn-delete-return" data-id="' . $row->id . '"><i class="fa fa-trash"></i></button></td>';
-            $html2 .= '</tr>';
-        }
-        return response()->json($html2);
-    }
-    public function deleteReturn(Request $request)
-    {
-        $detail = Detail_return_jual::find($request->id);
-        $return = Return_penjualan::find($detail->return_jual_id);
-        $transaksi = Penjualan::find($return->penjualan_id);
-        $detail_transaksi = Detail_penjualan::where('penjualan_id', $transaksi->id)->where('barang_id', $detail->barang_id)->first();
-
-        if ($detail->delete()) {
-            $return->total_bayar -= $detail_transaksi->harga * $detail->jumlah_jual;
-            $return->save();
-            $cek = Return_penjualan::with('detail_return_jual')->find($return->id);
-            if ($cek->detail_return_jual) {
-                return response()->json(["oke", $transaksi->id]);
-            } else {
-                $cek->delete();
-                return response()->json(["oke", $transaksi->id]);
-            }
-        } else {
-            return response()->json("gagal");
-        }
-    }
     public function store(Request $request)
     {
-        $transaksi = Penjualan::where('faktur', $request->kode_transaksi)->first();
-        $return = Return_penjualan::where('penjualan_id', $transaksi->id)->first();
-        $return->status = 'finish';
-        $return->tanggal_return_jual = $request->tanggal;
-        $return->save();
-        KasHelper::add($return->faktur, 'pengeluaran', 'return penjualan', 0, $return->total_bayar);
-        self::updateDataTransaksiAfterReturn($transaksi->id);
-        return response()->json(["success", "Success"]);
-    }
-    public static function updateDataTransaksiAfterReturn($penjualan_id)
-    {
-        $transaksi = Penjualan::with('detail_penjualan')->find($penjualan_id);
-        $return = Return_penjualan::with('detail_return_jual')->where('penjualan_id', $transaksi->id)->first();
-        $return_detail = Detail_return_jual::with('barang')->where('return_jual_id', $return->id)->get();
-        $kurangi = 0;
-        if ($transaksi->status == "tunai") {
-            foreach ($return_detail as $key => $row) {
-                $detail_transaksi = Detail_penjualan::where('penjualan_id', $transaksi->id)->where('barang_id', $row->barang_id)->first();
-                $barang = Barang::find($detail_transaksi->barang_id);
-                if ($detail_transaksi->jumlah_jual - $row->jumlah_jual == 0) {
-                    $kurangi += $detail_transaksi->subtotal;
-                    $detail_transaksi->delete();
-                } else {
-                    $detail_transaksi->jumlah_jual -= $row->jumlah_jual;
-                    $detail_transaksi->subtotal -= $row->jumlah_jual * $detail_transaksi->harga;
-                    $detail_transaksi->update();
-                    $kurangi += $row->jumlah_jual * $detail_transaksi->harga;
-                }
-                $barang->stok_akhir += $row->jumlah_jual;
-                $barang->stok_keluar -= $row->jumlah_jual;
-                $barang->save();
-            }
-            $transaksi->total -= $kurangi;
-            $transaksi->save();
-        } else {
-            $piutang = Piutang::where('penjualan_id', $transaksi->id)->first();
-            foreach ($return_detail as $key => $row) {
-                $detail_transaksi = Detail_penjualan::where('penjualan_id', $transaksi->id)->where('barang_id', $row->barang_id)->first();
-                $barang = Barang::find($detail_transaksi->barang_id);
-                if ($detail_transaksi->jumlah_jual - $row->jumlah_jual == 0) {
-                    $kurangi += $detail_transaksi->subtotal;
-                    $detail_transaksi->delete();
-                } else {
-                    $detail_transaksi->jumlah_jual -= $row->jumlah_jual;
-                    $detail_transaksi->subtotal -= $row->jumlah_jual * $detail_transaksi->harga;
-                    $detail_transaksi->update();
-                    $kurangi += $row->jumlah_jual * $detail_transaksi->harga;
-                }
-                $barang->stok_akhir += $row->jumlah_jual;
-                $barang->stok_keluar -= $row->jumlah_jual;
-                $barang->save();
-            }
-            $sisa_piutang_akhir = $piutang->sisa_piutang;
-            $piutang_terbayar = $piutang->piutang_terbayar;
-            $piutang_total = $piutang->total_hutang;
 
-
-            $piutang->total_hutang -= $kurangi;
-            if ($sisa_piutang_akhir - $kurangi <= 0) {
-                $piutang->sisa_piutang = 0;
-                $piutang->piutang_terbayar = $piutang->total_hutang;
-            } else {
-                $tampung =  $piutang->total_hutang - $kurangi;
-                $piutang->sisa_piutang = $tampung - $piutang->piutang_terbayar;
-                if ($piutang->sisa_piutang == 0) {
-                    $piutang->piutang_terbayar = $tampung;
-                }
-                if ($piutang->piutang_terbayar > $tampung) {
-                    $piutang->piutang_terbayar = $tampung;
+        try {
+            DB::beginTransaction();
+            $penjualan = Penjualan::where('faktur', $request->faktur_penjualan)->first();
+            $new = [];
+            $total = 0;
+            foreach ($request->data as $key => $row) {
+                if ($request->faktur_penjualan == $row['faktur_penjualan']) {
+                    $new[$key]['kode_barang'] = $row['kode_barang'];
+                    $new[$key]['jumlah_dikembalikan'] = $row['jumlah_dikembalikan'];
+                    $total += $row['subtotal'];
                 }
             }
-            $transaksi->total -= $kurangi;
-            $piutang->save();
-            $transaksi->save();
+            //dd($request->faktur_penjualan);
+            $return = new Return_penjualan();
+            $return->faktur = $request->faktur;
+            $return->penjualan_id = $penjualan->id;
+            $return->tanggal_return_jual = date('Y-m-d');
+            $return->total_bayar = $total;
+            $return->save();
+
+            foreach ($new as $row) {
+                $detail = new Detail_return_jual();
+                $detail->barang_id = $row['kode_barang'];
+                $detail->return_jual_id = $return->id;
+                $detail->jumlah_jual = $row['jumlah_dikembalikan'];
+                $detail->save();
+            }
+            KasHelper::add($return->faktur, 'pengeluaran', 'return penjualan',0,$return->total_bayar);
+            self::updateDataAfterReturn($penjualan->id);
+            DB::commit();
+            return response()->json(['success', 'Return penjualan berhasil!']);
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return response()->json(['error', 'Return penjualan gagal!']);
         }
-        return response()->json(["success", "Return berhasil diproses"]);
+    }
+    public static function updateDataAfterReturn($penjualan_id)
+    {
+        $penjualan = penjualan::with('detail_penjualan')->find($penjualan_id);
+        $return = Return_penjualan::with('detail_return_jual.barang')->where('penjualan_id', $penjualan_id)->first();
+        $kurangi = 0;
+        if ($penjualan->status == "tunai") {
+            foreach ($return->detail_return_jual as $key => $row) {
+                $detail = Detail_penjualan::where('penjualan_id', $penjualan->id)->where('barang_id', $row->barang_id)->first();
+                $detail->jumlah_jual += $row->jumlah_jual;
+                $detail->subtotal += $row->jumlah_jual * $row->barang->harga_jual;
+                $kurangi -= $row->jumlah_jual * $row->barang->harga_jual;
+                $detail->save();
+                $barang = Barang::find($row->barang_id);
+                $barang->stok_akhir += $row->jumlah_jual;
+                $barang->stok_masuk += $row->jumlah_jual;
+                $barang->save();
+            }
+        } else {
+            foreach ($return->detail_return_jual as $key => $row) {
+                $detail = Detail_penjualan::where('penjualan_id', $penjualan->id)->where('barang_id', $row->barang_id)->first();
+                $detail->jumlah_jual += $row->jumlah_jual;
+                $detail->subtotal += $row->jumlah_jual * $row->barang->harga_jual;
+                $kurangi -= $row->jumlah_jual * $row->barang->harga_jual;
+                $detail->save();
+                $barang = Barang::find($row->barang_id);
+                $barang->stok_akhir += $row->jumlah_jual;
+                $barang->stok_masuk += $row->jumlah_jual;
+                $barang->save();
+            }
+            $hutang = HutangCustomer::where('penjualan_id', $penjualan->id)->first();
+            $th = $hutang->total_hutang;
+            $hutang->total_hutang += $kurangi;
+            $hutang->sisa_hutang += $th - $hutang->pembayaran_hutang;
+            if ($hutang->sisa_hutang <= 0) {
+                $hutang->sisa_hutang = 0;
+                $hutang->status = "lunas";
+            }
+            $hutang->save();
+        }
+        $penjualan->total += $kurangi;
+        $penjualan->save();
     }
 }

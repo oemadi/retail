@@ -223,15 +223,10 @@
 </div>
 @endsection
 @push('style')
-<link rel="stylesheet"
-    href="{{ asset('adminlte') }}/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
-<link rel="stylesheet" href="{{ asset('adminlte') }}/plugins/sweetalert2/dist/sweetalert2.css">
+<link rel="stylesheet" href="{{ url('public/adminlte') }}/plugins/sweetalert2/dist/sweetalert2.css">
 @endpush
 @push('script')
-<script src="{{ asset('adminlte') }}/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="{{ asset('adminlte') }}/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js">
-</script>
-<script src="{{ asset('adminlte') }}/plugins/sweetalert2/dist/sweetalert2.all.min.js"></script>
+<script src="{{ url('public/adminlte') }}/plugins/sweetalert2/dist/sweetalert2.all.min.js"></script>
 <script>
     $(document).ready(function(){
         var cart_return_pembelian = [];
@@ -270,6 +265,7 @@
         }
 
         function addCart(){
+
             var faktur_pembelian = $('#faktur_pembelian').val();
             var kode_barang = $('#kodeBarang').val();
             var nama_barang = $('#namaBarang').val();
@@ -379,7 +375,7 @@
                         return;
                     }else{
                         for(i in cart_return_pembelian){
-                            item = cart_return_pembelian[i];     
+                            item = cart_return_pembelian[i];
                             if(item.faktur_pembelian == $('#faktur_pembelian').val()){
                                 if(item.kode_barang == $('#kodeBarang').val()){
                                     ini = parseInt(item.jumlah_dikembalikan) + parseInt($('#qty').val());
@@ -392,7 +388,7 @@
                                 addCart();
                                 return;
                             }
-                                
+
                         }
                         addCart();
                     }
@@ -403,17 +399,21 @@
                 Swal.fire("Error!","Form Transaksi masih kosong","error");
             }
         });
+
         $('.btn-store').click(function(){
             faktur_pembelian = $('#faktur_pembelian').val();
             faktur = $('#faktur').val();
-            if(faktur_pembelian != "" || cart_return_pembelian.length != 0){
+
+            if(faktur_pembelian != "" && cart_return_pembelian.length != 0){
+
                 $.ajax({
                     type: "POST",
                     url: "{{ route('transaksi.return.pembelian.store') }}",
                     data: {
                         faktur_pembelian:faktur_pembelian,
                         faktur:faktur,
-                        data : cart_return_pembelian
+                        data : cart_return_pembelian,
+                        _token: '{{csrf_token()}}'
                     },
                     beforeSend:function(){
                         Swal.fire({
@@ -427,6 +427,7 @@
                     },
                     dataType: "json",
                     success: function (response) {
+
                         Swal.close();
                         if(response[0] == "success"){
                             Swal.fire(response[0],response[1],response[0]).then(()=>{
