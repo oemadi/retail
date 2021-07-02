@@ -17,7 +17,45 @@
                         @endif
                     </div>
                 </div>
+                <div class="col-md-12">
+                    <div class=" box-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>Tanggal Awal</td>
+                                            <td>
+                                                <input title="tanggal transaksi" class="form-control datepicker-here" type="text"
+                                                    id="startdate" data-language="en" autocomplete="off"
+                                                    value="{{ date('Y-m-d') }}">
+                                            </td>
+                                            <td>Tanggal Akhir</td>
+                                            <td>
+                                                <input title="tanggal transaksi" class="form-control datepicker-here" type="text"
+                                                    id="enddate" data-language="en" autocomplete="off" value="{{ date('Y-m-d') }}">
+                                            </td>
+                                            <td>
+                                                <select id="status" class="form-control">
+                                                    <option value="all">Semua Transaksi</option>
+                                                    <option value="tunai">Tunai</option>
+                                                    <option value="kredit">Non Tunai</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <a href="#" class="btn btn-success" style="width:100%" id="filter1"><i
+                                                        class="fa fa-search"></i>
+                                                    Filter</a>
+                                            </td>
+                                        </tr>
 
+                                    </tbody>
+                                </table>
+                            </div>
+
+                    </div>
+                </div>
+            </div>
                 <div class="row">
                     <div class="col-md-12">
                         <table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0"
