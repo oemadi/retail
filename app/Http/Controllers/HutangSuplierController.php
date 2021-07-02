@@ -38,16 +38,20 @@ class HutangSuplierController extends Controller
 			$totalRecords = HutangSuplier::select('count(*)  as allcount')->count();
 			$totalRecordswithFilter =  HutangSuplier::select('count(*)  as allcount')
 			->count();
+
             $records = HutangSuplier::orderBy($columnName,$columnSortOrder)
+            ->join('pembelian','pembelian.id','hutang_suplier.pembelian_id')
             ->join('suplier','suplier.id','hutang_suplier.suplier_id')
-			->select('hutang_suplier.*','suplier.nama as suplier')
+			->select('hutang_suplier.*','suplier.nama as suplier','pembelian.faktur as faktur_pembelian')
 			->skip($start)
 			->take($rowperpage)
 			->get();
+
 			$data_arr = array();
 			foreach($records as $record){
 
-				$data_arr[]=array('id'=>$record->id,'suplier'=>$record->suplier,'suplier_id'=>$record->suplier_id,
+				$data_arr[]=array('id'=>$record->id,'pembelian_id'=>$record->pembelian_id,'suplier'=>$record->suplier,
+                'faktur_pembelian'=>$record->faktur_pembelian,'suplier_id'=>$record->suplier_id,
                 'total_hutang'=>$record->total_hutang,'total_pembayaran_hutang'=>$record->total_pembayaran_hutang,
                 'sisa_hutang'=>$record->sisa_hutang);
 

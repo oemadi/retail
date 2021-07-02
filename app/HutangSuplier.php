@@ -14,10 +14,10 @@ class HutangSuplier extends Model
             $hutang = HutangSuplier::orderBy('id', 'DESC')->first();
             $nourut = (int) substr($hutang->faktur, -8, 8);
             $nourut++;
-            $char = "HCS";
+            $char = "PS";
             $number = $char  .  sprintf("%08s", $nourut);
         } else {
-            $number = "HCS"  . "00000001";
+            $number = "PS"  . "00000001";
         }
         return $number;
     }

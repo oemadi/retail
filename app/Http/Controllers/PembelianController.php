@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Kas as KasHelper;
 use Saldo;
+use Session;
 
 class PembelianController extends Controller
 {
@@ -112,6 +113,7 @@ class PembelianController extends Controller
             }
             $pembelian->total = $total;
             $pembelian->status = $request->status;
+            $pembelian->branch = Session::get('branch');
             $pembelian->save();
             foreach ($request->data as $row) {
                 $detail = new Detail_Pembelian();
@@ -124,24 +126,16 @@ class PembelianController extends Controller
               // self::updateStokbarang($row['kode_barang'], $row['jumlah']);
             }
             if ($request->status != "tunai") {
-                $datahutang  = HutangSuplier::where('suplier_id',$request->suplier_id);
-                if($datahutang->count()>0){
-                    $data = $datahutang->first();
-                    $kodefaktur = $data->faktur;
-                    $data->total_hutang = $data->total_hutang+$total;
-                    $data->sisa_hutang =  $data->total_hutang-$data->total_pembayaran_hutang;
-                    $data->save();
-                }else{
+                $kodefaktur  = HutangSuplier::kodeFaktur();
                 $hutang = new HutangSuplier();
-                $hutang->faktur = HutangSuplier::kodeFaktur();
-                $kodefaktur = $hutang->faktur;
+                $hutang->faktur =   $kodefaktur;
+                $hutang->pembelian_id = $pembelian->id;
                 $hutang->suplier_id = $request->suplier_id;
                 $hutang->total_hutang = $total;
                 $hutang->total_pembayaran_hutang = 0;
                 $hutang->sisa_hutang = $total;
+                $hutang->branch = Session::get('branch');
                 $hutang->save();
-                }
-
             } else {
                 KasHelper::add($pembelian->faktur, 'pengeluaran', 'pembelian', 0, $pembelian->total);
             }

@@ -27,6 +27,7 @@
                                     {{-- No.bayar_hutang	Suplier	ID Pembelian	Tanggal	Jumlah Bayar	Sisa Hutang	Aks? --}}
                                     <th>#</th>
                                     <th>Customer</th>
+                                    <th>Faktur Penjualan</th>
                                     <th>Total Hutang</th>
                                     <th>Total Pembayaran</th>
                                     <th>Sisa Hutang</th>
@@ -63,10 +64,11 @@
                  }
            },
            {data:'customer'},
+           {data:'faktur_penjualan'},
            {data:'total_hutang'},
            {data:'total_pembayaran_hutang'},
            {data:'sisa_hutang'},
-           {data: 'customer_id',
+           {data: 'penjualan_id',
             "render": function (data) {
             data1 = '<a href="/transaksi/bayarCustomer/' + data + '/show" class="btn btn-sm btn-warning">View</a>';
 			return data1;

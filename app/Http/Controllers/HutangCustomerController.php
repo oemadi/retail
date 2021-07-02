@@ -40,14 +40,20 @@ class HutangCustomerController extends Controller
 			->count();
             $records = HutangCustomer::orderBy($columnName,$columnSortOrder)
             ->join('customer','customer.id','hutang_customer.customer_id')
-			->select('hutang_customer.*','customer.nama as customer')
+            ->join('penjualan','penjualan.id','hutang_customer.penjualan_id')
+			->select('hutang_customer.*','customer.nama as customer',
+            'penjualan.faktur as faktur_penjualan')
 			->skip($start)
 			->take($rowperpage)
 			->get();
+
+          //  dd($records);
+
 			$data_arr = array();
 			foreach($records as $record){
 
-				$data_arr[]=array('id'=>$record->id,'customer'=>$record->customer,'customer_id'=>$record->customer_id,
+				$data_arr[]=array('id'=>$record->id,'penjualan_id'=>$record->penjualan_id,'faktur_penjualan'=>$record->faktur_penjualan,
+                'customer'=>$record->customer,'customer_id'=>$record->customer_id,
                 'total_hutang'=>$record->total_hutang,'total_pembayaran_hutang'=>$record->total_pembayaran_hutang,
                 'sisa_hutang'=>$record->sisa_hutang);
 

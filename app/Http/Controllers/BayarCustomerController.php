@@ -58,15 +58,18 @@ class BayarCustomerController extends Controller
         return $res;
     }
 		public function getDataBayarCustomer(Request $request){
+
             $draw = $request->get('draw');
             $start = $request->get('start');
             $rowperpage = $request->get('length');
+            $penjualan_id =  $request->get('penjualanid');
 
             $columnIndex_arr = $request->get('order');
             $columnName_arr = $request->get('columns');
             $order_arr = $request->get('order');
             $search_arr = $request->get('search');
 
+          //  dd($penjualan_id);
             $columnIndex = $columnIndex_arr[0]['column'];
             $columnName = $columnName_arr[$columnIndex]['data'];
             $columnSortOrder = $order_arr[0]['dir'];
@@ -75,17 +78,17 @@ class BayarCustomerController extends Controller
 			$totalRecords = BayarHutangCustomer::select('count(*)  as allcount')->count();
 			$totalRecordswithFilter =  BayarHutangCustomer::select('count(*)  as allcount')
 			->count();
-            $id_customer = Session::get('id_customer');
+
             $records = BayarHutangCustomer::orderBy($columnName,$columnSortOrder)
             ->join('customer','customer.id','bayar_hutang_customer.id_customer')
             ->join('penjualan','penjualan.id','bayar_hutang_customer.id_penjualan')
 			->select('bayar_hutang_customer.*','customer.nama as customer',
             'penjualan.faktur as faktur_penjualan')
-            ->where('penjualan.customer_id', $id_customer)
+            ->where('penjualan.id', $penjualan_id)
 			->skip($start)
 			->take($rowperpage)
 			->get();
-          //  dd($records);
+           // dd($records);
 			$data_arr = array();
 			foreach($records as $record){
 
@@ -114,12 +117,15 @@ class BayarCustomerController extends Controller
      */
     public function show($id)
     {
-       // dd($id);
-       $res = Customer::where('id',$id)->first();
-      // dd($res->nama);
-        Session::put(array('id_customer'=>$id,'nama_customer'=>$res->nama));
+
+       $data = HutangCustomer::where('penjualan_id',$id)
+       ->join('penjualan','penjualan.id','hutang_customer.penjualan_id')
+       ->join('customer','customer.id','hutang_customer.customer_id')
+       ->select('hutang_customer.*','customer.nama as customer','penjualan.faktur as faktur_penjualan')
+       ->first();
+
         $faktur = BayarHutangCustomer::kodeFaktur();
-        return view("pages.transaksi.bayar_customer.create",compact('faktur'));
+        return view("pages.transaksi.bayar_customer.create",compact('faktur','data'));
     }
 
     /**
@@ -146,10 +152,16 @@ class BayarCustomerController extends Controller
             $UpdatePenjualan->save();
         }
         if ($BayarCustomer->save()) {
-            $UpdateCustomer = HutangCustomer::where('customer_id',$request->id_customer)->first();
+            $UpdateCustomer = HutangCustomer::where('penjualan_id',$request->id_penjualan)->first();
             $UpdateCustomer->total_pembayaran_hutang =  $UpdateCustomer->total_pembayaran_hutang + $request->jumlah_bayar;
             $UpdateCustomer->sisa_hutang = $UpdateCustomer->total_hutang -  $UpdateCustomer->total_pembayaran_hutang ;
             $UpdateCustomer->save();
+
+            // $UpdateSuplier = HutangSuplier::where('suplier_id',$request->id_suplier)->first();
+            // $UpdateSuplier->total_pembayaran_hutang =  $UpdateSuplier->total_pembayaran_hutang + $request->jumlah_bayar;
+            // $UpdateSuplier->sisa_hutang = $UpdateSuplier->total_hutang -  $UpdateSuplier->total_pembayaran_hutang ;
+            // $UpdateSuplier->save();
+
             KasHelper::add($request->faktur, 'pendapatan', 'bayar hutang',$request->jumlah_bayar,0);
             echo json_encode(array('status'=>'success'));
         } else {

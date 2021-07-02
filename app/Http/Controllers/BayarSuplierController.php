@@ -58,7 +58,8 @@ class BayarSuplierController extends Controller
         return $res;
     }
 		public function getDataBayarSuplier(Request $request){
-			$draw = $request->get('draw');
+			$pembelian_id = $request->get('pembelian_id');
+            $draw = $request->get('draw');
 			$start = $request->get('start');
 			$rowperpage = $request->get('length');
 
@@ -75,13 +76,13 @@ class BayarSuplierController extends Controller
 			$totalRecords = BayarHutangSuplier::select('count(*)  as allcount')->count();
 			$totalRecordswithFilter =  BayarHutangSuplier::select('count(*)  as allcount')
 			->count();
-            $id_suplier = Session::get('id_suplier');
+
             $records = BayarHutangSuplier::orderBy($columnName,$columnSortOrder)
             ->join('suplier','suplier.id','bayar_hutang_Suplier.id_suplier')
             ->join('pembelian','pembelian.id','bayar_hutang_Suplier.id_pembelian')
 			->select('bayar_hutang_Suplier.*','Suplier.nama as Suplier',
             'pembelian.faktur as faktur_pembelian')
-            ->where('pembelian.Suplier_id', $id_suplier)
+            ->where('pembelian.id', $pembelian_id)
 			->skip($start)
 			->take($rowperpage)
 			->get();
@@ -113,12 +114,16 @@ class BayarSuplierController extends Controller
      */
     public function show($id)
     {
-       // dd($id);
-       $res = Suplier::where('id',$id)->first();
-      // dd($res->nama);
-        Session::put(array('id_suplier'=>$id,'nama_suplier'=>$res->nama));
+       //dd($id);
+       $data = HutangSuplier::where('pembelian_id',$id)
+       ->join('pembelian','pembelian.id','hutang_suplier.pembelian_id')
+       ->join('suplier','suplier.id','hutang_suplier.suplier_id')
+       ->select('hutang_suplier.*','suplier.nama as suplier','pembelian.faktur as faktur_pembelian')
+       ->first();
+     // dd($data);
+        //Session::put(array('data'=>$res));
         $faktur = BayarHutangSuplier::kodeFaktur();
-        return view("pages.transaksi.bayar_suplier.create",compact('faktur'));
+        return view("pages.transaksi.bayar_suplier.create",compact('faktur','data'));
     }
 
     /**
@@ -145,7 +150,7 @@ class BayarSuplierController extends Controller
             $Updatepembelian->save();
         }
         if ($BayarSuplier->save()) {
-            $UpdateSuplier = HutangSuplier::where('suplier_id',$request->id_suplier)->first();
+            $UpdateSuplier = HutangSuplier::where('pembelian_id',$request->id_pembelian)->first();
             $UpdateSuplier->total_pembayaran_hutang =  $UpdateSuplier->total_pembayaran_hutang + $request->jumlah_bayar;
             $UpdateSuplier->sisa_hutang = $UpdateSuplier->total_hutang -  $UpdateSuplier->total_pembayaran_hutang ;
             $UpdateSuplier->save();

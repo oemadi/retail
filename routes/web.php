@@ -29,7 +29,7 @@ Route::any('/getDataPegawaiSelect', 'PenggajianController@getDataPegawaiSelect')
 Route::any('/getDataPegawaiSelect2', 'PenggajianController@getDataPegawaiSelect2')->name('getDataPegawaiSelect2');
 
 Route::any('/getDataBayarSuplier', 'BayarSuplierController@getDataBayarSuplier')->name('getDataBayarSuplier');
-Route::any('/getDataBayarCustomer', 'BayarCustomerController@getDataBayarCustomer')->name('getDataBayarCustomer');
+Route::get('/getDataBayarCustomer', 'BayarCustomerController@getDataBayarCustomer')->name('getDataBayarCustomer');
 
 Route::any('/getDataFakturPembelianSelect', 'PembelianController@getDataFakturPembelianSelect')->name('getDataFakturPembelianSelect');
 Route::any('/getDataFakturPenjualanSelect', 'PenjualanController@getDataFakturPenjualanSelect')->name('getDataFakturPenjualanSelect');

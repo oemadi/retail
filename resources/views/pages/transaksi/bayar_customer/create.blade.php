@@ -47,15 +47,16 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="faktur_penjualan">No.Faktur Penjualan</label>
-                                                <select name="faktur_penjualan" id="faktur_penjualan" class="select2-faktur-penjualan" style="width: 100%;height:100%">
-                                                </select>
+                                            <input type="text" name="faktur_penjualan_label" id="faktur_penjualan_label" class="form-control"  value="{{$data->faktur_penjualan}}" readonly>
+                                            <input type="hidden" name="faktur_penjualan" id="faktur_penjualan" class="form-control" value="{{$data->penjualan_id}}" readonly>
+
 
                                     </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="gaji">Total Hutang</label>
-                                            <input type="text" name="total_hutang" id="total_hutang" class="form-control" >
+                                            <input type="text" name="total_hutang" id="total_hutang" value="{{$data->sisa_hutang}}" class="form-control" readonly>
                                         </div>
 
                                     </div>
@@ -74,7 +75,7 @@
                                         <div class="form-group">
                                                 <label for="sisa_hutang">Sisa Hutang</label>
                                                 <input type="text" name="sisa_hutang" id="sisa_hutang"
-                                                    class="form-control" readonly>
+                                                    class="form-control" value="{{$data->sisa_hutang}}"  readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -222,6 +223,7 @@
                         $('#faktur_penjualan').val(null).trigger('change');
                         loadTable();
                         Swal.fire("Success","Sukses saving pembayaran","success");
+                        location.reload();
                     }
                 }
             });
@@ -231,13 +233,21 @@
 
     })
     function loadTable(){
-     //   $.fn.dataTable.ext.errMode = 'none';
-         //$('#example-table').dataTable().fnDestroy();
+         $.fn.dataTable.ext.errMode = 'none';
+         $('#example-table').dataTable().fnDestroy();
+         var penjualanid = $('#faktur_penjualan').val();
          $('#example-table')
         .dataTable({
-           processing:true,
-		   serverSide:true,
-		   ajax:"{{route('getDataBayarCustomer')}}",
+
+           ordering: true,
+               processing:true,
+               serverSide:true,
+               searching:false,
+		   ajax:{
+            url:"{{route('getDataBayarCustomer')}}",
+            type:"get",
+            data:{ penjualanid:penjualanid,_token: '{{csrf_token()}}' }
+            },
             columns:[
             {data:'id_bayar_hutang_customer'},
             {data:'customer'},

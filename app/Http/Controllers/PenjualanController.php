@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Kas as KasHelper;
 use Saldo;
+use Session;
 
 class PenjualanController extends Controller
 {
@@ -193,24 +194,19 @@ class PenjualanController extends Controller
             }
 
             if ($request->status != "tunai") {
-                $datahutang  = HutangCustomer::where('customer_id',$request->customer_id);
-                if($datahutang->count()>0){
-                    $data = $datahutang->first();
-                    $kodefaktur = $data->faktur;
-                    $data->total_hutang = $data->total_hutang+$total;
-                    $data->sisa_hutang =  $data->total_hutang-$data->total_pembayaran_hutang;
-                    $data->save();
-                }else{
+
                 $hutang = new HutangCustomer();
                 $hutang->faktur = HutangCustomer::kodeFaktur();
                 $kodefaktur = $hutang->faktur;
+                $hutang->penjualan_id = $penjualan->id;
                 $hutang->customer_id = $request->customer_id;
                 $hutang->total_hutang = $total;
                 $hutang->total_pembayaran_hutang = 0;
                 $hutang->sisa_hutang = $total;
+                $hutang->branch = Session::get('branch');;
                 $hutang->save();
 
-                }
+
 
             } else {
                 KasHelper::add($penjualan->faktur, 'pendapatan', 'penjualan', $penjualan->total,0);

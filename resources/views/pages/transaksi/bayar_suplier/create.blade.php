@@ -39,23 +39,22 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="suplier">suplier</label>
-                                            <input type="hidden" name="id_suplier" id="id_suplier" class="form-control" value="{{Session::get('id_suplier')}}" readonly>
-                                            <input type="text" name="nama_suplier" id="nama_suplier" class="form-control" value="{{Session::get('nama_suplier')}}" readonly>
+                                            <input type="hidden" name="id_suplier" id="id_suplier" class="form-control" value="{{$data->suplier_id}}" readonly>
+                                            <input type="text" name="nama_suplier" id="nama_suplier" class="form-control" value="{{$data->suplier}}" readonly>
 
                                     </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="faktur_pembelian">No.Faktur Pembelian</label>
-                                                <select name="faktur_pembelian" id="faktur_pembelian" class="select2-faktur-pembelian" style="width: 100%;height:100%">
-                                                </select>
-
+                                            <input type="text" name="faktur_pembelian_label" id="faktur_pembelian_label"  value="{{$data->faktur_pembelian}}" class="form-control" readonly >
+                                            <input type="hidden" name="faktur_pembelian" id="faktur_pembelian"  value="{{$data->pembelian_id}}" class="form-control" >
                                     </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="gaji">Total Hutang</label>
-                                            <input type="text" name="total_hutang" id="total_hutang" class="form-control" >
+                                            <input type="text" name="total_hutang" id="total_hutang"  value="{{$data->sisa_hutang}}" class="form-control" readonly>
                                         </div>
 
                                     </div>
@@ -74,7 +73,7 @@
                                         <div class="form-group">
                                                 <label for="sisa_hutang">Sisa Hutang</label>
                                                 <input type="text" name="sisa_hutang" id="sisa_hutang"
-                                                    class="form-control" readonly>
+                                                value="{{$data->sisa_hutang}}"  class="form-control" readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -221,6 +220,7 @@
                         $('#faktur_pembelian').val(null).trigger('change');
                         loadTable();
                         Swal.fire("Success","Sukses saving pembayaran","success");
+                        location.reload();
                     }
                 }
             });
@@ -237,9 +237,12 @@
                 ordering: true,
                 processing:true,
                 serverSide:true,
-            ajax:"{{route('getDataBayarSuplier')}}",
+            ajax:{
+            url:"{{route('getDataBayarSuplier')}}",
+            type:"get",
+            data:{pembelian_id:$('#faktur_pembelian').val(),_token: '{{csrf_token()}}' }
+            },
             columns:[
-
             {data:'id_bayar_hutang_suplier'},
             {data:'suplier'},
             {data:'tanggal_bayar'},
