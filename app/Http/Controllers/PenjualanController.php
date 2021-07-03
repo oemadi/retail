@@ -41,6 +41,9 @@ class PenjualanController extends Controller
 			$start = $request->get('start');
 			$rowperpage = $request->get('length');
 
+            $id_customer = $request->get('id_customer');
+            $id_status = $request->get('id_status');
+
 			$columnIndex_arr = $request->get('order');
 			$columnName_arr = $request->get('columns');
 			$order_arr = $request->get('order');
@@ -52,16 +55,31 @@ class PenjualanController extends Controller
 			$searchValue =$search_arr['value'];
 
 			$totalRecords = Penjualan::select('count(*)  as allcount')->count();
-			$totalRecordswithFilter =  Penjualan::select('count(*)  as allcount')
-			->count();
 
-			$records = Penjualan::orderBy($columnName,$columnSortOrder)
-            ->join('customer','customer.id','penjualan.customer_id')
-			->where('penjualan.faktur','like','%'.$searchValue.'%')
-			->select('penjualan.*','customer.nama as customer')
-			->skip($start)
-			->take($rowperpage)
-			->get();
+            $totalRecordswithFilterA = DB::select("SELECT count(*) as allcount from penjualan a where a.id>0
+            ".($id_customer!="" ?  "and a.customer_id='".$id_customer."'"  : "")."
+            ".($id_status!="all" ?  "and a.status='".$id_status."'"  : "")."");
+            $totalRecordswithFilter =  $totalRecordswithFilterA[0]->allcount;
+
+
+            $records = DB::select("SELECT a.*,b.nama as customer from penjualan a
+            inner join customer b on b.id=a.customer_id where a.id>0
+            ".($id_customer!="" ?  "and a.customer_id='".$id_customer."'"  : "")."
+            ".($id_status!="all" ?  "and a.status='".$id_status."'"  : "")."
+             order by $columnName $columnSortOrder
+             limit $start,$rowperpage");
+
+
+			// $totalRecordswithFilter =  Penjualan::select('count(*)  as allcount')
+			// ->count();
+
+			// $records = Penjualan::orderBy($columnName,$columnSortOrder)
+            // ->join('customer','customer.id','penjualan.customer_id')
+			// ->where('penjualan.faktur','like','%'.$searchValue.'%')
+			// ->select('penjualan.*','customer.nama as customer')
+			// ->skip($start)
+			// ->take($rowperpage)
+			// ->get();
 
 			$data_arr = array();
 			foreach($records as $record){
@@ -97,12 +115,12 @@ class PenjualanController extends Controller
            }
             return json_encode($data);
         }
-        public function getDataSuplier()
+        public function getDataSuplierSelect()
         {
             //$id_ship = Session::get('id_ship');
             $id = request()->get('search');
-            //dd($id);
             $res = DB::select("SELECT a.* from suplier a
+            where a.nama like '%".$id."%'
              order by a.nama limit 10
             ");
            foreach($res as $row){
@@ -110,6 +128,7 @@ class PenjualanController extends Controller
            }
             return json_encode($data);
         }
+
         public function getDataBarang()
         {
             //$id_ship = Session::get('id_ship');
@@ -131,6 +150,8 @@ class PenjualanController extends Controller
            // dd($res);
             return $res;
         }
+
+
         public function getDataFakturPenjualan()
         {
             //$id_ship = Session::get('id_ship');

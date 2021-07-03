@@ -45,7 +45,7 @@ Route::any('/getDataReturnPembelian', 'ReturnPembelianController@getDataReturnPe
 
 Route::any('/getDataCustomerSelect', 'PenjualanController@getDataCustomerSelect')->name('getDataCustomerSelect');
 Route::any('/getDataMasterSuplier', 'SuplierController@getDataMasterSuplier')->name('getDataMasterSuplier');
-Route::any('/getDataSuplier', 'PenjualanController@getDataSuplier')->name('getDataSuplier');
+Route::any('/getDataSuplierSelect', 'PenjualanController@getDataSuplierSelect')->name('getDataSuplierSelect');
 
 Route::any('/getDataMasterBarang', 'BarangController@getDataMasterBarang')->name('getDataMasterBarang');
 

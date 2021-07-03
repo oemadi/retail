@@ -24,6 +24,8 @@ class HutangCustomerController extends Controller
 			$draw = $request->get('draw');
 			$start = $request->get('start');
 			$rowperpage = $request->get('length');
+            $id_customer = $request->get('id_customer');
+            $id_status = $request->get('id_status');
 
 			$columnIndex_arr = $request->get('order');
 			$columnName_arr = $request->get('columns');
@@ -36,16 +38,32 @@ class HutangCustomerController extends Controller
 			$searchValue =$search_arr['value'];
 
 			$totalRecords = HutangCustomer::select('count(*)  as allcount')->count();
-			$totalRecordswithFilter =  HutangCustomer::select('count(*)  as allcount')
-			->count();
-            $records = HutangCustomer::orderBy($columnName,$columnSortOrder)
-            ->join('customer','customer.id','hutang_customer.customer_id')
-            ->join('penjualan','penjualan.id','hutang_customer.penjualan_id')
-			->select('hutang_customer.*','customer.nama as customer',
-            'penjualan.faktur as faktur_penjualan')
-			->skip($start)
-			->take($rowperpage)
-			->get();
+
+            $totalRecordswithFilterA = DB::select("SELECT count(*) as allcount from hutang_customer a where a.id>0
+            ".($id_customer!="" ?  "and a.customer_id='".$id_customer."'"  : "")."
+            ".($id_status!="all" ?  "and a.status='".$id_status."'"  : "")."");
+            $totalRecordswithFilter =  $totalRecordswithFilterA[0]->allcount;
+
+            $records = DB::select("SELECT a.*,b.nama as customer,c.faktur as faktur_penjualan
+            from hutang_customer a
+            inner join customer b on b.id=a.customer_id
+            inner join penjualan c on c.id=a.penjualan_id
+            where a.id>0
+            ".($id_customer!="" ?  "and a.customer_id='".$id_customer."'"  : "")."
+            ".($id_status!="all" ?  "and a.status='".$id_status."'"  : "")."
+             order by $columnName $columnSortOrder
+             limit $start,$rowperpage");
+
+			// $totalRecordswithFilter =  HutangCustomer::select('count(*)  as allcount')
+			// ->count();
+            // $records = HutangCustomer::orderBy($columnName,$columnSortOrder)
+            // ->join('customer','customer.id','hutang_customer.customer_id')
+            // ->join('penjualan','penjualan.id','hutang_customer.penjualan_id')
+			// ->select('hutang_customer.*','customer.nama as customer',
+            // 'penjualan.faktur as faktur_penjualan')
+			// ->skip($start)
+			// ->take($rowperpage)
+			// ->get();
 
           //  dd($records);
 

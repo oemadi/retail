@@ -38,7 +38,7 @@
                                 </label>
 
                                 <label>
-                                    <input type="radio" name="metode" id="metode2" value="kredit">
+                                    <input type="radio" name="metode" id="metode2" value="hutang">
                                     Non Tunai
                                 </label>
                             </span>

@@ -24,22 +24,15 @@
                                 <table class="table">
                                     <tbody>
                                         <tr>
-                                            <td>Tanggal Awal</td>
                                             <td>
-                                                <input title="tanggal transaksi" class="form-control datepicker-here" type="text"
-                                                    id="startdate" data-language="en" autocomplete="off"
-                                                    value="{{ date('Y-m-d') }}">
-                                            </td>
-                                            <td>Tanggal Akhir</td>
-                                            <td>
-                                                <input title="tanggal transaksi" class="form-control datepicker-here" type="text"
-                                                    id="enddate" data-language="en" autocomplete="off" value="{{ date('Y-m-d') }}">
+                                                <select name="id_suplier" id="id_suplier" class="form-control select2-suplier" style="width: 100%;height:auto">
+                                                </select>
                                             </td>
                                             <td>
                                                 <select id="status" class="form-control">
                                                     <option value="all">Semua Transaksi</option>
-                                                    <option value="tunai">Tunai</option>
-                                                    <option value="kredit">Non Tunai</option>
+                                                    <option value="tunai">tunai</option>
+                                                    <option value="hutang">hutang</option>
                                                 </select>
                                             </td>
                                             <td>
@@ -85,16 +78,52 @@
 @push('script')
 
 <script type="text/javascript">
-    $(function() {
-		$.fn.dataTable.ext.errMode = 'none';
+    $(document).ready(function(){
+    //    / alert();
+        loadDataTable();
+        $(".select2-suplier").select2({
+        ajax: {
+        url: "{{ route('getDataSuplierSelect') }}",
+        contentType: 'application/json',
+        dataType: 'json',
+        delay:50,
+        type:"get",
+        data: function(params) {
+            return {
+            search: params.term,_token: '{{csrf_token()}}'
+            };
+        },
+        processResults: function(data) {
+            return {
+            results: data
+            };
+        },
+        cache: true
+        },
+        placeholder:"Nama Suplier",
+        });
+
+        $('#filter1').click(function(){
+            $('#example-table').dataTable().fnDestroy();
+            loadDataTable();
+        });
+    });
+    function loadDataTable(){
+        var id_suplier = $("#id_suplier").val();
+        var id_status = $("#status").val();
+        $.fn.dataTable.ext.errMode = 'none';
         $('#example-table')
 		.on( 'error.dt', function ( e, settings, techNote, message ) {
         console.log( 'An error has been reported by DataTables: ', message );
-    } )
+        } )
 		.dataTable({
            processing:true,
 		   serverSide:true,
-		   ajax:"{{route('getHutangSuplier')}}",
+		   ajax:{
+               url:"{{route('getHutangSuplier')}}",
+               type:"get",
+               data:{id_suplier:id_suplier,id_status:id_status,_token: '{{csrf_token()}}'}
+           },
 		   columns:[
            {"data": "id",
                  render: function (data, type, row, meta) {
@@ -114,7 +143,7 @@
            }
 		   ]
         });
-    });
+    }
 </script>
 @endpush
   {{-- No.bayar_hutang	Suplier	ID Pembelian	Tanggal	Jumlah Bayar	Sisa Hutang	Aks? --}}

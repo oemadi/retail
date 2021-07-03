@@ -26,7 +26,7 @@ class Saldo
     }
 
 
-    public static function getSaldoTransaksiTunai()
+    public static function getSaldopenjualanTunai()
     {
         $total = DB::table('penjualan')->sum('total')->where('status', 'tunai');
         return $total;
@@ -64,9 +64,9 @@ class Saldo
     }
     public static function getOmsetBulanIni()
     {
-        $transaksi = Penjualan::whereMonth('tanggal_penjualan', date('m'))->whereYear('tanggal_penjualan', date('Y'))->get();
+        $penjualan = Penjualan::whereMonth('tanggal_penjualan', date('m'))->whereYear('tanggal_penjualan', date('Y'))->get();
         $ret = 0;
-        foreach ($transaksi as $row) {
+        foreach ($penjualan as $row) {
             $ret += $row->total - ($row->ppn + $row->pph);
         }
         return $ret;
@@ -82,17 +82,17 @@ class Saldo
         $value_keuntungan = 0;
         foreach ($data as $row) {
             if ($row->status == "hutang") {
-                foreach ($row->detail_penjualan as $detail_transaksi) {
+                foreach ($row->detail_penjualan as $detail_penjualan) {
                     $ppn_pph = 11.5;
-                    $keuntungan_persentase = $detail_transaksi->barang->persentase_pph_ppn_keuntungan - $ppn_pph;
-                    $value_keuntungan += (($detail_transaksi->harga / 100) * $keuntungan_persentase) * $detail_transaksi->jumlah_jual;
+                    $keuntungan_persentase = $detail_penjualan->barang->persentase_pph_ppn_keuntungan - $ppn_pph;
+                    $value_keuntungan += (($detail_penjualan->harga / 100) * $keuntungan_persentase) * $detail_penjualan->jumlah_jual;
                 }
                 $value_keuntungan -= $row->piutang->sisa_hutang;
             } else {
-                foreach ($row->detail_penjualan as $detail_transaksi) {
+                foreach ($row->detail_penjualan as $detail_penjualan) {
                     $ppn_pph = 11.5;
-                    $keuntungan_persentase = $detail_transaksi->barang->persentase_pph_ppn_keuntungan - $ppn_pph;
-                    $value_keuntungan += (($detail_transaksi->harga / 100) * $keuntungan_persentase) * $detail_transaksi->jumlah_jual;
+                    $keuntungan_persentase = $detail_penjualan->barang->persentase_pph_ppn_keuntungan - $ppn_pph;
+                    $value_keuntungan += (($detail_penjualan->harga / 100) * $keuntungan_persentase) * $detail_penjualan->jumlah_jual;
                 }
             }
         }

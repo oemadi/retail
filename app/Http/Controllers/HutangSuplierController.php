@@ -25,6 +25,9 @@ class HutangSuplierController extends Controller
 			$start = $request->get('start');
 			$rowperpage = $request->get('length');
 
+            $id_suplier = $request->get('id_suplier');
+            $id_status = $request->get('id_status');
+
 			$columnIndex_arr = $request->get('order');
 			$columnName_arr = $request->get('columns');
 			$order_arr = $request->get('order');
@@ -36,16 +39,33 @@ class HutangSuplierController extends Controller
 			$searchValue =$search_arr['value'];
 
 			$totalRecords = HutangSuplier::select('count(*)  as allcount')->count();
-			$totalRecordswithFilter =  HutangSuplier::select('count(*)  as allcount')
-			->count();
 
-            $records = HutangSuplier::orderBy($columnName,$columnSortOrder)
-            ->join('pembelian','pembelian.id','hutang_suplier.pembelian_id')
-            ->join('suplier','suplier.id','hutang_suplier.suplier_id')
-			->select('hutang_suplier.*','suplier.nama as suplier','pembelian.faktur as faktur_pembelian')
-			->skip($start)
-			->take($rowperpage)
-			->get();
+            $totalRecordswithFilterA = DB::select("SELECT count(*) as allcount from hutang_suplier a
+            where a.id>0
+            ".($id_suplier!="" ?  "and a.suplier_id='".$id_suplier."'"  : "")."
+            ".($id_status!="all" ?  "and a.status='".$id_status."'"  : "")."");
+            $totalRecordswithFilter =  $totalRecordswithFilterA[0]->allcount;
+
+
+            $records = DB::select("SELECT a.*,b.nama as suplier,c.faktur as faktur_pembelian
+            from hutang_suplier a inner join suplier b on b.id=a.suplier_id
+            inner join pembelian c on c.id=a.pembelian_id
+            where a.id>0
+            ".($id_suplier!="" ?  "and a.suplier_id='".$id_suplier."'"  : "")."
+            ".($id_status!="all" ?  "and a.status='".$id_status."'"  : "")."
+             order by $columnName $columnSortOrder
+             limit $start,$rowperpage");
+
+			// $totalRecordswithFilter =  HutangSuplier::select('count(*)  as allcount')
+			// ->count();
+
+            // $records = HutangSuplier::orderBy($columnName,$columnSortOrder)
+            // ->join('pembelian','pembelian.id','hutang_suplier.pembelian_id')
+            // ->join('suplier','suplier.id','hutang_suplier.suplier_id')
+			// ->select('hutang_suplier.*','suplier.nama as suplier','pembelian.faktur as faktur_pembelian')
+			// ->skip($start)
+			// ->take($rowperpage)
+			// ->get();
 
 			$data_arr = array();
 			foreach($records as $record){

@@ -19,6 +19,38 @@
                         @endif
                     </div>
                 </div>
+                <div class="col-md-12">
+                    <div class=" box-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <select name="id_customer" id="id_customer" class="form-control select2-customer" style="width: 100%;height:auto">
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select id="status" class="form-control">
+                                                    <option value="all">Semua Transaksi</option>
+                                                    <option value="tunai">tunai</option>
+                                                    <option value="hutang">hutang</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <a href="#" class="btn btn-success" style="width:100%" id="filter1"><i
+                                                        class="fa fa-search"></i>
+                                                    Filter</a>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                    </div>
+                </div>
+            </div>
                 <div class="row">
                     <div class="col-md-4">
                         <a href="{{ route('transaksi.penjualan.create') }}" class="btn btn-primary"><i
@@ -77,6 +109,48 @@
 @push('script')
 <script>
     $(document).ready(function(){
+        loadDataTable();
+        $(".select2-customer").select2({
+        ajax: {
+        url: "{{ route('getDataCustomerSelect') }}",
+        contentType: 'application/json',
+
+        dataType: 'json',
+        delay:50,
+        type:"get",
+        data: function(params) {
+            return {
+            search: params.term,_token: '{{csrf_token()}}'
+            };
+        },
+        processResults: function(data) {
+            return {
+            results: data
+            };
+        },
+        cache: true
+        },
+
+        placeholder:"Nama Customer",
+        });
+
+
+        $("#startdate").datepicker({
+            todayBtn: 1,
+            format : 'yyyy-mm-dd',
+            autoclose: true,
+        }).on('changeDate', function (selected) {
+            var minDate = new Date(selected.date.valueOf());
+            $('#enddate').datepicker('setStartDate', minDate);
+        });
+        $("#enddate").datepicker({format : 'yyyy-mm-dd'}).on('changeDate', function (selected) {
+            var maxDate = new Date(selected.date.valueOf());
+            $('#startdate').datepicker('setEndDate', maxDate);
+        });
+    });
+    function loadDataTable(){
+         var id_customer = $("#id_customer").val();
+         var id_status = $("#status").val();
         $.fn.dataTable.ext.errMode = 'none';
         $('#example-table')
 		.on( 'error.dt', function ( e, settings, techNote, message ) {
@@ -85,7 +159,11 @@
 		.dataTable({
            processing:true,
 		   serverSide:true,
-		   ajax:"{{route('getDataPenjualan')}}",
+		   ajax:{
+               url:"{{route('getDataPenjualan')}}",
+               type:"get",
+               data:{id_customer:id_customer,id_status:id_status,_token: '{{csrf_token()}}'}
+           },
 		   columns:[
 		    {"data": "id",
                  render: function (data, type, row, meta) {
@@ -106,37 +184,13 @@
 		   ]
 
         });
-        $("#startdate").datepicker({
-            todayBtn: 1,
-            format : 'yyyy-mm-dd',
-            autoclose: true,
-        }).on('changeDate', function (selected) {
-            var minDate = new Date(selected.date.valueOf());
-            $('#enddate').datepicker('setStartDate', minDate);
-        });
-        $("#enddate").datepicker({format : 'yyyy-mm-dd'}).on('changeDate', function (selected) {
-            var maxDate = new Date(selected.date.valueOf());
-            $('#startdate').datepicker('setEndDate', maxDate);
-        });
-    });
-        // $('#filter1').click(function(){
-        //     const pelanggan = $('#pelanggan').val();
-        //     if($('#startdate').val()!=""){
-        //          tanggal_awal = $('#startdate').val();
-        //     }else{
-        //          tanggal_awal ="all";
-        //     }
-        //     if($('#enddate').val()!=""){
-        //          tanggal_akhir = $('#enddate').val();
-        //     }else{
-        //          tanggal_akhir ="all";
-        //     }
-        //     const status = $('#status').val();
-        //     let url = `{{ url('transaksi/penjualan/loadTable?status=`+status+`&tanggal_awal=`+tanggal_awal+`&tanggal_akhir=`+tanggal_akhir+`') }}`;
-        //     const parseResult = new DOMParser().parseFromString(url, "text/html");
-        //     const parsedUrl = parseResult.documentElement.textContent;
-        //     $('.table-responsive').load(parsedUrl);
-        // });
+        }
+
+         $('#filter1').click(function(){
+            $('#example-table').dataTable().fnDestroy();
+            loadDataTable();
+         });
+
         // $("#startdate").datepicker({
         //     todayBtn: 1,
         //     format : 'yyyy-mm-dd',

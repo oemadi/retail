@@ -7,6 +7,7 @@ use App\Gaji;
 use App\Pegawai;
 use DB;
 use Kas as KasHelper;
+use Session;
 
 class PenggajianController extends Controller
 {
@@ -58,11 +59,14 @@ class PenggajianController extends Controller
 
 			$totalRecords = Gaji::select('count(*)  as allcount')->count();
 			$totalRecordswithFilter =  Gaji::select('count(*)  as allcount')
-			->count();
-
+			->join('pegawai','pegawai.id','gaji.pegawai_id')
+            ->where('pegawai.nama','like','%'.$searchValue.'%')
+            ->count();
+// dd($searchValue);
 			$records = Gaji::orderBy($columnName,$columnSortOrder)
             ->join('pegawai','pegawai.id','gaji.pegawai_id')
 			->select('gaji.*','pegawai.nama','pegawai.gaji')
+            ->where('pegawai.nama','like','%'.$searchValue.'%')
 			->skip($start)
 			->take($rowperpage)
 			->get();
@@ -117,6 +121,7 @@ class PenggajianController extends Controller
         $penggajian->total_gaji = $request->gaji;
         $penggajian->potongan = $request->potongan;
         $penggajian->gaji_bersih = $request->gaji_bersih;
+        $penggajian->branch = Session::get('branch');
 
         if ($penggajian->save()) {
             KasHelper::add($penggajian->faktur, 'pengeluaran', 'penggajian',0,$request->gaji);

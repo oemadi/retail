@@ -27,6 +27,8 @@ class PembelianController extends Controller
 			$draw = $request->get('draw');
 			$start = $request->get('start');
 			$rowperpage = $request->get('length');
+            $id_suplier = $request->get('id_suplier');
+            $id_status = $request->get('id_status');
 
 			$columnIndex_arr = $request->get('order');
 			$columnName_arr = $request->get('columns');
@@ -39,16 +41,19 @@ class PembelianController extends Controller
 			$searchValue =$search_arr['value'];
 
 			$totalRecords = Pembelian::select('count(*)  as allcount')->count();
-			$totalRecordswithFilter =  Pembelian::select('count(*)  as allcount')
-			->count();
+            $totalRecordswithFilterA = DB::select("SELECT count(*) as allcount from pembelian a where a.id>0
+            ".($id_suplier!="" ?  "and a.suplier_id='".$id_suplier."'"  : "")."
+            ".($id_status!="all" ?  "and a.status='".$id_status."'"  : "")."");
+            $totalRecordswithFilter =  $totalRecordswithFilterA[0]->allcount;
 
-			$records = Pembelian::orderBy($columnName,$columnSortOrder)
-            ->join('suplier','suplier.id','pembelian.suplier_id')
-			->where('pembelian.faktur','like','%'.$searchValue.'%')
-			->select('pembelian.*','suplier.nama as suplier')
-			->skip($start)
-			->take($rowperpage)
-			->get();
+
+            $records = DB::select("SELECT a.*,b.nama as suplier from pembelian a
+            inner join suplier b on b.id=a.suplier_id where a.id>0
+            ".($id_suplier!="" ?  "and a.suplier_id='".$id_suplier."'"  : "")."
+            ".($id_status!="all" ?  "and a.status='".$id_status."'"  : "")."
+             order by $columnName $columnSortOrder
+             limit $start,$rowperpage");
+
 
 			$data_arr = array();
 			foreach($records as $record){

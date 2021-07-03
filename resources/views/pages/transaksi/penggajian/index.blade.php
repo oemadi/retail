@@ -56,7 +56,11 @@
 		.dataTable({
            processing:true,
 		   serverSide:true,
-		   ajax:"{{route('getDataPenggajian')}}",
+           searching:true,
+		   ajax:{
+               url:"{{route('getDataPenggajian')}}",
+               type:"get"
+           },
 		   columns:[
             {"data": "id",
                  render: function (data, type, row, meta) {

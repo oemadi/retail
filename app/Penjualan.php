@@ -34,4 +34,8 @@ class Penjualan extends Model
         }
         return $number;
     }
+    public function piutang()
+    {
+        return $this->hasOne(HutangCustomer::class, 'penjualan_id', 'id');
+    }
 }
