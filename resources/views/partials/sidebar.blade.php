@@ -102,6 +102,9 @@
                     <li class="{{ set_active(['transaksi.kas.index','transaksi.kas.create']) }}">
                         <a href="{{ route('transaksi.kas.index') }}"><i class="fa fa-calendar"></i> Kas</a>
                     </li>
+                    <li class="{{ set_active(['transaksi.kas.index','transaksi.kas.create']) }}">
+                        <a href="{{ route('transaksi.penyesuaianStok.index') }}"><i class="fa fa-calendar"></i> Penyesuaian Stok</a>
+                    </li>
                     <li class="{{ set_active(['transaksi.pembelian.index','transaksi.pembelian.create']) }}">
                         <a href="{{ route('transaksi.pembelian.index') }}"><i class="fa fa-shopping-basket"></i>
                             Pembelian</a>

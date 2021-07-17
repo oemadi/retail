@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Auth::routes(['register' => false, 'reset' => false]);
+
+
+Route::any('/getDataPenyesuaianStok', 'PenyesuaianStokController@getDataPenyesuaianStok')->name('getDataPenyesuaianStok');
+
 Route::any('/getDataSuplier', 'SuplierController@getSuplier')->name('getDataSuplier');
 Route::any('/getDataSuplierSelect', 'PenjualanController@getDataSuplierSelect')->name('getDataSuplierSelect');
 Route::any('/getDataCustomer', 'CustomerController@getDataCustomer')->name('getDataCustomer');
@@ -204,6 +208,11 @@ Route::group(['middleware' => 'auth'], function ($app) use ($router) {
             $app->post('/store', 'KasController@store')->name('store');
             $app->get('/loadTable', 'KasController@loadTable')->name('load_table');
             $app->get('/loadKotak', 'KasController@loadKotak')->name('load_kotak');
+        });
+        $app->prefix('penyesuaianStok')->name('penyesuaianStok.')->group(function ($app) use ($router) {
+            $app->get('/', 'PenyesuaianStokController@index')->name('index');
+            $app->get('/create', 'PenyesuaianStokController@create')->name('create');
+            $app->post('/store', 'PenyesuaianStokController@store')->name('store');
         });
         $app->prefix('pembelian')->name('pembelian.')->group(function ($app) use ($router) {
             $app->get('/', 'PembelianController@index')->name('index');

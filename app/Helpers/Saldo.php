@@ -80,23 +80,27 @@ class Saldo
     {
         $data = Penjualan::whereMonth('tanggal_penjualan', date('m'))->whereYear('tanggal_penjualan', date('Y'))->get();
         $value_keuntungan = 0;
-        foreach ($data as $row) {
-            if ($row->status == "hutang") {
-                foreach ($row->detail_penjualan as $detail_penjualan) {
-                    $ppn_pph = 11.5;
-                    $keuntungan_persentase = $detail_penjualan->barang->persentase_pph_ppn_keuntungan - $ppn_pph;
-                    $value_keuntungan += (($detail_penjualan->harga / 100) * $keuntungan_persentase) * $detail_penjualan->jumlah_jual;
-                }
-                $value_keuntungan -= $row->piutang->sisa_hutang;
-            } else {
-                foreach ($row->detail_penjualan as $detail_penjualan) {
-                    $ppn_pph = 11.5;
-                    $keuntungan_persentase = $detail_penjualan->barang->persentase_pph_ppn_keuntungan - $ppn_pph;
-                    $value_keuntungan += (($detail_penjualan->harga / 100) * $keuntungan_persentase) * $detail_penjualan->jumlah_jual;
-                }
-            }
-        }
-        return $value_keuntungan - self::return_penjualan() - self::cashback();
+  //dd($data->detail_penjualan);
+        // foreach ($data as $row) {
+        //     if ($row->status == "hutang") {
+        //         foreach ($row->detail_penjualan as $detail_penjualan) {
+        //             $ppn_pph = 11.5;
+        //             $keuntungan_persentase = $detail_penjualan->barang->persentase_pph_ppn_keuntungan - $ppn_pph;
+        //             $value_keuntungan += (($detail_penjualan->harga / 100) * $keuntungan_persentase) * $detail_penjualan->jumlah_jual;
+        //         }
+        //         // if($row->piutang->sisa_hutang<0){
+        //          dd($row->piutang->sisa_hutang);
+        //         // }
+        //         $value_keuntungan -= $row->piutang->sisa_hutang;
+        //     } else {
+        //         foreach ($row->detail_penjualan as $detail_penjualan) {
+        //             $ppn_pph = 11.5;
+        //             $keuntungan_persentase = $detail_penjualan->barang->persentase_pph_ppn_keuntungan - $ppn_pph;
+        //             $value_keuntungan += (($detail_penjualan->harga / 100) * $keuntungan_persentase) * $detail_penjualan->jumlah_jual;
+        //         }
+        //     }
+        // }
+        return 0;//$value_keuntungan - self::return_penjualan();
     }
     public static function cashback()
     {

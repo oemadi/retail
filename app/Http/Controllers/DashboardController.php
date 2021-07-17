@@ -21,6 +21,7 @@ class DashboardController extends Controller
         $user = Auth::user();
         $data_branch = Cabang::where('id',$user->branch)->first();
         Session::put(array('branch'=>$user->branch,'branch_name'=>$data_branch->nama));
+       // dd($user->branch);
         $totalBarang = Barang::count();
         $totalCustomer = Customer::count();
         $omsetBulanIni = Saldo::getOmsetBulanIni();
