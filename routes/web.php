@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes(['register' => false, 'reset' => false]);
 Route::any('/getDataSuplier', 'SuplierController@getSuplier')->name('getDataSuplier');
+Route::any('/getDataSuplierSelect', 'PenjualanController@getDataSuplierSelect')->name('getDataSuplierSelect');
 Route::any('/getDataCustomer', 'CustomerController@getDataCustomer')->name('getDataCustomer');
 Route::any('/getDataMasterPegawai', 'PegawaiController@getDataMasterPegawai')->name('getDataMasterPegawai');
 Route::any('/getDataBarang', 'BarangController@getBarang')->name('getDataBarang');

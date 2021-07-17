@@ -6,41 +6,40 @@
         <div class="box box-danger">
             <div class="box-body">
                 <div class="row">
-                    <div class="col-md-6">
-                        <table class="table">
-                            <tbody>
-                                <tr>
-                                    <td>Tanggal Awal</td>
-                                    <td>
-                                        <input title="tanggal transaksi" class="form-control datepicker-here"
-                                            type="text" id="startdate" data-language="en" autocomplete="off"
-                                            value="{{ date('Y-m-d') }}">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Tanggal Akhir</td>
+                    <div class="col-md-12">
+                        <div class=" box-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <td>Tanggal Awal</td>
+                                                <td>
+                                                    <input title="tanggal transaksi" class="form-control datepicker-here"
+                                                        type="text" id="startdate" data-language="en" autocomplete="off"
+                                                        value="{{ date('Y-m-d') }}">
+                                                </td>
+                                                <td>Tanggal Akhir</td>
+                                                <td>
+                                                    <input title="tanggal transaksi" class="form-control datepicker-here"
+                                                        type="text" id="enddate" data-language="en" autocomplete="off"
+                                                        value="{{ date('Y-m-d') }}">
+                                                </td>
+                                                <td>
+                                                    <a href="#" class="btn btn-success" style="width:100%" id="filter1"><i
+                                                            class="fa fa-search"></i>
+                                                        Filter</a>
+                                                </td>
+                                            </tr>
 
-                                    <td>
-                                        <input title="tanggal transaksi" class="form-control datepicker-here"
-                                            type="text" id="enddate" data-language="en" autocomplete="off"
-                                            value="{{ date('Y-m-d') }}">
-                                    </td>
+                                        </tbody>
+                                    </table>
+                                </div>
 
-                                    <td>
-                                        <a href="#" class="btn btn-success" style="width:100%" id="filter1"><i
-                                                class="fa fa-search"></i>
-                                            Filter</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col-md-6">
-
-                        <div id="kotak-total">
-                            @include('pages.laporan.kas.kotak_total')
                         </div>
                     </div>
+                </div>
+
                 </div>
             </div>
         </div>

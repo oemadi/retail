@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Kas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Session;
 
 class KasController extends Controller
 {
@@ -33,17 +34,18 @@ class KasController extends Controller
 			$columnName = $columnName_arr[$columnIndex]['data'];
 			$columnSortOrder = $order_arr[0]['dir'];
 			$searchValue =$search_arr['value'];
+            $branch = Session::get('branch');
 
 			$totalRecords = Kas::select('count(*)  as allcount')
-				->whereBetween('kas.tanggal', array($awal,$akhir))
-				->count();
+			->where('branch',$branch)->whereBetween('kas.tanggal', array($awal,$akhir))->count();
+
 			$totalRecordswithFilter =  Kas::select('count(*)  as allcount')
-			->where('faktur','like','%'.$searchValue.'%')
-				->whereBetween('kas.tanggal', array($awal,$akhir))
+			->where('branch',$branch)->where('faktur','like','%'.$searchValue.'%')
+			->whereBetween('kas.tanggal', array($awal,$akhir))
 			->count();
 
 			$records = Kas::orderBy($columnName,$columnSortOrder)
-			->where('kas.faktur','like','%'.$searchValue.'%')
+			->where('branch',$branch)->where('kas.faktur','like','%'.$searchValue.'%')
 			->whereBetween('kas.tanggal', array($awal,$akhir))
 			->select('kas.*')
 			->skip($start)
@@ -84,9 +86,12 @@ class KasController extends Controller
     public function store(Request $request)
     {
         $kas = new Kas();
+        $branch = Session::get('branch');
+        $kas->branch=$branch;
         $kas->tanggal = $request->tanggal;
         $kas->faktur = $request->faktur;
         $kas->tipe = $request->tipe;
+
         if ($request->tipe == "pendapatan") {
             $kas->pemasukan = $request->pemasukan;
             $kas->pengeluaran = 0;
@@ -101,6 +106,7 @@ class KasController extends Controller
         } else {
             $kas->keterangan = "Tambah Data Kas lewat user";
         }
+
         if ($kas->save()) {
             session()->flash('message', 'Data berhasil disimpan!');
             return redirect()->route('transaksi.kas.index')->with('status', 'success');

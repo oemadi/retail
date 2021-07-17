@@ -9,7 +9,7 @@
                 <h3 class="box-title">@yield('page')</h3>
             </div>
             <div class="box-body">
-                <form action="{{ route('anggota.store') }}" method="POST">
+                <form action="{{ route('customer.store') }}" method="POST">
                     @csrf
                     <div class="row">
                         <div class="col-md-6 col-sm-12">

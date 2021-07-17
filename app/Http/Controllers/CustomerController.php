@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-
+use Session;
 class CustomerController extends Controller
 {
     /**
@@ -33,13 +33,15 @@ class CustomerController extends Controller
 		$columnSortOrder = $order_arr[0]['dir'];
 		$searchValue =$search_arr['value'];
 
-		$totalRecords = Customer::select('count(*)  as allcount')->count();
+        $branch = Session::get('branch');
+
+		$totalRecords = Customer::select('count(*)  as allcount')->where('branch',$branch)->count();
 		$totalRecordswithFilter =  Customer::select('count(*)  as allcount')
-		->where('nama','like','%'.$searchValue.'%')
-		->count();
+		->where('branch',$branch)->where('nama','like','%'.$searchValue.'%')->count();
 
 		$records = Customer::orderBy($columnName,$columnSortOrder)
-		->where('customer.nama','like','%'.$searchValue.'%')
+		->where('branch',$branch)
+        ->where('customer.nama','like','%'.$searchValue.'%')
 		->select('customer.*')
 		->skip($start)
 		->take($rowperpage)
@@ -88,7 +90,9 @@ class CustomerController extends Controller
             'no_hp' => 'required'
 
         ]);
+        $branch = Session::get('branch');
         $Customer = new Customer();
+        $Customer->branch = $branch;
         $Customer->nama = $request->nama;
         $Customer->alamat = $request->alamat;
         $Customer->no_hp = $request->no_hp;

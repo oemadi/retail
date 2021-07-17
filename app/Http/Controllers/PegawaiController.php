@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jabatan;
 use App\Pegawai;
+use Session;
 use Illuminate\Http\Request;
 
 class PegawaiController extends Controller
@@ -26,13 +27,14 @@ class PegawaiController extends Controller
 		$columnName = $columnName_arr[$columnIndex]['data'];
 		$columnSortOrder = $order_arr[0]['dir'];
 		$searchValue =$search_arr['value'];
+        $branch = Session::get('branch');
 
-		$totalRecords = Pegawai::select('count(*)  as allcount')->count();
+		$totalRecords = Pegawai::select('count(*)  as allcount')->where('branch',$branch)->count();
 		$totalRecordswithFilter =  Pegawai::select('count(*)  as allcount')
-		->where('nama','like','%'.$searchValue.'%')
-		->count();
+		->where('branch',$branch)->where('nama','like','%'.$searchValue.'%')->count();
 
 		$records = Pegawai::orderBy($columnName,$columnSortOrder)
+        ->where('branch',$branch)
 		->where('pegawai.nama','like','%'.$searchValue.'%')
 		->select('pegawai.*')
 		->skip($start)
@@ -74,7 +76,9 @@ class PegawaiController extends Controller
             'gaji' => 'required',
             'alamat' => 'required'
         ]);
+        $branch = Session::get('branch');
         $pegawai = new Pegawai();
+        $pegawai->branch = $branch;
         $pegawai->nama = $request->nama;
         $pegawai->no_telp = $request->no_telp;
         $pegawai->alamat = $request->alamat;

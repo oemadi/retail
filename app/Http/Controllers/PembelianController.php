@@ -18,8 +18,6 @@ class PembelianController extends Controller
 {
     public function index()
     {
-       // $pembelian = Pembelian::with('suplier')->get();
-        //$total = Saldo::getTotalPembelian();
         return view("pages.transaksi.pembelian.index");
     }
 
@@ -39,16 +37,17 @@ class PembelianController extends Controller
 			$columnName = $columnName_arr[$columnIndex]['data'];
 			$columnSortOrder = $order_arr[0]['dir'];
 			$searchValue =$search_arr['value'];
+            $branch = Session::get('branch');
 
-			$totalRecords = Pembelian::select('count(*)  as allcount')->count();
-            $totalRecordswithFilterA = DB::select("SELECT count(*) as allcount from pembelian a where a.id>0
+			$totalRecords = Pembelian::select('count(*)  as allcount')->where('branch',$branch)->count();
+            $totalRecordswithFilterA = DB::select("SELECT count(*) as allcount from pembelian a where a.branch=$branch
             ".($id_suplier!="" ?  "and a.suplier_id='".$id_suplier."'"  : "")."
             ".($id_status!="all" ?  "and a.status='".$id_status."'"  : "")."");
             $totalRecordswithFilter =  $totalRecordswithFilterA[0]->allcount;
 
 
             $records = DB::select("SELECT a.*,b.nama as suplier from pembelian a
-            inner join suplier b on b.id=a.suplier_id where a.id>0
+            inner join suplier b on b.id=a.suplier_id where  a.branch=$branch
             ".($id_suplier!="" ?  "and a.suplier_id='".$id_suplier."'"  : "")."
             ".($id_status!="all" ?  "and a.status='".$id_status."'"  : "")."
              order by $columnName $columnSortOrder
@@ -73,23 +72,21 @@ class PembelianController extends Controller
 		}
         public function getDataFakturPembelian()
         {
-            //$id_ship = Session::get('id_ship');
-            // HutangCustomer::where('faktur')
-
+            $branch = Session::get('branch');
             $id = request()->post('faktur_pembelian');
             $res = DB::select("SELECT a.*,b.sisa_hutang from pembelian a
             left join bayar_hutang_suplier b on a.id=b.id_pembelian
-            where a.status!='lunas' and a.id='".$id."' order by b.id");
+            where a.status!='lunas' and a.branch=$branch and a.id='".$id."' order by b.id");
            // dd($res);
             return $res;
         }
      public function getDataFakturPembelianSelect()
         {
-            //$id_ship = Session::get('id_ship');
+            $branch = Session::get('branch');
             $id = request()->get('search');
             $id_suplier = request()->get('id_suplier');
             $res = DB::select("SELECT a.* from pembelian a
-            where a.suplier_id='".$id_suplier."' and a.status='hutang'
+            where a.suplier_id='".$id_suplier."' and a.branch=$branch  and a.status='hutang'
             and a.faktur like '%".$id."%'
              order by a.tanggal_pembelian
             ");
@@ -108,6 +105,7 @@ class PembelianController extends Controller
         try {
             DB::beginTransaction();
             $pembelian = new Pembelian();
+            $pembelian->branch = Session::get('branch');
             $pembelian->faktur = $request->faktur;
             $pembelian->suplier_id = $request->suplier_id;
             $pembelian->tanggal_pembelian = date('Y-m-d');
@@ -118,7 +116,6 @@ class PembelianController extends Controller
             }
             $pembelian->total = $total;
             $pembelian->status = $request->status;
-            $pembelian->branch = Session::get('branch');
             $pembelian->save();
             foreach ($request->data as $row) {
                 $detail = new Detail_Pembelian();

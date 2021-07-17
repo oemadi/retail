@@ -3,15 +3,17 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Session;
 
 class BayarHutangCustomer extends Model
 {
     protected $table = 'bayar_hutang_customer';
     public static function kodeFaktur()
     {
-        $cek = BayarHutangCustomer::all();
+        $branch = Session::get('branch');
+        $cek = BayarHutangCustomer::where('branch',$branch)->get();
         if ($cek->count() > 0) {
-            $hutang = BayarHutangCustomer::orderBy('id', 'DESC')->first();
+            $hutang = BayarHutangCustomer::where('branch',$branch)->orderBy('id', 'DESC')->first();
             $nourut = (int) substr($hutang->faktur, -8, 8);
             $nourut++;
             $char = "HC";

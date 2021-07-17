@@ -62,7 +62,11 @@
 		   serverSide:true,
 		   ajax:"{{route('getDataMasterSuplier')}}",
 		   columns:[
-		   {data:'id'},
+		    {"data": "id",
+                 render: function (data, type, row, meta) {
+                 return meta.row + meta.settings._iDisplayStart + 1;
+                 }
+                },
 		   {data:'nama'},
            {data:'kontak'},
 		   {data:'no_hp'},

@@ -151,7 +151,7 @@
         }
         $(".select2-suplier").select2({
         ajax: {
-        url: "{{ route('getDataSuplier') }}",
+        url: "{{ route('getDataSuplierSelect') }}",
         contentType: 'application/json',
         dataType: 'json',
         delay:50,

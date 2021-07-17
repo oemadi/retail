@@ -3,15 +3,17 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Session;
 
 class Return_penjualan extends Model
 {
     protected $table = 'return_penjualan';
     public static function kodeFaktur()
     {
-        $cek = Return_penjualan::all();
+        $branch = Session::get('branch');
+        $cek = Return_penjualan::where('branch',$branch)->get();
         if ($cek->count() > 0) {
-            $transaksi = Return_penjualan::orderBy('id', 'DESC')->first();
+            $transaksi = Return_penjualan::where('branch',$branch)->orderBy('id', 'DESC')->first();
             $nourut = (int) substr($transaksi->faktur, -8, 8);
             $nourut++;
             $char = "RPJ";

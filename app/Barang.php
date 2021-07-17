@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Session;
 //use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Barang extends Model
@@ -12,9 +13,10 @@ class Barang extends Model
    // public $incrementing = false;
     public static function kodeBarang()
     {
-        $cek = Barang::withTrashed()->get();
+        $branch = Session::get('branch');
+        $cek = Barang::where('branch',$branch)->get();
         if ($cek->count() > 0) {
-            $peminjaman = Barang::orderBy('id', 'DESC')->withTrashed()->first();
+            $peminjaman = Barang::where('branch',$branch)->orderBy('id', 'DESC')->withTrashed()->first();
             $nourut = (int) substr($peminjaman->id, -7, 7);
             $nourut++;
             $char = "BRG";

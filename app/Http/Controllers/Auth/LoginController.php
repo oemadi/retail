@@ -48,16 +48,15 @@ class LoginController extends Controller
         //dd($request->branch_id);
         $request->validate([
             'username' => 'required|min:3',
-            'password' => 'required|min:5',
-            'branch' => 'required'
+            'password' => 'required|min:5'
         ]);
         $attempt = [
             'username' => $request->username,
-            'password' => $request->password,
-            'branch' => $request->branch
+            'password' => $request->password
+            // 'branch' => $request->branch
         ];
         if (Auth::attempt($attempt)) {
-            Session::put('branch',$request->branch);
+            //Session::put('branch',$request->branch);
             return redirect()->route('dashboard');
         } else {
             return redirect()->back()->with('message', 'Username atau password salah');

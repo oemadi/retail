@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Session;
 class Penjualan extends Model
 {
     protected $table = 'penjualan';
@@ -22,9 +22,10 @@ class Penjualan extends Model
     }
     public static function kodeFaktur()
     {
-        $cek = penjualan::all();
+        $branch = Session::get('branch');
+        $cek = penjualan::where('branch',$branch)->get();
         if ($cek->count() > 0) {
-            $penjualan = penjualan::orderBy('id', 'DESC')->first();
+            $penjualan = penjualan::where('branch',$branch)->orderBy('id', 'DESC')->first();
             $nourut = (int) substr($penjualan->faktur, -8, 8);
             $nourut++;
             $char = "TRK";

@@ -30,12 +30,11 @@ class BarangController extends Controller
 		$columnSortOrder = $order_arr[0]['dir'];
 		$searchValue =$search_arr['value'];
 
-		$totalRecords = Barang::select('count(*)  as allcount')->count();
-		$totalRecordswithFilter =  Barang::select('count(*)  as allcount')
-		->where('nama','like','%'.$searchValue.'%')
-		->count();
-
         $branch = Session::get('branch');
+
+		$totalRecords = Barang::select('count(*)  as allcount')->count();
+        $totalRecordswithFilterA = DB::select("SELECT count(*) as allcount from barang where branch=$branch");
+        $totalRecordswithFilter =  $totalRecordswithFilterA[0]->allcount;
 
 		$records = Barang::select('barang.*','kategori.nama as kategori_nama','satuan.nama as satuan_nama')
         ->join('satuan', 'satuan.id', '=', 'barang.satuan_id')
@@ -102,7 +101,9 @@ class BarangController extends Controller
         ]);
         $ppn = ($request->harga_beli / 100) * 10;
         $pph = ($request->harga_beli / 100) * 1.5;
+        $branch = Session::get('branch');
         $barang = new Barang();
+        $barang->branch = $branch;
         $barang->id = $request->kode_barang;
         $barang->nama = $request->nama_barang;
         $barang->harga_jual = $request->harga_jual;

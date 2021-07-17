@@ -3,15 +3,17 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Session;
 
 class Kas extends Model
 {
     protected $table = 'kas';
     public static function kodeFaktur()
     {
-        $cek = Kas::where('faktur', 'LIKE', 'KAS%')->get();
+        $branch = Session::get('branch');
+        $cek = Kas::where('branch',$branch)->where('faktur', 'LIKE', 'KAS%')->get();
         if ($cek->count() > 0) {
-            $return = Kas::where('faktur', 'LIKE', 'KAS%')->orderBy('id', 'DESC')->first();
+            $return = Kas::where('branch',$branch)->where('faktur', 'LIKE', 'KAS%')->orderBy('id', 'DESC')->first();
             $nourut = (int) substr($return->faktur, -8, 8);
             $nourut++;
             $char = "KAS";

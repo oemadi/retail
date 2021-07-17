@@ -53,33 +53,22 @@ class PenjualanController extends Controller
 			$columnName = $columnName_arr[$columnIndex]['data'];
 			$columnSortOrder = $order_arr[0]['dir'];
 			$searchValue =$search_arr['value'];
+            $branch = Session::get('branch');
 
-			$totalRecords = Penjualan::select('count(*)  as allcount')->count();
+			$totalRecords = Penjualan::select('count(*)  as allcount')->where('branch',$branch)->count();
 
-            $totalRecordswithFilterA = DB::select("SELECT count(*) as allcount from penjualan a where a.id>0
+            $totalRecordswithFilterA = DB::select("SELECT count(*) as allcount from penjualan a where a.branch=$branch
             ".($id_customer!="" ?  "and a.customer_id='".$id_customer."'"  : "")."
             ".($id_status!="all" ?  "and a.status='".$id_status."'"  : "")."");
             $totalRecordswithFilter =  $totalRecordswithFilterA[0]->allcount;
 
 
             $records = DB::select("SELECT a.*,b.nama as customer from penjualan a
-            inner join customer b on b.id=a.customer_id where a.id>0
+            inner join customer b on b.id=a.customer_id where a.branch=$branch
             ".($id_customer!="" ?  "and a.customer_id='".$id_customer."'"  : "")."
             ".($id_status!="all" ?  "and a.status='".$id_status."'"  : "")."
              order by $columnName $columnSortOrder
              limit $start,$rowperpage");
-
-
-			// $totalRecordswithFilter =  Penjualan::select('count(*)  as allcount')
-			// ->count();
-
-			// $records = Penjualan::orderBy($columnName,$columnSortOrder)
-            // ->join('customer','customer.id','penjualan.customer_id')
-			// ->where('penjualan.faktur','like','%'.$searchValue.'%')
-			// ->select('penjualan.*','customer.nama as customer')
-			// ->skip($start)
-			// ->take($rowperpage)
-			// ->get();
 
 			$data_arr = array();
 			foreach($records as $record){
@@ -104,10 +93,10 @@ class PenjualanController extends Controller
         }
         public function getDataCustomerSelect()
         {
-            //$id_ship = Session::get('id_ship');
+            $branch = Session::get('branch');
             $id = request()->get('search');
             $res = DB::select("SELECT a.* from customer a
-            where a.nama like '%".$id."%'
+            where a.branch=$branch and a.nama like '%".$id."%'
              order by a.nama limit 10
             ");
            foreach($res as $row){
@@ -117,10 +106,10 @@ class PenjualanController extends Controller
         }
         public function getDataSuplierSelect()
         {
-            //$id_ship = Session::get('id_ship');
+            // $branch = Session::get('branch');
             $id = request()->get('search');
             $res = DB::select("SELECT a.* from suplier a
-            where a.nama like '%".$id."%'
+            where  a.nama like '%".$id."%'
              order by a.nama limit 10
             ");
            foreach($res as $row){
@@ -131,10 +120,9 @@ class PenjualanController extends Controller
 
         public function getDataBarang()
         {
-            //$id_ship = Session::get('id_ship');
+            $branch = Session::get('branch');
             $id = request()->get('search');
-            $res = DB::select("SELECT a.* from barang a
-
+            $res = DB::select("SELECT a.* from barang a where a.branch=$branch
              order by a.nama limit 10
             ");
            foreach($res as $row){
@@ -144,9 +132,9 @@ class PenjualanController extends Controller
         }
         public function getDataBarangSelect2()
         {
-            //$id_ship = Session::get('id_ship');
+            $branch = Session::get('branch');
             $id = request()->post('id_barang');
-            $res = DB::select("SELECT a.* from barang a where a.id='".$id."'");
+            $res = DB::select("SELECT a.* from barang a where  a.branch=$branch and a.id='".$id."'");
            // dd($res);
             return $res;
         }
@@ -154,24 +142,22 @@ class PenjualanController extends Controller
 
         public function getDataFakturPenjualan()
         {
-            //$id_ship = Session::get('id_ship');
-            // HutangCustomer::where('faktur')
-
+            $branch = Session::get('branch');
             $id = request()->post('faktur_penjualan');
             $res = DB::select("SELECT a.*,b.sisa_hutang from penjualan a
             left join bayar_hutang_customer b on a.id=b.id_penjualan
-            where a.status!='lunas' and a.id='".$id."' order by b.id");
+            where  a.branch=$branch and a.status!='lunas' and a.id='".$id."' order by b.id");
            // dd($res);
             return $res;
         }
 
         public function getDataFakturPenjualanSelect()
         {
-            //$id_ship = Session::get('id_ship');
+            $branch = Session::get('branch');
             $id = request()->get('search');
             $id_customer = request()->get('id_customer');
             $res = DB::select("SELECT a.* from penjualan a
-            where a.customer_id='".$id_customer."' and a.status='hutang'
+            where a.branch=$branch and a.customer_id='".$id_customer."' and a.status='hutang'
             and a.faktur like '%".$id."%'
              order by a.tanggal_penjualan
             ");
@@ -191,6 +177,7 @@ class PenjualanController extends Controller
         try {
             DB::beginTransaction();
             $penjualan = new penjualan();
+            $penjualan->branch = Session::get('branch');;
             $penjualan->faktur = $request->faktur;
             $penjualan->customer_id = $request->customer_id;
             $penjualan->tanggal_penjualan = date('Y-m-d');
@@ -226,8 +213,6 @@ class PenjualanController extends Controller
                 $hutang->sisa_hutang = $total;
                 $hutang->branch = Session::get('branch');;
                 $hutang->save();
-
-
 
             } else {
                 KasHelper::add($penjualan->faktur, 'pendapatan', 'penjualan', $penjualan->total,0);

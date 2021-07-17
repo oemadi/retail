@@ -61,7 +61,7 @@
                     <label class="help-block error">{{ $message }}</label>
                     @enderror
                 </div>
-				<div class="form-group has-feedback @error('branch') has-error @enderror">
+				{{-- <div class="form-group has-feedback @error('branch') has-error @enderror">
 					<select name="branch" id="branch" class="form-control">
                         <option value="">Pilih Cabang</option>
                         <option value="1">Depok</option>
@@ -71,7 +71,7 @@
                                     @error('branch')
                                     <label class="help-block error">{{ $message }}</label>
                                     @enderror
-                </div>
+                </div> --}}
                 <div class="row">
                     <!-- /.col -->
                     <div class="col-xs-4" style="float:right">

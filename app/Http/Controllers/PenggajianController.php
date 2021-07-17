@@ -23,10 +23,10 @@ class PenggajianController extends Controller
     }
     public function getDataPegawaiSelect()
     {
-        //$id_ship = Session::get('id_ship');
+       $branch =  Session::get('branch');
         $id = request()->get('search');
         $res = DB::select("SELECT a.* from pegawai a
-        where a.nama like '%".$id."%'
+        where a.branch=$branch and a.nama like '%".$id."%'
          order by a.nama limit 10
         ");
        foreach($res as $row){
@@ -36,7 +36,7 @@ class PenggajianController extends Controller
     }
     public function getDataPegawaiSelect2()
     {
-        //$id_ship = Session::get('id_ship');
+        $branch =  Session::get('branch');
         $id = request()->post('id_pegawai');
         $res = DB::select("SELECT a.* from pegawai a where a.id=$id");
        // dd($res);
@@ -56,16 +56,19 @@ class PenggajianController extends Controller
 			$columnName = $columnName_arr[$columnIndex]['data'];
 			$columnSortOrder = $order_arr[0]['dir'];
 			$searchValue =$search_arr['value'];
+            $branch = Session::get('branch');
 
-			$totalRecords = Gaji::select('count(*)  as allcount')->count();
+			$totalRecords = Gaji::select('count(*)  as allcount')->where('branch',$branch)->count();
 			$totalRecordswithFilter =  Gaji::select('count(*)  as allcount')
 			->join('pegawai','pegawai.id','gaji.pegawai_id')
+            ->where('pegawai.branch',$branch)
             ->where('pegawai.nama','like','%'.$searchValue.'%')
             ->count();
 // dd($searchValue);
 			$records = Gaji::orderBy($columnName,$columnSortOrder)
             ->join('pegawai','pegawai.id','gaji.pegawai_id')
 			->select('gaji.*','pegawai.nama','pegawai.gaji')
+            ->where('pegawai.branch',$branch)
             ->where('pegawai.nama','like','%'.$searchValue.'%')
 			->skip($start)
 			->take($rowperpage)

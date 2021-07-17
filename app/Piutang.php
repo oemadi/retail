@@ -9,9 +9,10 @@ class Piutang extends Model
     protected $table = 'piutang';
     public static function kodeFaktur()
     {
-        $cek = Piutang::all();
+        $branch = Session::get('branch');
+        $cek = Piutang::where('branch',$branch)->get();
         if ($cek->count() > 0) {
-            $piutang = Piutang::orderBy('id', 'DESC')->first();
+            $piutang = Piutang::where('branch',$branch)->orderBy('id', 'DESC')->first();
             $nourut = (int) substr($piutang->faktur, -8, 8);
             $nourut++;
             $char = "PTG";

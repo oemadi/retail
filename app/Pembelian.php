@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Session;
 class Pembelian extends Model
 {
     protected $table = 'pembelian';
@@ -21,9 +21,10 @@ class Pembelian extends Model
     }
     public static function kodeFaktur()
     {
-        $cek = Pembelian::all();
+        $branch = Session::get('branch');
+        $cek = Pembelian::where('branch',$branch)->get();
         if ($cek->count() > 0) {
-            $pembelian = Pembelian::orderBy('id', 'DESC')->first();
+            $pembelian = Pembelian::where('branch',$branch)->orderBy('id', 'DESC')->first();
             $nourut = (int) substr($pembelian->faktur, -8, 8);
             $nourut++;
             $char = "PMB";

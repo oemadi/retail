@@ -55,7 +55,11 @@
 		   serverSide:true,
 		   ajax:"{{route('getDataCabang')}}",
 		   columns:[
-		   {data:'id'},
+            {"data": "id",
+                 render: function (data, type, row, meta) {
+                 return meta.row + meta.settings._iDisplayStart + 1;
+                 }
+                },
 		   {data:'nama'},
            {data:'alamat'},
            {data:'kontak'},

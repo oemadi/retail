@@ -3,15 +3,17 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Session;
 
 class Return_pembelian extends Model
 {
     protected $table = 'return_pembelian';
     public static function kodeFaktur()
     {
-        $cek = Return_pembelian::all();
+        $branch = Session::get('branch');
+        $cek = Return_pembelian::where('branch',$branch)->get();
         if ($cek->count() > 0) {
-            $return = Return_pembelian::orderBy('id', 'DESC')->first();
+            $return = Return_pembelian::where('branch',$branch)->orderBy('id', 'DESC')->first();
             $nourut = (int) substr($return->faktur, -8, 8);
             $nourut++;
             $char = "RPM";
