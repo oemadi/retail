@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\HutangCustomer;
 // use App\Pembelian;
 use DB;
+use Session;
 
 class HutangCustomerController extends Controller
 {
@@ -36,10 +37,11 @@ class HutangCustomerController extends Controller
 			$columnName = $columnName_arr[$columnIndex]['data'];
 			$columnSortOrder = $order_arr[0]['dir'];
 			$searchValue =$search_arr['value'];
+            $branch = Session::get('branch');
 
 			$totalRecords = HutangCustomer::select('count(*)  as allcount')->count();
 
-            $totalRecordswithFilterA = DB::select("SELECT count(*) as allcount from hutang_customer a where a.id>0
+            $totalRecordswithFilterA = DB::select("SELECT count(*) as allcount from hutang_customer a where a.branch= $branch
             ".($id_customer!="" ?  "and a.customer_id='".$id_customer."'"  : "")."
             ".($id_status!="all" ?  "and a.status='".$id_status."'"  : "")."");
             $totalRecordswithFilter =  $totalRecordswithFilterA[0]->allcount;
@@ -48,7 +50,7 @@ class HutangCustomerController extends Controller
             from hutang_customer a
             inner join customer b on b.id=a.customer_id
             inner join penjualan c on c.id=a.penjualan_id
-            where a.id>0
+            where a.branch= $branch
             ".($id_customer!="" ?  "and a.customer_id='".$id_customer."'"  : "")."
             ".($id_status!="all" ?  "and a.status='".$id_status."'"  : "")."
              order by $columnName $columnSortOrder

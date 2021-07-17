@@ -125,7 +125,7 @@ class PembelianController extends Controller
                 $detail->subtotal = $row['subtotal'];
                 $detail->save();
              //  self::insertDataToHistory($row['kode_barang'], $request->suplier_id, $row['jumlah']);
-              // self::updateStokbarang($row['kode_barang'], $row['jumlah']);
+                self::updateStokbarang($row['kode_barang'], $row['jumlah']);
             }
             if ($request->status != "tunai") {
                 $kodefaktur  = HutangSuplier::kodeFaktur();
@@ -136,6 +136,7 @@ class PembelianController extends Controller
                 $hutang->total_hutang = $total;
                 $hutang->total_pembayaran_hutang = 0;
                 $hutang->sisa_hutang = $total;
+                $hutang->status = 'belum lunas';
                 $hutang->branch = Session::get('branch');
                 $hutang->save();
             } else {

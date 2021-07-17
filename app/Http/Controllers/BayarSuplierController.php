@@ -138,6 +138,7 @@ class BayarSuplierController extends Controller
             //'nama' => 'required|min:3'
         ]);
         $BayarSuplier = new BayarHutangSuplier();
+        $BayarSuplier->branch = Session::get('branch');
         $BayarSuplier->tanggal_bayar =  date('Y-m-d',strtotime($request->tanggal));
         $BayarSuplier->id_bayar_hutang_Suplier = $request->faktur;
         $BayarSuplier->id_suplier = $request->id_suplier;

@@ -11,7 +11,7 @@ class HutangCustomer extends Model
     public static function kodeFaktur()
     {
         $branch = Session::get('branch');
-        $cek = HutangCustomer::all();
+        $cek = HutangCustomer::where('branch',$branch)->get();
         if ($cek->count() > 0) {
             $hutang = HutangCustomer::where('branch',$branch)->orderBy('id', 'DESC')->first();
             $nourut = (int) substr($hutang->faktur, -8, 8);

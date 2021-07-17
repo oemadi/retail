@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\HutangSuplier;
 use App\Pembelian;
 use DB;
+use Session;
 
 class HutangSuplierController extends Controller
 {
@@ -37,11 +38,12 @@ class HutangSuplierController extends Controller
 			$columnName = $columnName_arr[$columnIndex]['data'];
 			$columnSortOrder = $order_arr[0]['dir'];
 			$searchValue =$search_arr['value'];
+            $branch = Session::get('branch');
 
-			$totalRecords = HutangSuplier::select('count(*)  as allcount')->count();
+			$totalRecords = HutangSuplier::select('count(*)  as allcount')->where('branch',$branch)->count();
 
             $totalRecordswithFilterA = DB::select("SELECT count(*) as allcount from hutang_suplier a
-            where a.id>0
+            where a.branch= $branch
             ".($id_suplier!="" ?  "and a.suplier_id='".$id_suplier."'"  : "")."
             ".($id_status!="all" ?  "and a.status='".$id_status."'"  : "")."");
             $totalRecordswithFilter =  $totalRecordswithFilterA[0]->allcount;
@@ -50,7 +52,7 @@ class HutangSuplierController extends Controller
             $records = DB::select("SELECT a.*,b.nama as suplier,c.faktur as faktur_pembelian
             from hutang_suplier a inner join suplier b on b.id=a.suplier_id
             inner join pembelian c on c.id=a.pembelian_id
-            where a.id>0
+            where a.branch= $branch
             ".($id_suplier!="" ?  "and a.suplier_id='".$id_suplier."'"  : "")."
             ".($id_status!="all" ?  "and a.status='".$id_status."'"  : "")."
              order by $columnName $columnSortOrder

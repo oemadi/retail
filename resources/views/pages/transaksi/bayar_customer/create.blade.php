@@ -39,8 +39,8 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="customer">Customer</label>
-                                            <input type="hidden" name="id_customer" id="id_customer" class="form-control" value="{{Session::get('id_customer')}}" readonly>
-                                            <input type="text" name="nama_customer" id="nama_customer" class="form-control" value="{{Session::get('nama_customer')}}" readonly>
+                                            <input type="hidden" name="id_customer" id="id_customer" class="form-control" value="{{$data->customer_id}}" readonly>
+                                            <input type="text" name="nama_customer" id="nama_customer" class="form-control" value="{{$data->customer}}" readonly>
 
                                     </div>
                                     </div>

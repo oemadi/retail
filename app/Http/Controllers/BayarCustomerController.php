@@ -140,6 +140,7 @@ class BayarCustomerController extends Controller
             //'nama' => 'required|min:3'
         ]);
         $BayarCustomer = new BayarHutangCustomer();
+        $BayarCustomer->branch = Session::get('branch');
         $BayarCustomer->tanggal_bayar =  date('Y-m-d',strtotime($request->tanggal));
         $BayarCustomer->id_bayar_hutang_customer = $request->faktur;
         $BayarCustomer->id_customer = $request->id_customer;
