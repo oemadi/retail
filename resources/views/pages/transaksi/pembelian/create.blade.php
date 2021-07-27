@@ -77,8 +77,15 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="jumlah">Jumlah</label>
-                            <input type="number" name="jumlah" id="jumlah" class="form-control">
+                            <label for="jumlah">Jumlah (Boleh Koma) dlm Kg</label>
+                            <input type="text" name="jumlah2" id="jumlah2" class="form-control">
+                            <input type="hidden" name="jumlah" id="jumlah" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="karung">Karung (Boleh Koma)</label>
+                            <input type="text" name="karung" id="karung" class="form-control">
                         </div>
                     </div>
                     <div class="col-md-12">
@@ -108,10 +115,11 @@
                             <table class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Kode Barang</th>
+
                                         <th>Nama Barang</th>
                                         <th>Harga Barang</th>
                                         <th>Qty</th>
+                                        <th>Karung</th>
                                         <th>Subtotal</th>
                                         <th>Action</th>
                                     </tr>
@@ -209,36 +217,21 @@
                     }
                 })
         });
-        $(document).on('click','#minus',function(){
-            minusCart($(this).data('kode'),$(this).data('i'));
-        });
-        $(document).on('click','#plus',function(){
-            plusCart($(this).data('kode'),$(this).data('i'));
-        });
+
         $('.showModalSuplier').click(function(){
             $('#modalSuplier').modal('show');
         });
         $('.showModalBarang').click(function(){
             $('#modalBarang').modal('show');
         });
-        $(document).on('click','.btn-pilih-suplier',function(){
-            $('#suplier').val($(this).data('nsuplier'));
-            $('#id_suplier').val($(this).data('id'));
-            $('#modalSuplier').modal('hide');
-        });
+
         $(document).on('click','#delete',function(){
             cart.splice($(this).data('i'),1);
             saveCart();
             showCart();
             loadKotak();
         });
-        $(document).on('click','.btn-pilih-barang',function(){
-            $('#id_barang').val($(this).data('id'));
-            $('#barang').val($(this).data('id'));
-            $('#hargabeli').val($(this).data('hargabeli'));
-            $('#nama_barang').val($(this).data('nbarang'));
-            $('#modalBarang').modal('hide');
-        });
+
         $('#metode1').click(function(){
             $('.kotakTanggal').css({display:"none"})
         })
@@ -260,20 +253,24 @@
             var nama_barang = $('#nama_barang').val();
             var jumlah = $('#jumlah').val();
             var harga = $('#harga_barang').val();
-            for (var i in cart){
-                if(cart[i].kode_barang == kode_barang){
-                    cart[i].jumlah = parseInt(cart[i].jumlah)+parseInt(jumlah);
-                    cart[i].subtotal = parseInt(cart[i].harga) * parseInt(cart[i].jumlah);
-                    showCart();
-                    saveCart();
-                    return;
-                }
-            }
+            var karung = $('#karung').val();
+
+            // for (var i in cart){
+            //     if(cart[i].kode_barang == kode_barang){
+            //         cart[i].jumlah = parseInt(cart[i].jumlah)+parseInt(jumlah);
+            //         cart[i].subtotal = parseInt(cart[i].harga) * parseInt(cart[i].jumlah);
+            //         showCart();
+            //         saveCart();
+            //         return;
+            //     }
+            // }
+
             const item = {
                 kode_barang :kode_barang,
                 nama_barang:nama_barang,
                 jumlah:jumlah,
                 harga:harga,
+                karung:karung,
                 subtotal:parseInt(jumlah)*parseInt(harga)
             };
 
@@ -290,34 +287,7 @@
                 localStorage.cart = JSON.stringify(cart);
             }
         }
-        function minusCart(kode_barang,index){
-            for (var i in cart){
-                if(cart[i].kode_barang == kode_barang){
-                    if(cart[i].jumlah == 1){
-                        cart.splice(index,1);
-                        loadKotak();
-                    }else{
-                        cart[i].jumlah = parseInt(cart[i].jumlah) - 1;
-                        cart[i].subtotal = parseInt(cart[i].harga) * parseInt(cart[i].jumlah);
-                    }
-                    saveCart();
-                    showCart();
-                    loadKotak();
-                    return;
-                }
-            }
-        }
-        function plusCart(kode_barang,i){
-            for (var i in cart){
-                if(cart[i].kode_barang == kode_barang){
-                    cart[i].jumlah = parseInt(cart[i].jumlah) + 1;
-                    cart[i].subtotal = parseInt(cart[i].harga) * parseInt(cart[i].jumlah);
-                    saveCart();
-                    showCart();
-                    return;
-                }
-            }
-        }
+
         function showCart(){
 
             if (cart.length == 0) {
@@ -327,11 +297,14 @@
             var row = '';
             for (var i in cart){
                 var item = cart[i];
+                var jumlah1 = item.jumlah;
+                jumlah2 = jumlah1.replace(".",",");
                 row +=   `<tr>
-                                <td>${item.kode_barang}</td>
+
                                 <td>${item.nama_barang}</td>
                                 <td>${item.harga}</td>
-                                <td><button id="minus" data-i="${i}" data-kode="${item.kode_barang}" class="btn btn-xs btn-default"><i class="fa fa-minus"></i></button> <span style="width:30px;padding:5px"> ${item.jumlah}</span> <button id="plus" data-i="${i}" data-kode="${item.kode_barang}" class="btn btn-xs btn-default"><i class="fa fa-plus"></i></button></td>
+                                <td>${jumlah2}</td>
+                                <td>${item.karung}</td>
                                 <td>${item.subtotal}</td>
                                 <td><button id="delete" data-i="${i}" class="btn btn-xs btn-danger"><i
                                         class="fa fa-trash"></i></button></td>
@@ -352,6 +325,13 @@
             }
             $('#grand_total2').text(grandtotal);
         }
+
+		$('#jumlah2').on("input",function(){
+                var jml=$('#jumlah2').val();
+				var hasil=jml.replace(",",".");
+				$('#jumlah').val((hasil));
+        })
+
         $('.simpan').click(function(){
 
             if($('#suplier').val() == ""){

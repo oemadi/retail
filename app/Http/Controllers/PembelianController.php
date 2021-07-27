@@ -122,6 +122,7 @@ class PembelianController extends Controller
                 $detail->pembelian_id = $pembelian->id;
                 $detail->barang_id = $row['kode_barang'];
                 $detail->jumlah_beli = $row['jumlah'];
+                $detail->karung = $row['karung'];
                 $detail->subtotal = $row['subtotal'];
                 $detail->save();
              //  self::insertDataToHistory($row['kode_barang'], $request->suplier_id, $row['jumlah']);

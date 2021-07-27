@@ -195,6 +195,7 @@ class PenjualanController extends Controller
                 $detail->barang_id = $row['kode_barang'];
                 $detail->harga = $row['harga'];
                 $detail->jumlah_jual = $row['jumlah'];
+                $detail->karung = $row['karung'];
                 $detail->subtotal = $row['subtotal'];
                 $detail->save();
               // self::insertDataToHistory($row['kode_barang'], $request->customer_id, $row['jumlah']);

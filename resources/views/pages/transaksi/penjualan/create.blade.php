@@ -76,8 +76,15 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="jumlah">Jumlah</label>
-                            <input type="number" name="jumlah" id="jumlah" class="form-control">
+                            <label for="jumlah">Jumlah (Boleh Koma) dlm Kg</label>
+                            <input type="text" name="jumlah2" id="jumlah2" class="form-control">
+                            <input type="hidden" name="jumlah" id="jumlah" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="karung">Karung (Boleh Koma)</label>
+                            <input type="text" name="karung" id="karung" class="form-control">
                         </div>
                     </div>
                     <div class="col-md-12">
@@ -111,6 +118,7 @@
                                         <th>Nama Barang</th>
                                         <th>Harga Barang</th>
                                         <th>Qty</th>
+                                        <th>Karung</th>
                                         <th>Subtotal</th>
                                         <th>Action</th>
                                     </tr>
@@ -310,7 +318,11 @@
         $('.newTrans').click(function(){
             newTransaction();
         });
-
+        $('#jumlah2').on("input",function(){
+                var jml=$('#jumlah2').val();
+				var hasil=jml.replace(",",".");
+				$('#jumlah').val((hasil));
+        })
         function newTransaction(){
             for (var i in cart){  var item = cart[i];  cart.splice(item); }
             showCart();
@@ -348,20 +360,22 @@
             var nama_barang = $('#nama_barang').val();
             var jumlah = $('#jumlah').val();
             var harga = $('#harga_barang').val();
-            for (var i in cart){
-                if(cart[i].kode_barang == kode_barang){
-                    cart[i].jumlah = parseInt(cart[i].jumlah)+parseInt(jumlah);
-                    cart[i].subtotal = parseInt(cart[i].harga) * parseInt(cart[i].jumlah);
-                    showCart();
-                    saveCart();
-                    return;
-                }
-            }
+            var karung = $('#karung').val();
+            // for (var i in cart){
+            //     if(cart[i].kode_barang == kode_barang){
+            //         cart[i].jumlah = parseInt(cart[i].jumlah)+parseInt(jumlah);
+            //         cart[i].subtotal = parseInt(cart[i].harga) * parseInt(cart[i].jumlah);
+            //         showCart();
+            //         saveCart();
+            //         return;
+            //     }
+            // }
             const item = {
                 kode_barang :kode_barang,
                 nama_barang:nama_barang,
                 jumlah:jumlah,
                 harga:harga,
+                karung:karung,
                 subtotal:parseInt(jumlah)*parseInt(harga)
             };
 
