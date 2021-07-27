@@ -114,7 +114,6 @@
                             <table class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Kode Barang</th>
                                         <th>Nama Barang</th>
                                         <th>Harga Barang</th>
                                         <th>Qty</th>
@@ -341,6 +340,8 @@
             $('#barang').val('');
             $('#harga_barang').val('');
             $('#jumlah').val('');
+            $('#jumlah2').val('');
+            $('#karung').val('');
 
         }
           function getNewFaktur(){
@@ -393,34 +394,7 @@
                 localStorage.cart = JSON.stringify(cart);
             }
         }
-        function minusCart(kode_barang,index){
-            for (var i in cart){
-                if(cart[i].kode_barang == kode_barang){
-                    if(cart[i].jumlah == 1){
-                        cart.splice(index,1);
-                        loadKotak();
-                    }else{
-                        cart[i].jumlah = parseInt(cart[i].jumlah) - 1;
-                        cart[i].subtotal = parseInt(cart[i].harga) * parseInt(cart[i].jumlah);
-                    }
-                    saveCart();
-                    showCart();
-                    loadKotak();
-                    return;
-                }
-            }
-        }
-        function plusCart(kode_barang,i){
-            for (var i in cart){
-                if(cart[i].kode_barang == kode_barang){
-                    cart[i].jumlah = parseInt(cart[i].jumlah) + 1;
-                    cart[i].subtotal = parseInt(cart[i].harga) * parseInt(cart[i].jumlah);
-                    saveCart();
-                    showCart();
-                    return;
-                }
-            }
-        }
+
         function showCart(){
 
             if (cart.length == 0) {
@@ -430,11 +404,13 @@
             var row = '';
             for (var i in cart){
                 var item = cart[i];
+                var jumlah1 = item.jumlah;
+                jumlah2 = jumlah1.replace(".",",");
                 row +=   `<tr>
                                 <td>${item.kode_barang}</td>
                                 <td>${item.nama_barang}</td>
                                 <td>${item.harga}</td>
-                                <td><button id="minus" data-i="${i}" data-kode="${item.kode_barang}" class="btn btn-xs btn-default"><i class="fa fa-minus"></i></button> <span style="width:30px;padding:5px"> ${item.jumlah}</span> <button id="plus" data-i="${i}" data-kode="${item.kode_barang}" class="btn btn-xs btn-default"><i class="fa fa-plus"></i></button></td>
+                                <td>${jumlah2}</td>
                                 <td>${item.subtotal}</td>
                                 <td><button id="delete" data-i="${i}" class="btn btn-xs btn-danger"><i
                                         class="fa fa-trash"></i></button></td>
