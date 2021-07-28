@@ -271,7 +271,7 @@
                 jumlah:jumlah,
                 harga:harga,
                 karung:karung,
-                subtotal:parseInt(jumlah)*parseInt(harga)
+                subtotal:parseFloat(jumlah)*parseFloat(harga)
             };
 
             cart.push(item);

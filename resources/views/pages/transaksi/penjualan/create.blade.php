@@ -377,7 +377,7 @@
                 jumlah:jumlah,
                 harga:harga,
                 karung:karung,
-                subtotal:parseInt(jumlah)*parseInt(harga)
+                subtotal:parseFloat(jumlah)*parseFloat(harga)
             };
 
             cart.push(item);
@@ -407,10 +407,10 @@
                 var jumlah1 = item.jumlah;
                 jumlah2 = jumlah1.replace(".",",");
                 row +=   `<tr>
-                                <td>${item.kode_barang}</td>
                                 <td>${item.nama_barang}</td>
                                 <td>${item.harga}</td>
                                 <td>${jumlah2}</td>
+                                <td>${item.karung}</td>
                                 <td>${item.subtotal}</td>
                                 <td><button id="delete" data-i="${i}" class="btn btn-xs btn-danger"><i
                                         class="fa fa-trash"></i></button></td>
