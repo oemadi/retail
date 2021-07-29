@@ -5,7 +5,7 @@
     @include('pages.report.pembelian.kotak_atas')
 </div>
 
-
+{{--
 <div class="row">
     <div class="col-md-12">
         <div class="box box-danger">
@@ -24,7 +24,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 
 

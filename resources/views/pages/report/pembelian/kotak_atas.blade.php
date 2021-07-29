@@ -28,11 +28,11 @@
                                         id="enddate" data-language="en" autocomplete="off" value="{{ date('Y-m-d') }}">
                                 </td>
 
-                                <td>
+                                {{-- <td>
                                     <a href="#" class="btn btn-success" style="width:100%" id="filter1"><i
                                             class="fa fa-search"></i>
                                         Filter</a>
-                                </td>
+                                </td> --}}
                             </tr>
                             <tr>
                                 <td>
@@ -44,7 +44,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="col-md-6">
+                {{-- <div class="col-md-6">
                     <div id="totalPiutang">
                         <table class="table">
                             <tbody>
@@ -59,7 +59,7 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>

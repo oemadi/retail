@@ -238,11 +238,11 @@
                     <i class="fa fa-gear"></i> <span>Cabang</span>
                 </a>
             </li>
-            <li class="{{ set_active(['setting.index']) }}">
+            {{-- <li class="{{ set_active(['setting.index']) }}">
                 <a href="{{ route('setting.index') }}">
                     <i class="fa fa-gear"></i> <span>Pengaturan Toko</span>
                 </a>
-            </li>
+            </li> --}}
             @endif
         </ul>
     </section>

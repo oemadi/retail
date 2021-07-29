@@ -14,6 +14,18 @@
                     @csrf
                     <div class="row">
                         <div class="col-md-6">
+                                <div class="form-group @error('logo') has-error @enderror">
+                                    <label for="logo">Logo </label>
+                                    <input type="file" name="logo" id="logo" class="form-control" value="{{ $Cabang->logo  }}">
+                                    <p>Ektensi file (.png)</p>
+                                    @error('logo')
+                                    <span class="help-block">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
                             <div class="form-group @error('nama') has-error @enderror">
                                 <label for="nama">Nama Cabang</label>
                                 <input type="text" class="form-control" name="nama" id="nama"
