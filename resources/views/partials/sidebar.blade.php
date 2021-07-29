@@ -180,7 +180,7 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="treeview {{ set_active(['report.penjualan.periode','report.penjualan.barang']) }}">
+                    {{-- <li class="treeview {{ set_active(['report.penjualan.periode','report.penjualan.barang']) }}">
                         <a href="#"><i class="fa fa-shopping-bag"></i> Penjualan
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
@@ -195,6 +195,10 @@
                                 <a href="{{ route('report.penjualan.barang') }}"><i class="fa fa-circle-o"></i>
                                     Per Barang</a></li>
                         </ul>
+                    </li> --}}
+                    <li class="{{ set_active(['report.penjualan.penjualan']) }}">
+                        <a href="{{ route('report.penjualan.penjualan') }}"><i class="fa fa-shopping-cart"></i>
+                            Penjualan</a>
                     </li>
                     <li class="{{ set_active(['report.pembelian.pembelian']) }}">
                         <a href="{{ route('report.pembelian.pembelian') }}"><i class="fa fa-shopping-cart"></i>

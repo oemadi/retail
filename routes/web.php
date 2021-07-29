@@ -241,6 +241,8 @@ Route::group(['middleware' => 'auth'], function ($app) use ($router) {
 
     $app->prefix('report')->middleware(['cek:Admin,Manager'])->name('report.')->group(function ($app) use ($router) {
         $app->prefix('penjualan')->name('penjualan.')->group(function ($app) use ($router) {
+            $app->get('/', 'ReportController@penjualan')->name('penjualan');
+            $app->get('/print', 'ReportController@penjualanPrint')->name('print');
             $app->get('/barang', 'ReportController@penjualanPerBarang')->name('barang');
             $app->get('/barang/loadTable', 'ReportController@penjualanPerBarangLoadTable')->name('barang_load_table');
             $app->get('/barang/print', 'ReportController@penjualanPerBarangPrint')->name('barang_print');

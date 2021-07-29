@@ -123,7 +123,7 @@ class PenjualanController extends Controller
             $branch = Session::get('branch');
             $id = request()->get('search');
             $res = DB::select("SELECT a.* from barang a where a.branch=$branch
-             order by a.nama limit 10
+             order by a.nama
             ");
            foreach($res as $row){
                $data[] = array('id'=>$row->id,'text'=>$row->nama);

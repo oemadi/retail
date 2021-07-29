@@ -7,6 +7,7 @@ use App\Gaji;
 use App\Hutang;
 use App\Kas;
 use App\Pembelian;
+use App\Penjualan;
 use App\Piutang;
 use App\Return_pembelian;
 use App\Return_penjualan;
@@ -161,8 +162,13 @@ class ReportController extends Controller
     public function pembelian()
     {
         $pembelian = Pembelian::with('suplier')->get();
-        $total = Saldo::getTotalPembelian();
-        return view("pages.report.pembelian.index", compact('pembelian', 'total'));
+       // $total = Saldo::getTotalPembelian();
+        return view("pages.report.pembelian.index", compact('pembelian'));
+    }
+    public function penjualan()
+    {
+        $pembelian = Penjualan::with('customer')->get();
+        return view("pages.report.penjualan.index");
     }
     public function pembelianLoadTable()
     {
@@ -187,50 +193,70 @@ class ReportController extends Controller
 
 
 
+    public function penjualanPrint()
+    {
+        $penjualan = Penjualan::with('customer')
+        ->whereDate('tanggal_penjualan', ">=", request()->get('tanggal_awal'))
+        ->whereDate('tanggal_penjualan', "<=", request()->get('tanggal_akhir'))
+        ->get();
+        $tgl1 =  request()->get('tanggal_awal');
+        $tgl2 =  request()->get('tanggal_akhir');
+        return view('pages.report.penjualan.print2', compact('penjualan','tgl1','tgl2'));
+
+    }
 
     public function pembelianPrint()
     {
-        if (request()->get('status') == "all") {
-            if (request()->get('tanggal_awal') && request()->get('tanggal_akhir')) {
-                $pembelianTunai = Pembelian::where('status', 'tunai')
-                    ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
-                    ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
-                    ->sum('total');
-                $pembelianHutang = Pembelian::where('status', 'hutang')
-                    ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
-                    ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
-                    ->sum('total');
-                $pembelian = Pembelian::with('suplier')
-                    ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
-                    ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
-                    ->get();
-                return view('pages.report.pembelian.print', compact('pembelianTunai', 'pembelianHutang', 'pembelian'));
-            }
-        } elseif (request()->get('status') == "tunai") {
-            $pembelianTunai = Pembelian::where('status', 'tunai')
-                ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
-                ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
-                ->sum('total');
+        $pembelian = Pembelian::with('suplier')
+        ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
+        ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
+        ->get();
+        $tgl1 =  request()->get('tanggal_awal');
+        $tgl2 =  request()->get('tanggal_akhir');
+        return view('pages.report.pembelian.print2', compact('pembelian','tgl1','tgl2'));
 
-            $pembelian = Pembelian::with('suplier')
-                ->where('status', 'tunai')
-                ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
-                ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
-                ->get();
-            return view('pages.report.pembelian.print_tunai', compact('pembelianTunai', 'pembelian'));
-        } else {
-            $pembelianHutang = Pembelian::where('status', 'hutang')
-                ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
-                ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
-                ->sum('total');
 
-            $pembelian = Pembelian::with('suplier')
-                ->where('status', 'hutang')
-                ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
-                ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
-                ->get();
-            return view('pages.report.pembelian.print_hutang', compact('pembelianHutang', 'pembelian'));
-        }
+        // if (request()->get('status') == "all") {
+        //     if (request()->get('tanggal_awal') && request()->get('tanggal_akhir')) {
+        //         $pembelianTunai = Pembelian::where('status', 'tunai')
+        //             ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
+        //             ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
+        //             ->sum('total');
+        //         $pembelianHutang = Pembelian::where('status', 'hutang')
+        //             ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
+        //             ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
+        //             ->sum('total');
+        //         $pembelian = Pembelian::with('suplier')
+        //             ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
+        //             ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
+        //             ->get();
+        //         return view('pages.report.pembelian.print', compact('pembelianTunai', 'pembelianHutang', 'pembelian'));
+        //     }
+        // } elseif (request()->get('status') == "tunai") {
+        //     $pembelianTunai = Pembelian::where('status', 'tunai')
+        //         ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
+        //         ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
+        //         ->sum('total');
+
+        //     $pembelian = Pembelian::with('suplier')
+        //         ->where('status', 'tunai')
+        //         ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
+        //         ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
+        //         ->get();
+        //     return view('pages.report.pembelian.print_tunai', compact('pembelianTunai', 'pembelian'));
+        // } else {
+        //     $pembelianHutang = Pembelian::where('status', 'hutang')
+        //         ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
+        //         ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
+        //         ->sum('total');
+
+        //     $pembelian = Pembelian::with('suplier')
+        //         ->where('status', 'hutang')
+        //         ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
+        //         ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
+        //         ->get();
+        //     return view('pages.report.pembelian.print_hutang', compact('pembelianHutang', 'pembelian'));
+        // }
     }
     public function hutang()
     {
