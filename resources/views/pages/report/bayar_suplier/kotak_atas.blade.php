@@ -2,7 +2,7 @@
     <div class="box box-danger">
         <div class=" box-body">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <table class="table">
                         <tbody>
                             <tr>
@@ -19,7 +19,7 @@
                                         id="enddate" data-language="en" autocomplete="off" value="{{ date('Y-m-d') }}">
                                 </td>
                             </tr>
-                      
+
                             <tr>
                                 <td>
                                    <button class="btn btn-primary print"><i class="fa fa-print"></i> Print</button>

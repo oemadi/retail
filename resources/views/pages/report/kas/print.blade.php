@@ -7,7 +7,67 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Laporan</title>
     <link rel="stylesheet" href="{{ asset('adminlte') }}/bower_components/bootstrap/dist/css/bootstrap.css">
+    <style>
+        table {
+         font-family: sans-serif;
+         border: 7mm solid aqua;
+         border-collapse: collapse;
+        }
+        table.table2 {
+         border: 2mm solid aqua;
+         border-collapse: collapse;
+        }
+        table.layout {
+         border: 0mm solid black;
+         border-collapse: collapse;
+        }
+        td.layout {
+         text-align: center;
+         border: 0mm solid black;
+        }
+        td {
+         padding: 2mm;
+         border: 0.2mm solid gray;
+         vertical-align: middle;
+        }
+        td.redcell {
+         border: 0mm solid red;
+        }
+        td.redcell2 {
+         border: 0mm solid red;
+        }
 
+        /* DivTable.com */
+        .divTable{
+            display: table;
+            width: 100%;
+        }
+        .divTableRow {
+            display: table-row;
+        }
+        .divTableHeading {
+            background-color: #EEE;
+            display: table-header-group;
+        }
+        .divTableCell, .divTableHead {
+            border: 1px solid #999999;
+            display: table-cell;
+            padding: 3px 10px;
+        }
+        .divTableHeading {
+            background-color: #EEE;
+            display: table-header-group;
+            font-weight: bold;
+        }
+        .divTableFoot {
+            background-color: #EEE;
+            display: table-footer-group;
+            font-weight: bold;
+        }
+        .divTableBody {
+            display: table-row-group;
+        }
+        </style>
 </head>
 
 
@@ -15,43 +75,25 @@
     <div class="containter">
         <div class="row">
             <div class="col-md-12">
-                @include('pages.report.nama_toko')
+                {{-- @include('pages.report.nama_toko') --}}
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
-                <table class="table" style="width:500px">
-                    <tbody>
-                        <tr>
-                            <td style="font-size:16px" colspan="3"><b>LAPORAN KAS PEMASUKAN DAN PENGELUARAN</b></td>
-                        </tr>
-                        <tr>
-                            <td>PERIODE</td>
-                            <td style="width:15px">:</td>
-                            <td>{{ request()->get('tanggal_awal') }} s/d {{ request()->get('tanggal_akhir') }}</td>
-                        </tr>
-                        <tr>
-                            <td>PENDAPATAN</td>
-                            <td>:</td>
-                            <td id="spdpt"></td>
-                        </tr>
-                        <tr>
-                            <td>PENGELUARAN</td>
-                            <td>:</td>
-                            <td id="spgl"></td>
-                        </tr>
-                        <tr>
-                            <td>SALDO</td>
-                            <td>:</td>
-                            <td id="ssld"></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div style="float:left;width:30%" >
+             {{-- <img  style="float:left;width:50%;" src="<?php echo base_url().'assets/';?>ayam.jpg" > --}}
             </div>
-        </div>
+
+            <div style="float:right;width:70%;valign:middle" >
+            <p style=";line-height:5px;font-weight:bold;font-size:18px;" align="left">CV. FERYPUTRA</p>
+            <p style="line-height:5px;font-weight:bold;font-size:18px;" align="left">REKAP PEMBAYARAN DARI CUSTOMER</p>
+            </div>
+            </div>
+            <br>
         <div class="row">
             <div class="col-md-12">
-                <table class="table table-bordered table-striped">
+
+<p>Periode : <?= request()->get('tanggal_awal').' s/d '.request()->get('tanggal_akhir');?></p>
+<table width="100%" class="layout">
                     <thead>
                         <tr>
                             <th>#</th>

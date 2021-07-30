@@ -36,11 +36,7 @@
                                             <option value="12">Desember</option>
                                         </select>
                                     </td>
-                                    <td>
-                                        <a href="#" class="btn btn-success" style="width:100%" id="filter-atas"><i
-                                                class="fa fa-search"></i>
-                                            Filter</a>
-                                    </td>
+
                                 </tr>
                                 <tr>
                                     <td>Tahun</td>
@@ -53,52 +49,12 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <button class="btn btn-warning excel"><i class="fa fa-print"></i>
-                                            Excel</button>
                                         <button class="btn btn-primary print"><i class="fa fa-print"></i> Print</button>
                                     </td>
                                 </tr>
 
                             </tbody>
                         </table>
-                    </div>
-                    <div class="col-md-6">
-                        <table class="table">
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <h3>Total Penggajian</h3>
-                                    </td>
-                                    <td>
-                                        <h3 id="sttlpgj">0</h3>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <a href="#" class="btn btn-default btn-sm lanjut" data-filter="bulan"> Bulan Ini</a>
-                        <a href="#" class="btn btn-default btn-sm lanjut" data-filter="tahun"> Tahun Ini</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="row">
-    <div class="col-md-12">
-        <div class="box box-danger">
-            <div class=" box-header with-border">
-                <i class="fa fa-bar-chart-o"></i>
-                <h3 class="box-title">@yield('page')</h3>
-            </div>
-            <div class="box-body">
-
-                <div class="row mt-3">
-                    <div class="col-md-12">
-                        <div class="table-responsive">
-                            @include('pages.report.penggajian.table')
-                        </div>
                     </div>
                 </div>
             </div>
@@ -159,7 +115,7 @@
         function loadKotakAtas(){
             $('#sttlpgj').html($('#ttlpgj').html());
         }
-        
+
         $(document).on('click','.lanjut',function(){
             loadTable("asdasd","asd",$(this).data('filter'));
         });

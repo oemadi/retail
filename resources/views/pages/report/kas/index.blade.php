@@ -25,13 +25,13 @@
                                                         type="text" id="enddate" data-language="en" autocomplete="off"
                                                         value="{{ date('Y-m-d') }}">
                                                 </td>
+
+                                            </tr>
+                                            <tr>
                                                 <td>
-                                                    <a href="#" class="btn btn-success" style="width:100%" id="filter1"><i
-                                                            class="fa fa-search"></i>
-                                                        Filter</a>
+                                                   <button class="btn btn-primary print"><i class="fa fa-print"></i> Print</button>
                                                 </td>
                                             </tr>
-
                                         </tbody>
                                     </table>
                                 </div>
@@ -45,31 +45,7 @@
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="box box-danger">
-            <div class="box-header with-border">
-                <i class="fa fa-bar-chart-o"></i>
-                <h3 class="box-title">@yield('page')</h3>
-            </div>
-            <div class="box-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <a href="#" class="btn btn-warning mb-3" id="refresh"><i class="fa fa-refresh"></i>
-                            Refresh</a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="table-responsive">
-                            @include('pages.laporan.kas.table')
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 @endsection
 
@@ -89,13 +65,7 @@
             var maxDate = new Date(selected.date.valueOf());
             $('#startdate').datepicker('setEndDate', maxDate);
         });
-        $('#filter1').click(function(){
-            if($('#startdate').val() == "" || $('#enddate').val() == ""){
-                alert('Form filter tidak boleh kosong');
-                return;
-            }
-            loadTable("custom");
-        });
+
         $('.print').click(function(){
 
             tanggal_awal = $('#startdate').val();
@@ -107,45 +77,7 @@
             const parsedUrl = parseResult.documentElement.textContent;
             window.open(parsedUrl,'_blank');
         });
-        $('.excel').click(function(){
 
-            tanggal_awal = $('#startdate').val();
-            tanggal_akhir = $('#enddate').val();
-
-
-            let url = `{{ url('report/kas/excel?tanggal_awal=${tanggal_awal}&tanggal_akhir=${tanggal_akhir}') }}`;
-            const parseResult = new DOMParser().parseFromString(url, "text/html");
-            const parsedUrl = parseResult.documentElement.textContent;
-            window.open(parsedUrl,'_blank');
-        });
-        function loadTable(filter){
-            tanggal_awal = $('#startdate').val();
-            tanggal_akhir = $('#enddate').val();
-
-            if(filter=="all"){
-                filter = filter;
-            }else{
-                filter="custom";
-            }
-
-            let url = `{{ url('/report/kas/loadTable?filter=`+filter+`&tanggal_awal=`+tanggal_awal+`&tanggal_akhir=`+tanggal_akhir+`') }}`;
-            const parseResult = new DOMParser().parseFromString(url, "text/html");
-            const parsedUrl = parseResult.documentElement.textContent;
-            $('.table-responsive').load(parsedUrl);
-            if(filter!="all"){
-                loadKotakAtas("custom",tanggal_awal,tanggal_akhir);
-            }
-        }
-        function loadKotakAtas(filter,tanggal_awal="all",tanggal_akhir="all"){
-           let url = `{{ url('/report/kas/loadKotak?filter=`+filter+`&tanggal_awal=`+tanggal_awal+`&tanggal_akhir=`+tanggal_akhir+`') }}`;
-            const parseResult = new DOMParser().parseFromString(url, "text/html");
-            const parsedUrl = parseResult.documentElement.textContent;
-            $('#kotak-total').load(parsedUrl);
-        }
-        $("#refresh").click(function(){
-            loadTable("all");
-            loadKotakAtas("all")
-        });
     });
 </script>
 @endpush

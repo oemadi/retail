@@ -8,6 +8,67 @@
     <title>Laporan</title>
     <link rel="stylesheet" href="{{ asset('adminlte') }}/bower_components/bootstrap/dist/css/bootstrap.css">
 
+<style>
+table {
+ font-family: sans-serif;
+ border: 7mm solid aqua;
+ border-collapse: collapse;
+}
+table.table2 {
+ border: 2mm solid aqua;
+ border-collapse: collapse;
+}
+table.layout {
+ border: 0mm solid black;
+ border-collapse: collapse;
+}
+td.layout {
+ text-align: center;
+ border: 0mm solid black;
+}
+td {
+ padding: 2mm;
+ border: 0.2mm solid gray;
+ vertical-align: middle;
+}
+td.redcell {
+ border: 0mm solid red;
+}
+td.redcell2 {
+ border: 0mm solid red;
+}
+
+/* DivTable.com */
+.divTable{
+	display: table;
+	width: 100%;
+}
+.divTableRow {
+	display: table-row;
+}
+.divTableHeading {
+	background-color: #EEE;
+	display: table-header-group;
+}
+.divTableCell, .divTableHead {
+	border: 1px solid #999999;
+	display: table-cell;
+	padding: 3px 10px;
+}
+.divTableHeading {
+	background-color: #EEE;
+	display: table-header-group;
+	font-weight: bold;
+}
+.divTableFoot {
+	background-color: #EEE;
+	display: table-footer-group;
+	font-weight: bold;
+}
+.divTableBody {
+	display: table-row-group;
+}
+</style>
 </head>
 
 
@@ -18,31 +79,10 @@
                 @include('pages.report.nama_toko')
             </div>
         </div>
+ <p>Periode : {{ request()->get('bulan') }} -  {{ request()->get('tahun') }}</p>
         <div class="row">
             <div class="col-md-12">
-                <table class="table" style="width:500px">
-                    <tbody>
-                        <tr>
-                            <td style="font-size:16px" colspan="3"><b>LAPORAN PENGGAJIAN</b></td>
-                        </tr>
-                        <tr>
-                            <td>PERIODE</td>
-                            <td style="width:15px">:</td>
-                            <td>{{ request()->get('bulan') }} -
-                                {{ request()->get('tahun') }}</td>
-                        </tr>
-                        <tr>
-                            <td>TOTAL PENGGAJIAN</td>
-                            <td>:</td>
-                            <td id="sttlpgj"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <table class="table table-bordered table-striped">
+                <table width="100%" class="layout">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -50,7 +90,7 @@
                             <th>Gaji Bulan</th>
                             <th>Tanggal</th>
                             <th>Faktur</th>
-                            <th>Gaji Pokok</th>
+                            <th>Gaji </th>
                             <th>Potongan Gaji</th>
                             <th>Gaji Bersih</th>
                         </tr>
@@ -66,7 +106,7 @@
                             <td>{{ Carbon\Carbon::parse($item->tanggal_gaji)->format('M-Y') }}</td>
                             <td>{{ $item->tanggal_gaji }}</td>
                             <td>{{ $item->faktur }}</td>
-                            <td>@rupiah($item->pegawai->jabatan->gaji_pokok)</td>
+                            <td>@rupiah($item->pegawai->gaji)</td>
                             <td>@rupiah($item->potongan)</td>
                             <td>@rupiah($item->gaji_bersih)</td>
                         </tr>

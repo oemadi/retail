@@ -213,18 +213,18 @@
                     <li class="{{ set_active(['report.kas.index']) }}">
                         <a href="{{ route('report.kas.index') }}"><i class="fa fa-calendar-check-o"></i> Kas</a>
                     </li>
-                    <li class="{{ set_active(['report.labarugi.index']) }}">
+                    {{-- <li class="{{ set_active(['report.labarugi.index']) }}">
                         <a href="{{ route('report.labarugi.index') }}"><i class="fa fa-line-chart"></i> Laba Rugi</a>
-                    </li>
+                    </li> --}}
                     <li class="{{ set_active(['report.penggajian.index']) }}">
                         <a href="{{ route('report.penggajian.index') }}"><i class="fa fa-user"></i> Penggajian</a>
                     </li>
-                    <li class="{{ set_active(['report.grafik.index']) }}">
+                    {{-- <li class="{{ set_active(['report.grafik.index']) }}">
                         <a href="{{ route('report.grafik.index') }}"><i class="fa fa-bar-chart"></i> Grafik</a>
                     </li>
                     <li class="{{ set_active(['report.rekap.index']) }}">
                         <a href="{{ route('report.rekap.index') }}"><i class="fa fa-pie-chart"></i> Rekap</a>
-                    </li>
+                    </li> --}}
                 </ul>
             </li>
             @endif
