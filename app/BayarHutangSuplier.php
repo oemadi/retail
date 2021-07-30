@@ -25,10 +25,10 @@ class BayarHutangSuplier extends Model
     }
     public function pembelian()
     {
-        return $this->belongsTo(Pembelian::class, 'pembelian_id', 'id');
+        return $this->belongsTo(Pembelian::class, 'id_pembelian', 'id');
     }
-    public function Suplier()
+    public function suplier()
     {
-        return $this->belongsTo(Suplier::class, 'pembelian_id', 'id');
+        return $this->belongsTo(Suplier::class, 'id_suplier', 'id');
     }
 }

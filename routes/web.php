@@ -275,7 +275,18 @@ Route::group(['middleware' => 'auth'], function ($app) use ($router) {
             $app->get('/print', 'ReportController@pembelianPrint')->name('print');
             $app->get('/excel', 'ExportExcelController@pembelianExcel')->name('excel');
         });
-
+        $app->prefix('bayarSuplier')->name('bayarSuplier.')->group(function ($app) use ($router) {
+            $app->get('/', 'ReportController@bayarSuplier')->name('bayarSuplier');
+            $app->get('/loadTable', 'ReportController@pembelianLoadTable')->name('load_table');
+            $app->get('/print', 'ReportController@bayarSuplierPrint')->name('print');
+            $app->get('/excel', 'ExportExcelController@pembelianExcel')->name('excel');
+        });
+        $app->prefix('bayarCustomer')->name('bayarCustomer.')->group(function ($app) use ($router) {
+            $app->get('/', 'ReportController@bayarCustomer')->name('bayarCustomer');
+            $app->get('/loadTable', 'ReportController@pembelianLoadTable')->name('load_table');
+            $app->get('/print', 'ReportController@bayarCustomerPrint')->name('print');
+            $app->get('/excel', 'ExportExcelController@pembelianExcel')->name('excel');
+        });
         $app->prefix('grafik')->name('grafik.')->group(function ($app) use ($router) {
             $app->get('/', 'GrafikController@index')->name('index');
             $app->get('/getChartPenjualan', 'GrafikController@getChartPenjualan')->name('getChartPenjualan');

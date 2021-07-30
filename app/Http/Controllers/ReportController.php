@@ -8,6 +8,8 @@ use App\Hutang;
 use App\Kas;
 use App\Pembelian;
 use App\Penjualan;
+use App\BayarHutangSuplier;
+use App\BayarHutangCustomer;
 use App\Piutang;
 use App\Return_pembelian;
 use App\Return_penjualan;
@@ -161,14 +163,42 @@ class ReportController extends Controller
     }
     public function pembelian()
     {
-        $pembelian = Pembelian::with('suplier')->get();
-       // $total = Saldo::getTotalPembelian();
-        return view("pages.report.pembelian.index", compact('pembelian'));
+        return view("pages.report.pembelian.index");
     }
     public function penjualan()
     {
-        $pembelian = Penjualan::with('customer')->get();
         return view("pages.report.penjualan.index");
+    }
+    public function bayarSuplier()
+    {
+          return view("pages.report.bayar_suplier.index");
+    }
+    public function bayarCustomer()
+    {
+        return view("pages.report.bayar_customer.index");
+    }
+    //      $pembelian = BayarHutangSuplier::with('suplier')->get();
+    // $pembelian = BayarHutangSuplier::with('suplier')->get();
+    public function bayarSuplierPrint()
+    {
+        $data =  BayarHutangSuplier::whereDate('tanggal_bayar', ">=", request()->get('tanggal_awal'))
+        ->whereDate('tanggal_bayar', "<=", request()->get('tanggal_akhir'))
+        ->get();
+        $tgl1 =  request()->get('tanggal_awal');
+        $tgl2 =  request()->get('tanggal_akhir');
+        return view('pages.report.bayar_suplier.print2', compact('data','tgl1','tgl2'));
+
+    }
+    public function bayarCustomerPrint()
+    {
+        $data = BayarHutangCustomer::with('customer')
+        ->whereDate('tanggal_bayar', ">=", request()->get('tanggal_awal'))
+        ->whereDate('tanggal_bayar', "<=", request()->get('tanggal_akhir'))
+        ->get();
+        $tgl1 =  request()->get('tanggal_awal');
+        $tgl2 =  request()->get('tanggal_akhir');
+        return view('pages.report.bayar_customer.print2', compact('data','tgl1','tgl2'));
+
     }
     public function pembelianLoadTable()
     {
@@ -190,6 +220,7 @@ class ReportController extends Controller
         $total = Saldo::getTotalPembelian();
         return view("pages.report.pembelian.kotak_atas", compact('total'));
     }
+
 
 
 

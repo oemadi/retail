@@ -25,10 +25,10 @@ class BayarHutangCustomer extends Model
     }
     public function penjualan()
     {
-        return $this->belongsTo(Penjualan::class, 'penjualan_id', 'id');
+        return $this->belongsTo(Penjualan::class, 'id_penjualan', 'id');
     }
     public function customer()
     {
-        return $this->belongsTo(Suplier::class, 'customer_id', 'id');
+        return $this->belongsTo(Customer::class, 'id_customer', 'id');
     }
 }

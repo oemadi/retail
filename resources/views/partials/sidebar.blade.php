@@ -204,11 +204,11 @@
                         <a href="{{ route('report.pembelian.pembelian') }}"><i class="fa fa-shopping-cart"></i>
                             Pembelian</a>
                     </li>
-                    <li class="{{ set_active(['report.hutang.index']) }}">
-                        <a href="{{ route('report.hutang.index') }}"><i class="fa fa-calendar-minus-o"></i> Hutang</a>
+                    <li class="{{ set_active(['report.bayarSuplier.bayarSuplier']) }}">
+                        <a href="{{ route('report.bayarSuplier.bayarSuplier') }}"><i class="fa fa-calendar-minus-o"></i> Bayar ke Suplier</a>
                     </li>
-                    <li class="{{ set_active(['report.piutang.index']) }}">
-                        <a href="{{ route('report.piutang.index') }}"><i class="fa fa-calendar"></i> Piutang</a>
+                    <li class="{{ set_active(['report.bayarCustomer.bayarCustomer']) }}">
+                        <a href="{{ route('report.bayarCustomer.bayarCustomer') }}"><i class="fa fa-calendar"></i> Bayar dari Customer</a>
                     </li>
                     <li class="{{ set_active(['report.kas.index']) }}">
                         <a href="{{ route('report.kas.index') }}"><i class="fa fa-calendar-check-o"></i> Kas</a>

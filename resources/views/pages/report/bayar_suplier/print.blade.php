@@ -23,7 +23,7 @@
                 <table class="table" style="width:500px">
                     <tbody>
                         <tr>
-                            <td style="font-size:16px" colspan="3"><b>LAPORAN PEMBELIAN TUNAI</b></td>
+                            <td style="font-size:16px" colspan="3"><b>LAPORAN PEMBELIAN</b></td>
                         </tr>
                         <tr>
                             <td>PERIODE</td>
@@ -33,7 +33,17 @@
                         <tr>
                             <td>TOTAL PEMBELIAN</td>
                             <td>:</td>
-                            <td>@rupiah($pembelianTunai) </td>
+                            <td>@rupiah($pembelianTunai+$pembelianHutang) </td>
+                        </tr>
+                        <tr>
+                            <td>TOTAL PEMBELIAN TUNAI</td>
+                            <td>:</td>
+                            <td>@rupiah($pembelianTunai)</td>
+                        </tr>
+                        <tr>
+                            <td>TOTAL PEMBELIAN KREDIT</td>
+                            <td>:</td>
+                            <td>@rupiah($pembelianHutang) </td>
                         </tr>
                     </tbody>
                 </table>
