@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Customer;
 use App\Barang;
 use App\Gaji;
 use App\Hutang;
@@ -177,6 +177,10 @@ class ReportController extends Controller
     {
         return view("pages.report.bayar_customer.index");
     }
+	public function tagihanCustomer()
+    {
+        return view("pages.report.tagihan_customer.index");
+    }
     //      $pembelian = BayarHutangSuplier::with('suplier')->get();
     // $pembelian = BayarHutangSuplier::with('suplier')->get();
     public function bayarSuplierPrint()
@@ -198,6 +202,16 @@ class ReportController extends Controller
         $tgl1 =  request()->get('tanggal_awal');
         $tgl2 =  request()->get('tanggal_akhir');
         return view('pages.report.bayar_customer.print2', compact('data','tgl1','tgl2'));
+
+    }
+	    public function tagihanCustomerPrint()
+    {
+        $data = Penjualan::with('BayarHutangCustomer')
+        ->where('customer_id',request()->get('id_customer'))
+        ->get();
+		$cus = Customer::where('id',request()->get('id_customer'))->first();
+        $id_customer =  request()->get('id_customer');
+        return view('pages.report.tagihan_customer.print2', compact('data','cus'));
 
     }
     public function pembelianLoadTable()

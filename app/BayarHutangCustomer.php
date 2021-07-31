@@ -23,10 +23,11 @@ class BayarHutangCustomer extends Model
         }
         return $number;
     }
-    public function penjualan()
-    {
-        return $this->belongsTo(Penjualan::class, 'id_penjualan', 'id');
-    }
+    // public function penjualan()
+    // {
+    //     return $this->belongsTo(Penjualan::class, 'id_penjualan', 'id');
+    // }
+
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'id_customer', 'id');

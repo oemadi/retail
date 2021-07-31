@@ -15,7 +15,10 @@ class Penjualan extends Model
     {
         return $this->hasMany(Detail_penjualan::class, 'penjualan_id', 'id');
     }
-
+    public function BayarHutangCustomer()
+    {
+        return $this->hasMany(BayarHutangCustomer::class, 'id_penjualan', 'id');
+    }
     public function return_penjualan()
     {
         return $this->hasOne(Return_penjualan::class, 'penjualan_id', 'id');

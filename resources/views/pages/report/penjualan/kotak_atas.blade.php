@@ -36,8 +36,6 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <button class="btn btn-warning excel"><i class="fa fa-print"></i>
-                                        Excel</button>
                                     <button class="btn btn-primary print"><i class="fa fa-print"></i> Print</button>
                                 </td>
                             </tr>

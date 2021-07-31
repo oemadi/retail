@@ -210,6 +210,9 @@
                     <li class="{{ set_active(['report.bayarCustomer.bayarCustomer']) }}">
                         <a href="{{ route('report.bayarCustomer.bayarCustomer') }}"><i class="fa fa-calendar"></i> Bayar dari Customer</a>
                     </li>
+					 <li class="{{ set_active(['report.tagihanCustomer.tagihanCustomer']) }}">
+                        <a href="{{ route('report.tagihanCustomer.tagihanCustomer') }}"><i class="fa fa-calendar"></i> Tagihan Customer</a>
+                    </li>
                     <li class="{{ set_active(['report.kas.index']) }}">
                         <a href="{{ route('report.kas.index') }}"><i class="fa fa-calendar-check-o"></i> Kas</a>
                     </li>
