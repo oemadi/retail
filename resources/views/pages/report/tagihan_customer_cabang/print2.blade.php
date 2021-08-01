@@ -33,7 +33,7 @@
 
 	<div style="float:right;width:70%;valign:middle" >
 	<p style=";line-height:5px;font-weight:bold;font-size:18px;" align="left">CV. FERYPUTRA</p>
-	<p style="line-height:5px;font-weight:bold;font-size:18px;" align="left">TAGIHAN CUSTOMER</p>
+	<p style="line-height:5px;font-weight:bold;font-size:18px;" align="left">TAGIHAN CUSTOMER PER CABANG</p>
 	</div>
 	</div>
 	<br>
@@ -102,11 +102,12 @@ td.redcell2 {
 
 
 
-<p>CUSTOMER : <?= $cus->nama;?></p>
+<p>Cabang : <?= $cabang->nama;?></p>
   <table width="100%" class="layout">
     <thead>
         <tr>
             <td>No.</td>
+			<td>Customer</td>
             <td>Faktur Penjualan</td>
 			<td>Tanggal</td>
 			<td>Jumlah Transaksi</td>
@@ -122,6 +123,7 @@ td.redcell2 {
 	 ?>
     <tr>
         <td><?php echo $no;?></td>
+		<td><?php echo $row->customer->nama;?></td>
 		<td><?php echo $row->faktur;?></td>
 		<td><?php echo $row->tanggal_penjualan;?></td>
 		<td align="right"><?php echo number_format($row->total,0,',','.') ;?></td>

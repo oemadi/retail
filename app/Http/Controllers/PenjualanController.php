@@ -117,7 +117,19 @@ class PenjualanController extends Controller
            }
             return json_encode($data);
         }
-
+       public function getDataCabangSelect()
+        {
+            // $branch = Session::get('branch');
+            $id = request()->get('search');
+            $res = DB::select("SELECT a.* from cabang a
+            where  a.nama like '%".$id."%'
+             order by a.nama limit 10
+            ");
+           foreach($res as $row){
+               $data[] = array('id'=>$row->id,'text'=>$row->nama.'-'.$row->alamat);
+           }
+            return json_encode($data);
+        }
         public function getDataBarang()
         {
             $branch = Session::get('branch');

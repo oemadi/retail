@@ -4,7 +4,7 @@ use App\Kas as KasModel;
 
 class Kas
 {
-    public static function add($faktur, $tipe, $jenis, $pemasukan, $pengeluaran)
+    public static function add($faktur, $tipe, $jenis, $pemasukan, $pengeluaran,$branch)
     {
         $kas = new KasModel();
         $kas->faktur = $faktur;
@@ -14,6 +14,7 @@ class Kas
         $kas->pemasukan = $pemasukan;
         $kas->pengeluaran = $pengeluaran;
         $kas->keterangan = ucwords($jenis) . ' ' . $faktur;
+        $kas->branch = $branch;
         $kas->save();
     }
 }

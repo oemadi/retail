@@ -127,7 +127,7 @@ class PenggajianController extends Controller
         $penggajian->branch = Session::get('branch');
 
         if ($penggajian->save()) {
-            KasHelper::add($penggajian->faktur, 'pengeluaran', 'penggajian',0,$request->gaji);
+            KasHelper::add($penggajian->faktur, 'pengeluaran', 'penggajian',0,$request->gaji,Session::get('branch'));
             return json_encode(array("status"=>"berhasil"));
         } else {
             return json_encode(array("status"=>"gagal"));

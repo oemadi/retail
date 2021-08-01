@@ -180,29 +180,22 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    {{-- <li class="treeview {{ set_active(['report.penjualan.periode','report.penjualan.barang']) }}">
-                        <a href="#"><i class="fa fa-shopping-bag"></i> Penjualan
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li class="{{ set_active(['report.penjualan.periode']) }}">
-                                <a href="{{ route('report.penjualan.periode') }}"><i class="fa fa-circle-o"></i>
-                                    Per Periode</a></li>
-
-                            <li class="{{ set_active(['report.penjualan.barang']) }}">
-                                <a href="{{ route('report.penjualan.barang') }}"><i class="fa fa-circle-o"></i>
-                                    Per Barang</a></li>
-                        </ul>
-                    </li> --}}
+               
                     <li class="{{ set_active(['report.penjualan.penjualan']) }}">
                         <a href="{{ route('report.penjualan.penjualan') }}"><i class="fa fa-shopping-cart"></i>
                             Penjualan</a>
                     </li>
+					<li class="{{ set_active(['report.penjualanCabang.penjualanCabang']) }}">
+                        <a href="{{ route('report.penjualanCabang.penjualanCabang') }}"><i class="fa fa-shopping-cart"></i>
+                            Penjualan All Cabang</a>
+                    </li>
                     <li class="{{ set_active(['report.pembelian.pembelian']) }}">
                         <a href="{{ route('report.pembelian.pembelian') }}"><i class="fa fa-shopping-cart"></i>
                             Pembelian</a>
+                    </li>
+					<li class="{{ set_active(['report.pembelianCabang.pembelianCabang']) }}">
+                        <a href="{{ route('report.pembelianCabang.pembelianCabang') }}"><i class="fa fa-shopping-cart"></i>
+                            Pembelian All Cabang</a>
                     </li>
                     <li class="{{ set_active(['report.bayarSuplier.bayarSuplier']) }}">
                         <a href="{{ route('report.bayarSuplier.bayarSuplier') }}"><i class="fa fa-calendar-minus-o"></i> Bayar ke Suplier</a>
@@ -213,8 +206,14 @@
 					 <li class="{{ set_active(['report.tagihanCustomer.tagihanCustomer']) }}">
                         <a href="{{ route('report.tagihanCustomer.tagihanCustomer') }}"><i class="fa fa-calendar"></i> Tagihan Customer</a>
                     </li>
+					 <li class="{{ set_active(['report.tagihanCustomerCabang.tagihanCustomerCabang']) }}">
+                        <a href="{{ route('report.tagihanCustomerCabang.tagihanCustomerCabang') }}"><i class="fa fa-calendar"></i> Tagihan Customer All Cabang</a>
+                    </li>
                     <li class="{{ set_active(['report.kas.index']) }}">
                         <a href="{{ route('report.kas.index') }}"><i class="fa fa-calendar-check-o"></i> Kas</a>
+                    </li>
+					<li class="{{ set_active(['report.kasCabang.kasCabang']) }}">
+                        <a href="{{ route('report.kasCabang.kasCabang') }}"><i class="fa fa-calendar-check-o"></i> Kas All Cabang</a>
                     </li>
                     {{-- <li class="{{ set_active(['report.labarugi.index']) }}">
                         <a href="{{ route('report.labarugi.index') }}"><i class="fa fa-line-chart"></i> Laba Rugi</a>

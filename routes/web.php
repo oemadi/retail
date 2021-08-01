@@ -21,6 +21,7 @@ Route::any('/getDataPenyesuaianStok', 'PenyesuaianStokController@getDataPenyesua
 Route::any('/getDataSuplier', 'SuplierController@getSuplier')->name('getDataSuplier');
 Route::any('/getDataSuplierSelect', 'PenjualanController@getDataSuplierSelect')->name('getDataSuplierSelect');
 Route::any('/getDataCustomer', 'CustomerController@getDataCustomer')->name('getDataCustomer');
+Route::any('/getDataCabangSelect', 'PenjualanController@getDataCabangSelect')->name('getDataCabangSelect');
 Route::any('/getDataMasterPegawai', 'PegawaiController@getDataMasterPegawai')->name('getDataMasterPegawai');
 Route::any('/getDataBarang', 'BarangController@getBarang')->name('getDataBarang');
 Route::any('/getDataSatuan', 'SatuanController@getSatuan')->name('getDataSatuan');
@@ -243,37 +244,32 @@ Route::group(['middleware' => 'auth'], function ($app) use ($router) {
         $app->prefix('penjualan')->name('penjualan.')->group(function ($app) use ($router) {
             $app->get('/', 'ReportController@penjualan')->name('penjualan');
             $app->get('/print', 'ReportController@penjualanPrint')->name('print');
-            $app->get('/barang', 'ReportController@penjualanPerBarang')->name('barang');
-            $app->get('/barang/loadTable', 'ReportController@penjualanPerBarangLoadTable')->name('barang_load_table');
-            $app->get('/barang/print', 'ReportController@penjualanPerBarangPrint')->name('barang_print');
-            $app->get('/barang/excel', 'ExportExcelController@penjualanBarangExport')->name('barang_export');
-
-
-            $app->get('/periode', 'ReportController@penjualanPerPeriode')->name('periode');
-            $app->get('/periode/loadTable', 'ReportController@penjualanPerPeriodeLoadTable')->name('periode_load_table');
-            $app->get('/periode/print', 'ReportController@penjualanPerPeriodePrint')->name('periode_print');
-            $app->get('/periode/excel', 'ExportExcelController@penjualanPeriodeExport')->name('barang_periode');
+        });
+		$app->prefix('penjualanCabang')->name('penjualanCabang.')->group(function ($app) use ($router) {
+            $app->get('/', 'ReportController@penjualanCabang')->name('penjualanCabang');
+            $app->get('/print', 'ReportController@penjualanCabangPrint')->name('print');
         });
         $app->prefix('kas')->name('kas.')->group(function ($app) use ($router) {
             $app->get('/', 'ReportController@kas')->name('index');
-            $app->get('/loadTable', 'ReportController@kasloadTable')->name('load_table');
-            $app->get('/loadKotak', 'ReportController@kasloadKotak')->name('load_kotak');
             $app->get('/print', 'ReportController@kasPrint')->name('print');
-            $app->get('/excel', 'ExportExcelController@kasExcel')->name('excel');
         });
-
+		$app->prefix('kasCabang')->name('kasCabang.')->group(function ($app) use ($router) {
+            $app->get('/', 'ReportController@kasCabang')->name('kasCabang');
+            $app->get('/print', 'ReportController@kasCabangPrint')->name('print');
+        });
         $app->prefix('labarugi')->name('labarugi.')->group(function ($app) use ($router) {
             $app->get('/', 'ReportController@LabaRugiindex')->name('index');
             $app->get('/loadTable', 'ReportController@LabaRugiloadTable')->name('load_table');
             $app->get('/print', 'ReportController@LabaRugiPrint')->name('print');
-            $app->get('/excel', 'ExportExcelController@labarugiExcel')->name('excel');
         });
 
         $app->prefix('pembelian')->name('pembelian.')->group(function ($app) use ($router) {
             $app->get('/', 'ReportController@pembelian')->name('pembelian');
-            $app->get('/loadTable', 'ReportController@pembelianLoadTable')->name('load_table');
             $app->get('/print', 'ReportController@pembelianPrint')->name('print');
-            $app->get('/excel', 'ExportExcelController@pembelianExcel')->name('excel');
+        });
+		$app->prefix('pembelianCabang')->name('pembelianCabang.')->group(function ($app) use ($router) {
+            $app->get('/', 'ReportController@pembelianCabang')->name('pembelianCabang');
+            $app->get('/print', 'ReportController@pembelianCabangPrint')->name('print');
         });
         $app->prefix('bayarSuplier')->name('bayarSuplier.')->group(function ($app) use ($router) {
             $app->get('/', 'ReportController@bayarSuplier')->name('bayarSuplier');
@@ -291,6 +287,10 @@ Route::group(['middleware' => 'auth'], function ($app) use ($router) {
 		$app->prefix('tagihanCustomer')->name('tagihanCustomer.')->group(function ($app) use ($router) {
             $app->get('/', 'ReportController@tagihanCustomer')->name('tagihanCustomer');
             $app->get('/print', 'ReportController@tagihanCustomerPrint')->name('print');
+        });
+		$app->prefix('tagihanCustomerCabang')->name('tagihanCustomerCabang.')->group(function ($app) use ($router) {
+            $app->get('/', 'ReportController@tagihanCustomerCabang')->name('tagihanCustomerCabang');
+            $app->get('/print', 'ReportController@tagihanCustomerCabangPrint')->name('print');
         });
         $app->prefix('grafik')->name('grafik.')->group(function ($app) use ($router) {
             $app->get('/', 'GrafikController@index')->name('index');

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Cabang;
 use App\Customer;
 use App\Barang;
 use App\Gaji;
@@ -104,13 +105,13 @@ class ReportController extends Controller
 
     public function kas()
     {
-        $kas = Kas::all();
-        $pendapatan = DB::table('kas')->sum('pemasukan');
-        $pengeluaran = DB::table('kas')->sum('pengeluaran');
-        $faktur = Kas::kodeFaktur();
-        return view("pages.report.kas.index", compact('kas', 'pendapatan', 'pengeluaran'));
-    }
 
+        return view("pages.report.kas.index");
+    }
+    public function kasCabang()
+    {
+        return view("pages.report.kas_cabang.index");
+    }
     public function kasloadTable()
     {
         if (request()->get('filter') == "all") {
@@ -140,6 +141,12 @@ class ReportController extends Controller
         }
         return view("pages.report.kas.print", compact('kas'));
     }
+	    public function kasCabangPrint()
+    {
+      
+        $kas = Kas::where('branch',request()->get('cabang'))->whereDate('tanggal', ">=", request()->get('tanggal_awal'))->whereDate('tanggal', "<=", request()->get('tanggal_akhir'))->get();
+        return view("pages.report.kas.print", compact('kas'));
+    }
     public function LabaRugiindex()
     {
         $transaksiTunai = Transaksi::get();
@@ -165,9 +172,17 @@ class ReportController extends Controller
     {
         return view("pages.report.pembelian.index");
     }
+	  public function pembelianCabang()
+    {
+        return view("pages.report.pembelian_cabang.index");
+    }
     public function penjualan()
     {
         return view("pages.report.penjualan.index");
+    }
+	public function penjualanCabang()
+    {
+        return view("pages.report.penjualan_cabang.index");
     }
     public function bayarSuplier()
     {
@@ -180,6 +195,10 @@ class ReportController extends Controller
 	public function tagihanCustomer()
     {
         return view("pages.report.tagihan_customer.index");
+    }
+	public function tagihanCustomerCabang()
+    {
+        return view("pages.report.tagihan_customer_cabang.index");
     }
     //      $pembelian = BayarHutangSuplier::with('suplier')->get();
     // $pembelian = BayarHutangSuplier::with('suplier')->get();
@@ -204,31 +223,25 @@ class ReportController extends Controller
         return view('pages.report.bayar_customer.print2', compact('data','tgl1','tgl2'));
 
     }
+	    public function tagihanCustomerCabangPrint()
+    {
+        $data = Penjualan::with('BayarHutangCustomer')
+        ->where('branch',request()->get('id_cabang'))
+        ->get();
+		$cabang = Cabang::where('id',request()->get('id_cabang'))->first();
+        return view('pages.report.tagihan_customer_cabang.print2', compact('data','cabang'));
+
+    }
 	    public function tagihanCustomerPrint()
     {
         $data = Penjualan::with('BayarHutangCustomer')
         ->where('customer_id',request()->get('id_customer'))
         ->get();
 		$cus = Customer::where('id',request()->get('id_customer'))->first();
-        $id_customer =  request()->get('id_customer');
         return view('pages.report.tagihan_customer.print2', compact('data','cus'));
 
     }
-    public function pembelianLoadTable()
-    {
-        $pembelian = Pembelian::with('suplier');
-        if (request()->get('tanggal_awal') != "all") {
-            $pembelian = $pembelian->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'));
-        }
-        if (request()->get('tanggal_akhir') != "all") {
-            $pembelian = $pembelian->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'));
-        }
-        if (request()->get('status') != "all") {
-            $pembelian = $pembelian->where('status', request()->get('status'));
-        }
-        $pembelian = $pembelian->get();
-        return view("pages.report.pembelian.table", compact('pembelian', 'suplier'));
-    }
+ 
     public function pembelianloadKotakAtas()
     {
         $total = Saldo::getTotalPembelian();
@@ -249,7 +262,19 @@ class ReportController extends Controller
         return view('pages.report.penjualan.print2', compact('penjualan','tgl1','tgl2'));
 
     }
+  public function penjualanCabangPrint()
+    {
+        $penjualan = Penjualan::with('customer')
+		->where('branch',request()->get('cabang'))
+        ->whereDate('tanggal_penjualan', ">=", request()->get('tanggal_awal'))
+        ->whereDate('tanggal_penjualan', "<=", request()->get('tanggal_akhir'))
+        ->get();
+        $tgl1 =  request()->get('tanggal_awal');
+        $tgl2 =  request()->get('tanggal_akhir');
+		$cabang = Cabang::where('id',request()->get('cabang'))->first();
+        return view('pages.report.penjualan_cabang.print2', compact('penjualan','tgl1','tgl2','cabang'));
 
+    }
     public function pembelianPrint()
     {
         $pembelian = Pembelian::with('suplier')
@@ -260,48 +285,20 @@ class ReportController extends Controller
         $tgl2 =  request()->get('tanggal_akhir');
         return view('pages.report.pembelian.print2', compact('pembelian','tgl1','tgl2'));
 
+    }
+	
+    public function pembelianCabangPrint()
+    {
+        $pembelian = Pembelian::with('suplier')
+		->where('branch',request()->get('cabang'))
+        ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
+        ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
+        ->get();
+        $tgl1 =  request()->get('tanggal_awal');
+        $tgl2 =  request()->get('tanggal_akhir');
+		$cabang = Cabang::where('id',request()->get('cabang'))->first();
+        return view('pages.report.pembelian_cabang.print2', compact('pembelian','tgl1','tgl2','cabang'));
 
-        // if (request()->get('status') == "all") {
-        //     if (request()->get('tanggal_awal') && request()->get('tanggal_akhir')) {
-        //         $pembelianTunai = Pembelian::where('status', 'tunai')
-        //             ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
-        //             ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
-        //             ->sum('total');
-        //         $pembelianHutang = Pembelian::where('status', 'hutang')
-        //             ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
-        //             ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
-        //             ->sum('total');
-        //         $pembelian = Pembelian::with('suplier')
-        //             ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
-        //             ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
-        //             ->get();
-        //         return view('pages.report.pembelian.print', compact('pembelianTunai', 'pembelianHutang', 'pembelian'));
-        //     }
-        // } elseif (request()->get('status') == "tunai") {
-        //     $pembelianTunai = Pembelian::where('status', 'tunai')
-        //         ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
-        //         ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
-        //         ->sum('total');
-
-        //     $pembelian = Pembelian::with('suplier')
-        //         ->where('status', 'tunai')
-        //         ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
-        //         ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
-        //         ->get();
-        //     return view('pages.report.pembelian.print_tunai', compact('pembelianTunai', 'pembelian'));
-        // } else {
-        //     $pembelianHutang = Pembelian::where('status', 'hutang')
-        //         ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
-        //         ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
-        //         ->sum('total');
-
-        //     $pembelian = Pembelian::with('suplier')
-        //         ->where('status', 'hutang')
-        //         ->whereDate('tanggal_pembelian', ">=", request()->get('tanggal_awal'))
-        //         ->whereDate('tanggal_pembelian', "<=", request()->get('tanggal_akhir'))
-        //         ->get();
-        //     return view('pages.report.pembelian.print_hutang', compact('pembelianHutang', 'pembelian'));
-        // }
     }
     public function hutang()
     {

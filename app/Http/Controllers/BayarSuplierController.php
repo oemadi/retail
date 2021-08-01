@@ -155,7 +155,7 @@ class BayarSuplierController extends Controller
             $UpdateSuplier->total_pembayaran_hutang =  $UpdateSuplier->total_pembayaran_hutang + $request->jumlah_bayar;
             $UpdateSuplier->sisa_hutang = $UpdateSuplier->total_hutang -  $UpdateSuplier->total_pembayaran_hutang ;
             $UpdateSuplier->save();
-            KasHelper::add($request->faktur, 'pengeluaran', 'bayar piutang',0,$request->jumlah_bayar);
+            KasHelper::add($request->faktur, 'pengeluaran', 'bayar piutang',0,$request->jumlah_bayar,Session::get('branch'));
             echo json_encode(array('status'=>'success'));
         } else {
             echo json_encode(array('status'=>'failed'));
