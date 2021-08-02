@@ -83,7 +83,7 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
+
                                         <th>Nama Barang</th>
                                         <th>Harga</th>
                                         <th>Qty</th>
@@ -111,9 +111,8 @@
                                         <div class="input-group">
                                             <input type="hidden" name="qty_detail" id="qty_detail">
                                             <input type="hidden" name="harga_hidden" id="harga_hidden">
-                                            <span class="input-group-btn"><button class="btn " type="button">Kode Barang
-                                                </button></span>
-                                            <input class="form-control" type="text" id="kodeBarang" title="kode barang"
+
+                                            <input class="form-control" type="hidden" id="kodeBarang" title="kode barang"
                                                 readonly>
 
                                             <span class="input-group-btn"><button class="btn " type="button">Nama Barang
@@ -145,7 +144,7 @@
                         <div class="table-responsive">
                             <table class="table table-bordered table-hover tableReturn">
                                 <tr>
-                                    <th>#</th>
+
                                     <th>Nama Barang</th>
                                     <th>Harga</th>
                                     <th>Jumlah Dikembalikan</th>
@@ -246,7 +245,6 @@
                 var item = cart_return_penjualan[i];
                 if(faktur_penjualan == item.faktur_penjualan){
                     row += `<tr>
-                        <td>${item.kode_barang}</td>
                         <td>${item.nama_barang}</td>
                         <td>${item.harga}</td>
                         <td>${item.jumlah_dikembalikan}</td>

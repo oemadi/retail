@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Kas as KasHelper;
 use Saldo;
+use Session;
 
 class ReturnPembelianController extends Controller
 {
@@ -76,7 +77,6 @@ class ReturnPembelianController extends Controller
         $html = '';
         foreach ($pembelian->detail_pembelian as $key => $row) {
             $html .= '<tr>';
-            $html .= '<td>' . $row->barang->id . '</td>';
             $html .= '<td>' . $row->barang->nama . '</td>';
             $html .= '<td>' . $row->barang->harga_beli . '</td>';
             $html .= '<td>' . $row->jumlah_beli . '</td>';
@@ -108,6 +108,7 @@ class ReturnPembelianController extends Controller
             $return->tanggal_pembelian = $pembelian->tanggal_pembelian;
             $return->tanggal_return_pembelian = date('Y-m-d');
             $return->total_bayar = $total;
+            $return->branch = Session::get('branch');
             $return->save();
 
             foreach ($new as $row) {
@@ -117,7 +118,7 @@ class ReturnPembelianController extends Controller
                 $detail->jumlah_beli = $row['jumlah_dikembalikan'];
                 $detail->save();
             }
-            KasHelper::add($return->faktur, 'pendapatan', 'return pembelian', $return->total_bayar, 0);
+            KasHelper::add($return->faktur, 'pendapatan', 'return pembelian', $return->total_bayar, 0,Session::get('branch'));
             self::updateDataAfterReturn($pembelian->id);
             DB::commit();
             return response()->json(['success', 'Return pembelian berhasil!']);

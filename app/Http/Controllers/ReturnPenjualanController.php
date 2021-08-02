@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Kas as KasHelper;
 use Saldo;
+use Session;
 
 class ReturnPenjualanController extends Controller
 {
@@ -75,7 +76,6 @@ class ReturnPenjualanController extends Controller
         $html = '';
         foreach ($penjualan->detail_penjualan as $key => $row) {
             $html .= '<tr>';
-            $html .= '<td>' . $row->barang->id . '</td>';
             $html .= '<td>' . $row->barang->nama . '</td>';
             $html .= '<td>' . $row->barang->harga_jual . '</td>';
             $html .= '<td>' . $row->jumlah_jual . '</td>';
@@ -108,6 +108,7 @@ class ReturnPenjualanController extends Controller
             $return->penjualan_id = $penjualan->id;
             $return->tanggal_return_jual = date('Y-m-d');
             $return->total_bayar = $total;
+            $return->branch = Session::get('branch');
             $return->save();
 
             foreach ($new as $row) {
@@ -117,7 +118,7 @@ class ReturnPenjualanController extends Controller
                 $detail->jumlah_jual = $row['jumlah_dikembalikan'];
                 $detail->save();
             }
-            KasHelper::add($return->faktur, 'pengeluaran', 'return penjualan',0,$return->total_bayar);
+            KasHelper::add($return->faktur, 'pengeluaran', 'return penjualan',0,$return->total_bayar,Session::get('branch'));
             self::updateDataAfterReturn($penjualan->id);
             DB::commit();
             return response()->json(['success', 'Return penjualan berhasil!']);
