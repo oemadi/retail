@@ -228,7 +228,7 @@ class PenjualanController extends Controller
                 $hutang->save();
 
             } else {
-                KasHelper::add($penjualan->faktur, 'pendapatan', 'penjualan', $penjualan->total,0);
+                KasHelper::add($penjualan->faktur, 'pendapatan', 'penjualan', $penjualan->total,0,Session::get('branch'));
             }
             DB::commit();
             //return response()->json(["success", "penjualan berhasil"]);

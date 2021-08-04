@@ -245,6 +245,10 @@ Route::group(['middleware' => 'auth'], function ($app) use ($router) {
             $app->get('/', 'ReportController@penjualan')->name('penjualan');
             $app->get('/print', 'ReportController@penjualanPrint')->name('print');
         });
+        $app->prefix('saldo')->name('saldo.')->group(function ($app) use ($router) {
+            $app->get('/', 'ReportController@saldo')->name('saldo');
+            $app->get('/print', 'ReportController@saldoPrint')->name('print');
+        });
 		$app->prefix('penjualanCabang')->name('penjualanCabang.')->group(function ($app) use ($router) {
             $app->get('/', 'ReportController@penjualanCabang')->name('penjualanCabang');
             $app->get('/print', 'ReportController@penjualanCabangPrint')->name('print');
@@ -277,7 +281,7 @@ Route::group(['middleware' => 'auth'], function ($app) use ($router) {
             $app->get('/print', 'ReportController@bayarSuplierPrint')->name('print');
             $app->get('/excel', 'ExportExcelController@pembelianExcel')->name('excel');
         });
-	
+
         $app->prefix('bayarCustomer')->name('bayarCustomer.')->group(function ($app) use ($router) {
             $app->get('/', 'ReportController@bayarCustomer')->name('bayarCustomer');
             $app->get('/loadTable', 'ReportController@pembelianLoadTable')->name('load_table');

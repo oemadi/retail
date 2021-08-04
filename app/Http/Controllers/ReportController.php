@@ -108,10 +108,12 @@ class ReportController extends Controller
 
         return view("pages.report.kas.index");
     }
+
     public function kasCabang()
     {
         return view("pages.report.kas_cabang.index");
     }
+
     public function kasloadTable()
     {
         if (request()->get('filter') == "all") {
@@ -143,7 +145,7 @@ class ReportController extends Controller
     }
 	    public function kasCabangPrint()
     {
-      
+
         $kas = Kas::where('branch',request()->get('cabang'))->whereDate('tanggal', ">=", request()->get('tanggal_awal'))->whereDate('tanggal', "<=", request()->get('tanggal_akhir'))->get();
         return view("pages.report.kas.print", compact('kas'));
     }
@@ -167,6 +169,20 @@ class ReportController extends Controller
                 ->get();
             return view("pages.report.labarugi.print", compact('transaksi'));
         }
+    }
+    public function saldo()
+    {
+        return view("pages.report.saldo.index");
+    }
+    public function saldoPrint()
+    {
+    $saldo = Penjualan::with('customer')
+    ->whereDate('tanggal_penjualan', ">=", request()->get('tanggal_awal'))
+    ->whereDate('tanggal_penjualan', "<=", request()->get('tanggal_akhir'))
+    ->get();
+    $tgl1 =  request()->get('tanggal_awal');
+    $tgl2 =  request()->get('tanggal_akhir');
+    return view('pages.report.saldo.print', compact('saldo','tgl1','tgl2'));
     }
     public function pembelian()
     {
@@ -241,7 +257,7 @@ class ReportController extends Controller
         return view('pages.report.tagihan_customer.print2', compact('data','cus'));
 
     }
- 
+
     public function pembelianloadKotakAtas()
     {
         $total = Saldo::getTotalPembelian();
@@ -286,7 +302,7 @@ class ReportController extends Controller
         return view('pages.report.pembelian.print2', compact('pembelian','tgl1','tgl2'));
 
     }
-	
+
     public function pembelianCabangPrint()
     {
         $pembelian = Pembelian::with('suplier')

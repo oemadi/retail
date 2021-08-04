@@ -141,7 +141,7 @@ class PembelianController extends Controller
                 $hutang->branch = Session::get('branch');
                 $hutang->save();
             } else {
-                KasHelper::add($pembelian->faktur, 'pengeluaran', 'pembelian', 0, $pembelian->total);
+                KasHelper::add($pembelian->faktur, 'pengeluaran', 'pembelian', 0, $pembelian->total,Session::get('branch'));
             }
             DB::commit();
             return response()->json(["success", "Pembelian berhasil"]);
