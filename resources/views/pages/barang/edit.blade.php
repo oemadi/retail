@@ -14,10 +14,12 @@
                     <div class="row">
                         <div class="col-md-4 col-sm-6">
                             <div class="form-group @error('kode_barang') has-error @enderror">
-                                <label for=" kode_barang">Kode Barang</label>
-                                <input type="text" class="form-control 
+                                <input type="hidden" name=" id_barang" id="id_barang" placeholder="Kode Barang" readonly
+                                value="{{ $barang->id }}">
+                                <label for="nama_barang">Kode Barang</label>
+                                <input type="text" class="form-control
                                     name=" kode_barang" id="kode_barang" placeholder="Kode Barang" readonly
-                                    value="{{ $barang->id }}">
+                                    value="{{ $barang->kode }}">
                                 @error('kode_barang')
                                 <span class="help-block error">{{ $message }}</span>
                                 @enderror
@@ -45,7 +47,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-4 col-sm-6">
+                        {{-- <div class="col-md-4 col-sm-6">
                             <div class="form-group @error('ppn_pph') has-error @enderror">
                                 <label for="ppn_pph">PPN, PPH dan Keuntungan (%)</label>
                                 <div class="input-group">
@@ -59,7 +61,7 @@
                                 <span class="help-block error">{{ $message }}</span>
                                 @enderror
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="col-md-4 col-sm-6">
                             <div class="form-group @error('harga_jual') has-error @enderror">
                                 <label for="harga_jual">Harga Jual</label>
@@ -133,7 +135,7 @@
         $('#ppn_pph').keyup(function(){
             const harga_beli = $('#harga_beli').val();
             const ppn_pph = $(this).val();
-            
+
             if(parseFloat(ppn_pph) > 100){
                 alert('Presentase melebihi 100%');
                 $(this).val(0);

@@ -25,8 +25,20 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
+                            <div class="form-group @error('kontak') has-error @enderror">
+                                <label for="kontak">Kontak</label>
+                                <input type="text" class="form-control" name="kontak" id="kontak"
+                                    placeholder="Kontak Suplier...." value="{{ old('kontak') }}">
+                                @error('kontak')
+                                <span class="help-block">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
                             <div class="form-group @error('email') has-error @enderror">
-                                <label for="email">Email *Optional</label>
+                                <label for="email">Email *Optional (boleh kosong)</label>
                                 <input type="email" class="form-control" name="email" id="email"
                                     placeholder="Email Suplier...." value="{{ old('email') }}">
                                 @error('email')
@@ -42,18 +54,6 @@
                                 <input type="text" class="form-control" name="no_hp" id="no_hp"
                                     placeholder="No Hp Suplier...." value="{{ old('no_hp') }}">
                                 @error('no_hp')
-                                <span class="help-block">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <div class="form-group @error('kota') has-error @enderror">
-                                <label for="kota">Kota</label>
-                                <input type="text" class="form-control" name="kota" id="kota"
-                                    placeholder="Kota Suplier...." value="{{ old('kota') }}">
-                                @error('kota')
                                 <span class="help-block">{{ $message }}</span>
                                 @enderror
                             </div>

@@ -78,9 +78,9 @@ class BayarSuplierController extends Controller
 			->count();
 
             $records = BayarHutangSuplier::orderBy($columnName,$columnSortOrder)
-            ->join('suplier','suplier.id','bayar_hutang_Suplier.id_suplier')
-            ->join('pembelian','pembelian.id','bayar_hutang_Suplier.id_pembelian')
-			->select('bayar_hutang_Suplier.*','Suplier.nama as Suplier',
+            ->join('suplier','suplier.id','bayar_hutang_suplier.id_suplier')
+            ->join('pembelian','pembelian.id','bayar_hutang_suplier.id_pembelian')
+			->select('bayar_hutang_suplier.*','suplier.nama as suplier',
             'pembelian.faktur as faktur_pembelian')
             ->where('pembelian.id', $pembelian_id)
 			->skip($start)

@@ -39,7 +39,7 @@
 
                                 <label>
                                     <input type="radio" name="metode" id="metode2" value="hutang">
-                                    Non Tunai
+                                    Hutang
                                 </label>
                             </span>
                         </form>

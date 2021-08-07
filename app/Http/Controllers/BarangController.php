@@ -8,6 +8,7 @@ use App\Barang;
 use Illuminate\Http\Request;
 use Milon\Barcode\DNS1D;
 use Session;
+use Helper;
 
 class BarangController extends Controller
 {
@@ -39,34 +40,39 @@ class BarangController extends Controller
 		$records = Barang::select('barang.*','kategori.nama as kategori_nama','satuan.nama as satuan_nama')
         ->join('satuan', 'satuan.id', '=', 'barang.satuan_id')
         ->join('kategori', 'kategori.id', '=', 'barang.kategori_id')
-		->orderBy($columnName,$columnSortOrder)
+        ->where('barang.nama','like','%'.$searchValue.'%')
         ->where('barang.branch',$branch)
-		->where('barang.nama','like','%'.$searchValue.'%')
+        ->orWhere('barang.kode','like','%'.$searchValue.'%')
+        ->where('barang.branch',$branch)
 		->skip($start)
 		->take($rowperpage)
+        ->orderBy($columnName,$columnSortOrder)
 		->get();
 
 		$data_arr = array();
 		foreach($records as $record){
 			$id= $record->id;
+            $kode= $record->kode;
 			$nama= $record->nama;
-			$harga_beli= $record->harga_beli;
-			$harga_jual= $record->harga_jual;
-			$stok_awal= $record->stok_awal;
-			$stok_masuk= $record->stok_masuk;
-			$stok_akhir= $record->stok_akhir;
-			$stok_keluar= $record->stok_keluar;
-			$ppn= $record->ppn;
-			$pph= $record->pph;
-			$keuntungan= $record->keuntungan;
-			$persentase_pph_ppn_keuntungan= $record->persentase_pph_ppn_keuntungan;
+			$harga_beli= format_uang($record->harga_beli);
+			$harga_jual= format_uang($record->harga_jual);
+			$stok_awal= ($record->stok_awal);
+			$stok_masuk= ($record->stok_masuk);
+			$stok_akhir= ($record->stok_akhir);
+			$stok_keluar= ($record->stok_keluar);
+            $stok_penyesuaian_penambahan = format_uang($record->stok_penyesuaian_penambahan);
+            $stok_penyesuaian_pengurangan = format_uang($record->stok_penyesuaian_pengurangan);
+			// $ppn= $record->ppn;
+			// $pph= $record->pph;
+			// $keuntungan= $record->keuntungan;
+			// $persentase_pph_ppn_keuntungan= $record->persentase_pph_ppn_keuntungan;
 			$satuan_id= $record->satuan_nama;
 			$kategori_id= $record->kategori_nama;
 
-			$data_arr[]=array('id'=>$id,'nama'=>$nama,'harga_beli'=>$harga_beli,'harga_jual'=>$harga_jual,
+			$data_arr[]=array('id'=>$id,'kode'=>$kode,'nama'=>$nama,'harga_beli'=>$harga_beli,'harga_jual'=>$harga_jual,
 			'stok_awal'=>$stok_awal,'stok_masuk'=>$stok_masuk,'stok_akhir'=>$stok_akhir,
-			'stok_keluar'=>$stok_keluar,'ppn'=>$ppn,'pph'=>$pph,
-			'keuntungan'=>$keuntungan,'persentase_pph_ppn_keuntungan'=>$persentase_pph_ppn_keuntungan,
+			'stok_keluar'=>$stok_keluar,'stok_penyesuaian_penambahan'=>$stok_penyesuaian_penambahan,
+            'stok_penyesuaian_pengurangan'=>$stok_penyesuaian_pengurangan,
 			'satuan_id'=>$satuan_id,'kategori_id'=>$kategori_id
 			);
 
@@ -91,7 +97,7 @@ class BarangController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kode_barang' => 'required|unique:barang,id',
+            'kode_barang' => 'required',
             'nama_barang' => 'required|min:3',
             'harga_jual' => 'required|numeric',
             'harga_beli' => 'required|numeric',
@@ -99,12 +105,13 @@ class BarangController extends Controller
             'satuan' => 'required',
             'kategori' => 'required',
         ]);
-        $ppn = ($request->harga_beli / 100) * 10;
-        $pph = ($request->harga_beli / 100) * 1.5;
+        // $ppn = ($request->harga_beli / 100) * 10;
+        // $pph = ($request->harga_beli / 100) * 1.5;
         $branch = Session::get('branch');
         $barang = new Barang();
         $barang->branch = $branch;
-        $barang->id = $request->kode_barang;
+        $barang->kode = $request->kode_barang;
+        $barang->id = $request->id_barang;
         $barang->nama = $request->nama_barang;
         $barang->harga_jual = $request->harga_jual;
         $barang->harga_beli = $request->harga_beli;
@@ -112,10 +119,10 @@ class BarangController extends Controller
         $barang->stok_masuk = 0;
         $barang->stok_akhir = $request->stok_awal;
         $barang->stok_keluar = 0;
-        $barang->ppn = $ppn;
-        $barang->persentase_pph_ppn_keuntungan = $request->ppn_pph;
-        $barang->pph = $pph;
-        $barang->keuntungan = ($request->harga_beli / 100) * ($request->ppn_pph - 11.5);
+        // $barang->ppn = $ppn;
+        // $barang->persentase_pph_ppn_keuntungan = $request->ppn_pph;
+        // $barang->pph = $pph;
+        // $barang->keuntungan = ($request->harga_beli / 100) * ($request->ppn_pph - 11.5);
         $barang->satuan_id = $request->satuan;
         $barang->kategori_id = $request->kategori;
         if ($barang->save()) {
@@ -150,7 +157,6 @@ class BarangController extends Controller
     }
     public function edit($id)
     {
-
         $satuan = Satuan::get();
         $kategori = Kategori::get();
         $barang = Barang::with('satuan', 'kategori')->where('id', $id)->firstOrFail();
@@ -165,14 +171,14 @@ class BarangController extends Controller
             'satuan' => 'required',
             'kategori' => 'required',
         ]);
-        $ppn = ($request->harga_beli / 100) * 10;
-        $pph = ($request->harga_beli / 100) * 1.5;
+        // $ppn = ($request->harga_beli / 100) * 10;
+        // $pph = ($request->harga_beli / 100) * 1.5;
         $barang = Barang::findOrFail($request->id);
         $barang->nama = $request->nama_barang;
-        $barang->ppn = $ppn;
-        $barang->persentase_pph_ppn_keuntungan = $request->ppn_pph;
-        $barang->pph = $pph;
-        $barang->keuntungan = ($request->harga_beli / 100) * ($request->ppn_pph - 11.5);
+        // $barang->ppn = $ppn;
+        // $barang->persentase_pph_ppn_keuntungan = $request->ppn_pph;
+        // $barang->pph = $pph;
+        // $barang->keuntungan = ($request->harga_beli / 100) * ($request->ppn_pph - 11.5);
         $barang->harga_jual = $request->harga_jual;
         $barang->harga_beli = $request->harga_beli;
         $barang->satuan_id = $request->satuan;

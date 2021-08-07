@@ -32,6 +32,7 @@
                                     <th>Kontak</th>
                                     <th>No Hp</th>
                                     <th>Alamat</th>
+                                    <th>Email</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -71,6 +72,7 @@
            {data:'kontak'},
 		   {data:'no_hp'},
 		   {data:'alamat'},
+           {data:'email'},
 		   {data: 'id',
             "render": function (data) {
             data1 = '<a href="/suplier/' + data + '/edit" class="btn btn-sm btn-warning">Edit</a>';

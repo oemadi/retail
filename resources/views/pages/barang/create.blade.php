@@ -43,7 +43,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4 col-sm-6">
+                        {{-- <div class="col-md-4 col-sm-6">
                             <div class="form-group @error('ppn_pph') has-error @enderror">
                                 <label for="ppn_pph">PPN, PPH dan Keuntungan (%)</label>
                                 <div class="input-group">
@@ -56,7 +56,7 @@
                                 <span class="help-block error">{{ $message }}</span>
                                 @enderror
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="col-md-4 col-sm-6">
                             <div class="form-group @error('harga_jual') has-error @enderror">
@@ -73,7 +73,7 @@
                             <div class="form-group @error('stok_awal') has-error @enderror">
                                 <label for="stok_awal">Stok Awal</label>
                                 <input type="text" class="form-control " name="stok_awal" id="stok_awal"
-                                    placeholder="Harga Beli" value="{{ old('stok_awal') }}">
+                                    placeholder="Stok Awal" value="{{ old('stok_awal') }}">
                                 @error('stok_awal')
                                 <span class="help-block error">{{ $message }}</span>
                                 @enderror
@@ -122,31 +122,31 @@
 @push('script')
 <script>
     $(document).ready(function(){
-        $('#harga_beli').keyup(function(){
-            const harga_beli = $(this).val();
-            if(harga_beli == ""){
-                $('#harga_jual').val(0);
-                return;
-            }
-            const ppn_pph = $('#ppn_pph').val();
-            const result = (parseFloat(harga_beli) / 100) * parseFloat(ppn_pph);
-            $('#harga_jual').val(parseFloat(result) + parseFloat(harga_beli));
-        });
-        $('#ppn_pph').keyup(function(){
-            const harga_beli = $('#harga_beli').val();
-            const ppn_pph = $(this).val();
-            
-            if(parseFloat(ppn_pph) > 100){
-                alert('Presentase melebihi 100%');
-                $(this).val(0);
-            }
-            if(ppn_pph == ""){
-                $('#harga_jual').val(harga_beli);
-                return;
-            }
-            const result = (parseFloat(harga_beli) / 100) * parseFloat(ppn_pph);
-            $('#harga_jual').val(parseFloat(result) + parseFloat(harga_beli));
-        });
+        // $('#harga_beli').keyup(function(){
+        //     const harga_beli = $(this).val();
+        //     if(harga_beli == ""){
+        //         $('#harga_jual').val(0);
+        //         return;
+        //     }
+        //     const ppn_pph = $('#ppn_pph').val();
+        //     const result = (parseFloat(harga_beli) / 100) * parseFloat(ppn_pph);
+        //     $('#harga_jual').val(parseFloat(result) + parseFloat(harga_beli));
+        // });
+        // $('#ppn_pph').keyup(function(){
+        //     const harga_beli = $('#harga_beli').val();
+        //     const ppn_pph = $(this).val();
+
+        //     if(parseFloat(ppn_pph) > 100){
+        //         alert('Presentase melebihi 100%');
+        //         $(this).val(0);
+        //     }
+        //     if(ppn_pph == ""){
+        //         $('#harga_jual').val(harga_beli);
+        //         return;
+        //     }
+        //     const result = (parseFloat(harga_beli) / 100) * parseFloat(ppn_pph);
+        //     $('#harga_jual').val(parseFloat(result) + parseFloat(harga_beli));
+        // });
     });
 </script>
 @endpush

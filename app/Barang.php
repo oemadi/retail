@@ -4,11 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Session;
-//use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Barang extends Model
 {
-   // use SoftDeletes;
+    use SoftDeletes;
     protected $table = 'barang';
    // public $incrementing = false;
     public static function kodeBarang()

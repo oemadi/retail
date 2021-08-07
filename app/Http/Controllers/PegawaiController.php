@@ -49,7 +49,7 @@ class PegawaiController extends Controller
 			$alamat= $record->alamat;
 			$email= $record->email;
 			$no_hp= $record->no_telp;
-            $gaji= $record->gaji;
+            $gaji= format_uang($record->gaji);
 			$data_arr[]=array('id'=>$id,'nama'=>$nama,'alamat'=>$alamat,'no_hp'=>$no_hp,
             'email'=>$email,'gaji'=>$gaji);
 

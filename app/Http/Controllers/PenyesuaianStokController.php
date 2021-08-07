@@ -95,7 +95,7 @@ class PenyesuaianStokController extends Controller
                 $detail->jenis = $row['jenis'];
                 $detail->save();
               // self::insertDataToHistory($row['kode_barang'], $request->customer_id, $row['jumlah']);
-                self::updateStokbarang($row['kode_barang'], $row['jumlah']);
+                self::updateStokbarang($row['jenis'],$row['kode_barang'], $row['jumlah']);
             }
 
             // if ($request->status != "tunai") {
@@ -131,12 +131,28 @@ class PenyesuaianStokController extends Controller
         $PenyesuaianStok = PenyesuaianStok::findOrFail($id);
         return view("pages.transakasi.penyesuaianStok.edit", compact('PenyesuaianStok'));
     }
-    public static function updateStokbarang($barang_id, $qty)
+    public function viewData($id)
     {
+
+       // dd($id);
+           $atas = penyesuaianStok::findOrFail($id);
+           $data = DetailPenyesuaianStok::with('Barang')->where('penyesuaianStok_id',$id)->get();
+
+        return view("pages.transaksi.penyesuaian_stok.viewData", compact('atas','data'));
+    }
+    public static function updateStokbarang($jenis,$barang_id, $qty)
+    {
+        if($jenis=="penambahan"){
         $barang = Barang::find($barang_id);
-        $barang->stok_penyesuaian += $qty;
+        $barang->stok_penyesuaian_penambahan += $qty;
         $barang->stok_akhir += $qty;
         $barang->update();
+        }else{
+        $barang = Barang::find($barang_id);
+        $barang->stok_penyesuaian_pengurangan += $qty;
+        $barang->stok_akhir = $barang->stok_akhir-$qty;
+        $barang->update();
+        }
     }
 
 }

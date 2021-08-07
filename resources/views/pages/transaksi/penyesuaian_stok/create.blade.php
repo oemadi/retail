@@ -60,8 +60,9 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="jumlah">Jumlah Barang</label>
-                            <input type="text" name="jumlah" id="jumlah" class="form-control" >
+                            <label for="jumlah">Jumlah Kg</label>
+                            <input type="text" name="jumlah2" id="jumlah2" class="form-control" >
+                            <input type="hidden" name="jumlah" id="jumlah" class="form-control">
                         </div>
                     </div>
                     <div class="col-md-12">
@@ -92,7 +93,7 @@
                             <table class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Kode Barang</th>
+
                                         <th>Nama Barang</th>
                                         <th>Jenis</th>
                                         <th>Qty</th>
@@ -129,6 +130,11 @@
 <script type="text/javascript">
     $(function() {
         //alert();
+        $('#jumlah2').on("input",function(){
+                var jml=$('#jumlah2').val();
+				var hasil=jml.replace(",",".");
+				$('#jumlah').val((hasil));
+        })
         var cart = [];
         if(localStorage.cart){
             cart = JSON.parse(localStorage.cart);
@@ -229,7 +235,7 @@
             for (var i in cart){
                 var item = cart[i];
                 row +=   `<tr>
-                                <td>${item.kode_barang}</td>
+
                                 <td>${item.nama_barang}</td>
                                 <td>${item.jenis}</td>
                                 <td>${item.jumlah}</td>

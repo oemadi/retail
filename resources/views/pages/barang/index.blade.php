@@ -32,17 +32,19 @@
                                 id="example-table">
                                 <thead>
                                     <tr>
-
-                                        <th>Kode</th>
+                                        <th>No.</th>
+                                        <th>Kode Barang</th>
                                         <th>Nama</th>
+                                        <th>Kategori</th>
+                                        <th>Satuan</th>
                                         <th>Harga Beli</th>
                                         <th>Harga Jual</th>
                                         <th>Stok Awal</th>
                                         <th>Stok Masuk</th>
-                                        <th>Stok Akhir</th>
                                         <th>Stok Keluar</th>
-                                        <th>Satuan</th>
-                                        <th>Kategori</th>
+                                        <th>Stok Penyesuaian Penambahan</th>
+                                        <th>Stok Penyesuaian Pengurangan</th>
+                                        <th>Stok Akhir</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -191,15 +193,18 @@
                  return meta.row + meta.settings._iDisplayStart + 1;
                  }
                 },
+           {data:'kode'},
 		   {data:'nama'},
+           {data:'kategori_id'},
+           {data:'satuan_id'},
 		   {data:'harga_beli'},
 		   {data:'harga_jual'},
 		   {data:'stok_awal'},
 		   {data:'stok_masuk'},
+           {data:'stok_keluar'},
+           {data:'stok_penyesuaian_penambahan'},
+           {data:'stok_penyesuaian_pengurangan'},
 		   {data:'stok_akhir'},
-		   {data:'stok_keluar'},
-		   {data:'satuan_id'},
-		   {data:'kategori_id'},
 		   {data: 'id',
             "render": function (data) {
             data1 = '<a href="/barang/' + data + '/edit" class="btn btn-sm btn-warning">Edit</a>';

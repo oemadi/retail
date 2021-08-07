@@ -138,7 +138,7 @@ class PenjualanController extends Controller
              order by a.nama
             ");
            foreach($res as $row){
-               $data[] = array('id'=>$row->id,'text'=>$row->nama);
+               $data[] = array('id'=>$row->id,'text'=>$row->kode.' - '.$row->nama);
            }
             return json_encode($data);
         }
@@ -249,8 +249,8 @@ class PenjualanController extends Controller
     public static function updateStokbarang($barang_id, $qty)
     {
         $barang = Barang::find($barang_id);
-        $barang->stok_masuk += $qty;
-        $barang->stok_akhir += $qty;
+        $barang->stok_keluar += $qty;
+        $barang->stok_akhir -= $qty;
         $barang->update();
     }
     public static function insertDataToHistory($barang_id, $Customer_id, $qty)

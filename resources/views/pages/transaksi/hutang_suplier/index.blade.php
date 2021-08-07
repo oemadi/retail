@@ -30,9 +30,9 @@
                                             </td>
                                             <td>
                                                 <select id="status" class="form-control">
-                                                    <option value="all">Semua Transaksi</option>
-                                                    <option value="tunai">tunai</option>
-                                                    <option value="hutang">hutang</option>
+                                                    <option value="all">Semua Status</option>
+                                                    <option value="lunas">lunas</option>
+                                                    <option value="hutang">belum lunas</option>
                                                 </select>
                                             </td>
                                             <td>

@@ -52,9 +52,9 @@ class SuplierController extends Controller
 				$kontak= $record->kontak;
 				$alamat= $record->alamat;
 				$no_hp= $record->no_hp;
-
+                $email= $record->email;
 				$data_arr[]=array('id'=>$id,'nama'=>$nama,'kontak'=>$kontak,
-                'alamat'=>$alamat,'no_hp'=>$no_hp);
+                'alamat'=>$alamat,'no_hp'=>$no_hp,'email'=>$email);
 
 				$response = array(
 				"draw" => intval($draw),
@@ -89,18 +89,17 @@ class SuplierController extends Controller
     {
         $request->validate([
             'nama' => 'required|min:4',
-            'no_hp' => 'required|min:10',
-            'kota' => 'required|min:5',
+            'kontak' => 'required',
+            'no_hp' => 'required',
             'alamat' => 'required|min:10',
         ]);
         $suplier = new Suplier();
         $suplier->nama = $request->nama;
         $suplier->no_hp = $request->no_hp;
-        $suplier->kota = $request->kota;
         $suplier->alamat = $request->alamat;
-        if ($request->website) {
-            $suplier->website = $request->website;
-        }
+        $suplier->kontak = $request->kontak;
+        $suplier->email = $request->email;
+
         if ($request->email) {
             $suplier->email = $request->email;
         }
@@ -154,7 +153,6 @@ class SuplierController extends Controller
         $suplier =  Suplier::find($id);
         $suplier->nama = $request->nama;
         $suplier->no_hp = $request->no_hp;
-        $suplier->kota = $request->kota;
         $suplier->alamat = $request->alamat;
         if ($request->website) {
             $suplier->website = $request->website;
@@ -180,19 +178,23 @@ class SuplierController extends Controller
     public function destroy($id)
     {
         $suplier = Suplier::find($id);
-        $relasiHutang = Suplier::with('hutang')->find($id);
-        $relasiPembelian = Suplier::with('pembelian')->find($id);
-        if (count($relasiHutang->hutang) < 1 && count($relasiPembelian->pembelian) < 1) {
-            if ($suplier->delete()) {
-                session()->flash('message', 'Data berhasil dihapus!');
-                return redirect()->route('suplier.index')->with('status', 'success');
-            } else {
-                session()->flash('message', 'Data gagal dihapus!');
-                return redirect()->route('suplier.index')->with('status', 'danger');
-            }
-        } else {
-            session()->flash('message', 'Data gagal dihapus!');
-            return redirect()->route('suplier.index')->with('status', 'danger');
-        }
+        // $relasiHutang = Suplier::with('hutang')->find($id);
+        // $relasiPembelian = Suplier::with('pembelian')->find($id);
+        $suplier->delete();
+        session()->flash('message', 'Data berhasil dihapus!');
+        return redirect()->route('suplier.index')->with('status', 'success');
+
+        // if (count($relasiHutang->hutang) < 1 && count($relasiPembelian->pembelian) < 1) {
+        //     if ($suplier->delete()) {
+        //         session()->flash('message', 'Data berhasil dihapus!');
+        //         return redirect()->route('suplier.index')->with('status', 'success');
+        //     } else {
+        //         session()->flash('message', 'Data gagal dihapus!');
+        //         return redirect()->route('suplier.index')->with('status', 'danger');
+        //     }
+        // } else {
+        //     session()->flash('message', 'Data gagal dihapus!');
+        //     return redirect()->route('suplier.index')->with('status', 'danger');
+        // }
     }
 }

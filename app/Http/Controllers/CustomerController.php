@@ -163,19 +163,23 @@ class CustomerController extends Controller
      */
     public function destroy($id)
     {
+       // dd($id);
         $Customer = Customer::findOrFail($id);
-        $relasi = Customer::with('transaksi')->find($id);
-        if (count($relasi->transaksi) < 1) {
-            if ($Customer->delete()) {
-                session()->flash('message', 'Data berhasil dihapus!');
-                return redirect()->route('customer.index')->with('status', 'success');
-            } else {
-                session()->flash('message', 'Data gagal dihapus!');
-                return redirect()->route('customer.index')->with('status', 'danger');
-            }
-        } else {
-            session()->flash('message', 'Data gagal dihapus!');
-            return redirect()->route('customer.index')->with('status', 'danger');
-        }
+        $Customer->delete();
+       // $relasi = Customer::with('transaksi')->find($id);
+        // if (count($relasi->transaksi) < 1) {
+        //     if ($Customer->delete()) {
+        //         session()->flash('message', 'Data berhasil dihapus!');
+        //         return redirect()->route('customer.index')->with('status', 'success');
+        //     } else {
+        //         session()->flash('message', 'Data gagal dihapus!');
+        //         return redirect()->route('customer.index')->with('status', 'danger');
+        //     }
+        // } else {
+        //     session()->flash('message', 'Data gagal dihapus!');
+        //     return redirect()->route('customer.index')->with('status', 'danger');
+        // }
+        session()->flash('message', 'Data sukses dihapus!');
+        return redirect()->route('customer.index')->with('status', 'success');
     }
 }

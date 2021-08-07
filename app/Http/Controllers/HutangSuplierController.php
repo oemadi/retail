@@ -45,7 +45,7 @@ class HutangSuplierController extends Controller
             $totalRecordswithFilterA = DB::select("SELECT count(*) as allcount from hutang_suplier a
             where a.branch= $branch
             ".($id_suplier!="" ?  "and a.suplier_id='".$id_suplier."'"  : "")."
-            ".($id_status!="all" ?  "and a.status='".$id_status."'"  : "")."");
+            ");
             $totalRecordswithFilter =  $totalRecordswithFilterA[0]->allcount;
 
 
@@ -54,7 +54,7 @@ class HutangSuplierController extends Controller
             inner join pembelian c on c.id=a.pembelian_id
             where a.branch= $branch
             ".($id_suplier!="" ?  "and a.suplier_id='".$id_suplier."'"  : "")."
-            ".($id_status!="all" ?  "and a.status='".$id_status."'"  : "")."
+            ".($id_status!="all" ?  "and c.status='".$id_status."'"  : "")."
              order by $columnName $columnSortOrder
              limit $start,$rowperpage");
 

@@ -43,7 +43,7 @@ class HutangCustomerController extends Controller
 
             $totalRecordswithFilterA = DB::select("SELECT count(*) as allcount from hutang_customer a where a.branch= $branch
             ".($id_customer!="" ?  "and a.customer_id='".$id_customer."'"  : "")."
-            ".($id_status!="all" ?  "and a.status='".$id_status."'"  : "")."");
+            ");
             $totalRecordswithFilter =  $totalRecordswithFilterA[0]->allcount;
 
             $records = DB::select("SELECT a.*,b.nama as customer,c.faktur as faktur_penjualan
@@ -52,7 +52,7 @@ class HutangCustomerController extends Controller
             inner join penjualan c on c.id=a.penjualan_id
             where a.branch= $branch
             ".($id_customer!="" ?  "and a.customer_id='".$id_customer."'"  : "")."
-            ".($id_status!="all" ?  "and a.status='".$id_status."'"  : "")."
+            ".($id_status!="all" ?  "and c.status='".$id_status."'"  : "")."
              order by $columnName $columnSortOrder
              limit $start,$rowperpage");
 
