@@ -137,7 +137,7 @@ td.redcell2 {
     </tr>
     <?php endforeach;?>
 	   <tr>
-        <td align="center" colspan="6">Total</td>
+        <td align="center" colspan="5">Total</td>
 		<td align="right"><?php echo number_format($total_tagihan,0,',','.');?></td>
 
     </tr>
