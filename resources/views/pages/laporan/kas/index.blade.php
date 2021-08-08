@@ -101,15 +101,10 @@
 </div>
 
 @endsection
-@push('style')
-<link rel="stylesheet"
-<link rel="stylesheet"
-    href="{{ asset('adminlte') }}/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
-@endpush
+
 @push('script')
-<script src="{{ asset('adminlte') }}/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js">
-</script>
-</script>
+
+
 <script>
     $(document).ready(function(){
 		$('#example-table').DataTable().destroy();

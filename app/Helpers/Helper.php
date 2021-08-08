@@ -3,6 +3,7 @@
 
 function set_active($uri, $output = "active")
 {
+    //dd($uri);
     if (is_array($uri)) {
         foreach ($uri as $u) {
             if (Route::is($u)) {

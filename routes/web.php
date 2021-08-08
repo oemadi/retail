@@ -214,7 +214,13 @@ Route::group(['middleware' => 'auth'], function ($app) use ($router) {
             $app->get('/', 'PenyesuaianStokController@index')->name('index');
             $app->get('/create', 'PenyesuaianStokController@create')->name('create');
             $app->post('/store', 'PenyesuaianStokController@store')->name('store');
-            $router->get('/{id}/viewData', 'PenyesuaianStokController@viewData')->name('viewData');
+          //  $router->get('/{id}/viewData', 'PenyesuaianStokController@viewData')->name('viewData');
+        });
+        $app->prefix('penyesuaian')->name('penyesuaian.')->group(function ($app) use ($router) {
+            $app->get('/', 'PenyesuaianStokController@index')->name('index');
+            $app->get('/create', 'PenyesuaianStokController@create')->name('create');
+            $app->post('/store', 'PenyesuaianStokController@store')->name('store');
+          //  $router->get('/{id}/viewData', 'PenyesuaianStokController@viewData')->name('viewData');
         });
         $app->prefix('pembelian')->name('pembelian.')->group(function ($app) use ($router) {
             $app->get('/', 'PembelianController@index')->name('index');
@@ -253,7 +259,7 @@ Route::group(['middleware' => 'auth'], function ($app) use ($router) {
         });
 		 $app->prefix('penyesuaianStok')->name('penyesuaianStok.')->group(function ($app) use ($router) {
 			 $app->get('/print', 'ReportController@penyesuaianStokPrint')->name('print');
-           
+
         });
 		$app->prefix('penjualan')->name('penjualan.')->group(function ($app) use ($router) {
             $app->get('/', 'ReportController@penjualan')->name('penjualan');

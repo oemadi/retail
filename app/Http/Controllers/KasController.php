@@ -11,10 +11,10 @@ class KasController extends Controller
 {
     public function index()
     {
-        $kas = Kas::all();
-        $pendapatan = DB::table('kas')->sum('pemasukan');
-        $pengeluaran = DB::table('kas')->sum('pengeluaran');
-        return view("pages.laporan.kas.index", compact('kas', 'pendapatan', 'pengeluaran'));
+        // $kas = Kas::all();
+        // $pendapatan = DB::table('kas')->sum('pemasukan');
+        // $pengeluaran = DB::table('kas')->sum('pengeluaran');
+        return view("pages.laporan.kas.index");
     }
 	public function getDataKas(Request $request){
 			$draw = $request->get('draw');

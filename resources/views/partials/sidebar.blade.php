@@ -90,7 +90,7 @@
 
             @if (Auth::user()->level == "Admin" or Auth::user()->level == "Petugas")
             <li
-                class="treeview {{ set_active(['transaksi.piutang.index','transaksi.return.penjualan.index','transaksi.pembelian.index','transaksi.pembelian.create','transaksi.hutang.index','transaksi.return.penjualan.index','transaksi.return.penjualan.create','transaksi.return.pembelian.index','transaksi.return.pembelian.create','transaksi.penjualan.periode.index','transaksi.penjualan.barang.index','transaksi.penggajian.index','transaksi.penggajian.create','transaksi.kas.index','transaksi.kas.create','transaksi.penjualan.all']) }}">
+                class="treeview {{ set_active(['transaksi.hutangSuplier.index','transaksi.hutangCustomer.index','transaksi.penjualan.index','transaksi.penjualan.create','transaksi.penyesuaianStok.index','transaksi.penyesuaianStok.create','transaksi.piutang.index','transaksi.return.penjualan.index','transaksi.pembelian.index','transaksi.pembelian.create','transaksi.hutang.index','transaksi.return.penjualan.index','transaksi.return.penjualan.create','transaksi.return.pembelian.index','transaksi.return.pembelian.create','transaksi.penjualan.periode.index','transaksi.penjualan.barang.index','transaksi.penggajian.index','transaksi.penggajian.create','transaksi.kas.index','transaksi.kas.create','transaksi.penjualan.all']) }}">
                 <a href="#">
                     <i class="fa fa-pie-chart"></i>
                     <span>Transaksi</span>
@@ -99,17 +99,17 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="{{ set_active(['transaksi.kas.index','transaksi.kas.create']) }}">
-                        <a href="{{ route('transaksi.kas.index') }}"><i class="fa fa-money"></i> Kas</a>
+                    <li class="{{ set_active(['transaksi.penyesuaianStok.index','transaksi.penyesuaianStok.create','transaksi.penyesuaianStok.create']) }}">
+                        <a href="{{ route('transaksi.penyesuaianStok.index') }}"><i class="fa fa-money"></i> Penyesuaian Stok</a>
                     </li>
                     <li class="{{ set_active(['transaksi.kas.index','transaksi.kas.create']) }}">
-                        <a href="{{ route('transaksi.penyesuaianStok.index') }}"><i class="fa fa-money"></i> Penyesuaian Stok</a>
+                        <a href="{{ route('transaksi.kas.index') }}"><i class="fa fa-money"></i> Kas</a>
                     </li>
                     <li class="{{ set_active(['transaksi.pembelian.index','transaksi.pembelian.create']) }}">
                         <a href="{{ route('transaksi.pembelian.index') }}"><i class="fa fa-shopping-basket"></i>
                             Pembelian</a>
                     </li>
-                    <li class="{{ set_active(['transaksi.penjualan.index','transaksi.penjualan.index']) }}">
+                    <li class="{{ set_active(['transaksi.penjualan.index','transaksi.penjualan.create']) }}">
                         <a href="{{ route('transaksi.penjualan.index') }}"><i class="fa fa-shopping-basket"></i>
                             Penjualan</a>
                     </li>
@@ -152,7 +152,11 @@
 
             @if (Auth::user()->level == "Admin" or Auth::user()->level == "Manager")
             <li
-                class="treeview {{ set_active(['report.penjualan.periode.index','report.penjualan.barang.index','report.grafik.index','report.pembelian.pembelian','report.kas.index','report.labarugi.index','report.penjualan.periode','report.penjualan.barang','report.hutang.index','report.piutang.index','report.rekap.index']) }}">
+                class="treeview {{ set_active(['report.suplier.suplier','report.customer.customer',
+                'report.saldo.saldo','report.pembelian.pembelian','report.pembelianCabang.pembelianCabang','report.kas.index',
+                'report.kasCabang.kasCabang','report.penjualan.penjualan',
+                'report.penjualanCabang.penjualanCabang','report.bayarCustomer.bayarCustomer','report.bayarSuplier.bayarSuplier',
+                'report.tagihanCustomer.tagihanCustomer','report.tagihanCustomerCabang.tagihanCustomerCabang','report.penggajian.index']) }}">
                 <a href="#">
                     <i class="fa fa-pie-chart"></i>
                     <span>Report</span>
