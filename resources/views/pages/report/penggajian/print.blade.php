@@ -7,78 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Laporan</title>
     <link rel="stylesheet" href="{{ asset('adminlte') }}/bower_components/bootstrap/dist/css/bootstrap.css">
-
-<style>
-table {
- font-family: sans-serif;
- border: 7mm solid aqua;
- border-collapse: collapse;
-}
-table.table2 {
- border: 2mm solid aqua;
- border-collapse: collapse;
-}
-table.layout {
- border: 0mm solid black;
- border-collapse: collapse;
-}
-td.layout {
- text-align: center;
- border: 0mm solid black;
-}
-td {
- padding: 2mm;
- border: 0.2mm solid gray;
- vertical-align: middle;
-}
-td.redcell {
- border: 0mm solid red;
-}
-td.redcell2 {
- border: 0mm solid red;
-}
-
-/* DivTable.com */
-.divTable{
-	display: table;
-	width: 100%;
-}
-.divTableRow {
-	display: table-row;
-}
-.divTableHeading {
-	background-color: #EEE;
-	display: table-header-group;
-}
-.divTableCell, .divTableHead {
-	border: 1px solid #999999;
-	display: table-cell;
-	padding: 3px 10px;
-}
-.divTableHeading {
-	background-color: #EEE;
-	display: table-header-group;
-	font-weight: bold;
-}
-.divTableFoot {
-	background-color: #EEE;
-	display: table-footer-group;
-	font-weight: bold;
-}
-.divTableBody {
-	display: table-row-group;
-}
-</style>
+    
 </head>
 
 
 <body>
     <div class="containter">
-        <div class="row">
-            <div class="col-md-12">
-                @include('pages.report.nama_toko')
-            </div>
-        </div>
+        @include('pages/report/logo')
+		<p style="margin-top:60px;line-height:5px;font-weight:bold;font-size:16px;" align="left">REKAP PENGGAJIAN KARYAWAN</p>
  <p>Periode : {{ request()->get('bulan') }} -  {{ request()->get('tahun') }}</p>
         <div class="row">
             <div class="col-md-12">
@@ -106,9 +42,9 @@ td.redcell2 {
                             <td>{{ Carbon\Carbon::parse($item->tanggal_gaji)->format('M-Y') }}</td>
                             <td>{{ $item->tanggal_gaji }}</td>
                             <td>{{ $item->faktur }}</td>
-                            <td>@rupiah($item->pegawai->gaji)</td>
-                            <td>@rupiah($item->potongan)</td>
-                            <td>@rupiah($item->gaji_bersih)</td>
+                            <td align="right">@rupiah($item->pegawai->gaji)</td>
+                            <td align="right">@rupiah($item->potongan)</td>
+                            <td align="right">@rupiah($item->gaji_bersih)</td>
                         </tr>
                         @php
                         $total += $item->gaji_bersih;
@@ -119,7 +55,7 @@ td.redcell2 {
                         <td colspan="7">
                             <center><b>Total Gaji</b></center>
                         </td>
-                        <td id="ttlpgj">@rupiah($total)</td>
+                        <td align="right" id="ttlpgj">@rupiah($total)</td>
                     </thead>
                 </table>
             </div>

@@ -142,13 +142,36 @@ class ReportController extends Controller
         } else {
             $kas = Kas::whereDate('tanggal', ">=", request()->get('tanggal_awal'))->whereDate('tanggal', "<=", request()->get('tanggal_akhir'))->get();
         }
-        return view("pages.report.kas.print", compact('kas'));
+
+        $pdf = PDF::loadView('pages.report.kas.print', compact('kas'))->setPaper('a4', 'portait');
+        $pdf->getDomPDF()->setHttpContext(
+        stream_context_create([
+            'ssl' => [
+                'allow_self_signed'=> TRUE,
+                'verify_peer' => FALSE,
+                'verify_peer_name' => FALSE,
+            ]
+        ])
+    );
+        return $pdf->stream();
     }
 	    public function kasCabangPrint()
     {
 
         $kas = Kas::where('branch',request()->get('cabang'))->whereDate('tanggal', ">=", request()->get('tanggal_awal'))->whereDate('tanggal', "<=", request()->get('tanggal_akhir'))->get();
-        return view("pages.report.kas.print", compact('kas'));
+
+        $pdf = PDF::loadView('pages.report.kas_cabang.print', compact('kas'))->setPaper('a4', 'portait');
+        $pdf->getDomPDF()->setHttpContext(
+        stream_context_create([
+            'ssl' => [
+                'allow_self_signed'=> TRUE,
+                'verify_peer' => FALSE,
+                'verify_peer_name' => FALSE,
+            ]
+        ])
+    );
+        return $pdf->stream();
+
     }
     public function LabaRugiindex()
     {
@@ -248,7 +271,18 @@ class ReportController extends Controller
         ->get();
         $tgl1 =  request()->get('tanggal_awal');
         $tgl2 =  request()->get('tanggal_akhir');
-        return view('pages.report.bayar_customer.print2', compact('data','tgl1','tgl2'));
+
+        $pdf = PDF::loadView('pages.report.bayar_customer.print2', compact('data','tgl1','tgl2'))->setPaper('a4', 'portait');
+        $pdf->getDomPDF()->setHttpContext(
+        stream_context_create([
+            'ssl' => [
+                'allow_self_signed'=> TRUE,
+                'verify_peer' => FALSE,
+                'verify_peer_name' => FALSE,
+            ]
+        ])
+    );
+        return $pdf->stream();
 
     }
 	    public function tagihanCustomerCabangPrint()
@@ -257,8 +291,18 @@ class ReportController extends Controller
         ->where('branch',request()->get('id_cabang'))
         ->get();
 		$cabang = Cabang::where('id',request()->get('id_cabang'))->first();
-        return view('pages.report.tagihan_customer_cabang.print2', compact('data','cabang'));
 
+        $pdf = PDF::loadView('pages.report.tagihan_customer_cabang.print2', compact('data','cabang'))->setPaper('a4', 'portait');
+        $pdf->getDomPDF()->setHttpContext(
+        stream_context_create([
+            'ssl' => [
+                'allow_self_signed'=> TRUE,
+                'verify_peer' => FALSE,
+                'verify_peer_name' => FALSE,
+            ]
+        ])
+    );
+        return $pdf->stream();
     }
 	    public function tagihanCustomerPrint()
     {
@@ -266,7 +310,17 @@ class ReportController extends Controller
         ->where('customer_id',request()->get('id_customer'))
         ->get();
 		$cus = Customer::where('id',request()->get('id_customer'))->first();
-        return view('pages.report.tagihan_customer.print2', compact('data','cus'));
+        $pdf = PDF::loadView('pages.report.tagihan_customer.print2', compact('data','cus'))->setPaper('a4', 'portait');
+        $pdf->getDomPDF()->setHttpContext(
+        stream_context_create([
+            'ssl' => [
+                'allow_self_signed'=> TRUE,
+                'verify_peer' => FALSE,
+                'verify_peer_name' => FALSE,
+            ]
+        ])
+    );
+        return $pdf->stream();
 
     }
 
@@ -287,8 +341,17 @@ class ReportController extends Controller
         ->get();
         $tgl1 =  request()->get('tanggal_awal');
         $tgl2 =  request()->get('tanggal_akhir');
-        return view('pages.report.penjualan.print2', compact('penjualan','tgl1','tgl2'));
-
+        $pdf = PDF::loadView('pages.report.penjualan.print2', compact('penjualan','tgl1','tgl2'))->setPaper('a4', 'portait');
+        $pdf->getDomPDF()->setHttpContext(
+        stream_context_create([
+            'ssl' => [
+                'allow_self_signed'=> TRUE,
+                'verify_peer' => FALSE,
+                'verify_peer_name' => FALSE,
+            ]
+        ])
+    );
+        return $pdf->stream();
     }
   public function penjualanCabangPrint()
     {
@@ -300,8 +363,17 @@ class ReportController extends Controller
         $tgl1 =  request()->get('tanggal_awal');
         $tgl2 =  request()->get('tanggal_akhir');
 		$cabang = Cabang::where('id',request()->get('cabang'))->first();
-        return view('pages.report.penjualan_cabang.print2', compact('penjualan','tgl1','tgl2','cabang'));
-
+        $pdf = PDF::loadView('pages.report.penjualan.print2', compact('penjualan','tgl1','tgl2','cabang'))->setPaper('a4', 'portait');
+        $pdf->getDomPDF()->setHttpContext(
+        stream_context_create([
+            'ssl' => [
+                'allow_self_signed'=> TRUE,
+                'verify_peer' => FALSE,
+                'verify_peer_name' => FALSE,
+            ]
+        ])
+    );
+        return $pdf->stream();
     }
     public function pembelianPrint()
     {
@@ -311,8 +383,17 @@ class ReportController extends Controller
         ->get();
         $tgl1 =  request()->get('tanggal_awal');
         $tgl2 =  request()->get('tanggal_akhir');
-        return view('pages.report.pembelian.print2', compact('pembelian','tgl1','tgl2'));
-
+        $pdf = PDF::loadView('pages.report.pembelian.print2', compact('pembelian','tgl1','tgl2'))->setPaper('a4', 'portait');
+        $pdf->getDomPDF()->setHttpContext(
+        stream_context_create([
+            'ssl' => [
+                'allow_self_signed'=> TRUE,
+                'verify_peer' => FALSE,
+                'verify_peer_name' => FALSE,
+            ]
+        ])
+    );
+        return $pdf->stream();
     }
 
     public function pembelianCabangPrint()
@@ -325,8 +406,17 @@ class ReportController extends Controller
         $tgl1 =  request()->get('tanggal_awal');
         $tgl2 =  request()->get('tanggal_akhir');
 		$cabang = Cabang::where('id',request()->get('cabang'))->first();
-        return view('pages.report.pembelian_cabang.print2', compact('pembelian','tgl1','tgl2','cabang'));
-
+        $pdf = PDF::loadView('pages.report.pembelian_cabang.print2', compact('pembelian','tgl1','tgl2','cabang'))->setPaper('a4', 'portait');
+        $pdf->getDomPDF()->setHttpContext(
+        stream_context_create([
+            'ssl' => [
+                'allow_self_signed'=> TRUE,
+                'verify_peer' => FALSE,
+                'verify_peer_name' => FALSE,
+            ]
+        ])
+    );
+        return $pdf->stream();
     }
     public function hutang()
     {
@@ -491,6 +581,17 @@ class ReportController extends Controller
             }
         }
         $penggajian = $penggajian->get();
-        return view("pages.report.penggajian.print", compact('penggajian'));
+
+        $pdf = PDF::loadView('pages.report.penggajian.print', compact('penggajian'))->setPaper('a4', 'portait');
+        $pdf->getDomPDF()->setHttpContext(
+        stream_context_create([
+            'ssl' => [
+                'allow_self_signed'=> TRUE,
+                'verify_peer' => FALSE,
+                'verify_peer_name' => FALSE,
+            ]
+        ])
+    );
+        return $pdf->stream();
     }
 }

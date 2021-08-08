@@ -1,36 +1,7 @@
 
 <div class="panel panel-default">
 <div class="panel-body">
-
-	<div class="row">
-	<div style="float:left;width:30%" >
-    {{-- <img  style="float:left;width:50%;" src="<?php echo base_url().'assets/';?>ayam.jpg" > --}}
-	</div>
-
-	<div style="float:right;width:70%;valign:middle" >
-	<p style=";line-height:5px;font-weight:bold;font-size:18px;" align="left">CV. FERYPUTRA</p>
-	<p style="line-height:5px;font-weight:bold;font-size:18px;" align="left">REKAP PEMBELIAN AYAM</p>
-	</div>
-	</div>
-	<br>
-
-<style>
-
-table.layout {
- border: 0mm solid black;
- border-collapse: collapse;
-}
-td.layout {
- text-align: center;
- border: 0mm solid black;
-}
-td {
- padding: 2mm;
- border: 0.2mm solid gray;
- vertical-align: middle;
-}
-</style>
-
+  @include('pages/report/logo')
 
 	<?php
 
@@ -40,7 +11,7 @@ td {
 		$tglawal_indo=date("d-m-Y",strtotime($tgl1 ?? ''));
 		$tglakhir_indo=date("d-m-Y",strtotime($tgl2));
 		?>
-
+ <p style="margin-top:60px;line-height:5px;font-weight:bold;font-size:16px;">Rekap Pembelian</p>       
 <p>Periode : <?= $tglawal_indo.' s/d '.$tglakhir_indo;?></p>
   <table width="100%" class="layout">
     <thead>
@@ -49,7 +20,7 @@ td {
             <td>Faktur Pembelian</td>
 			<td>Suplier</td>
 			<td>Tanggal</td>
-		    <td align="right" width="200">Pembelian</td>
+		    <td align="right" >Pembelian</td>
 			<td align="center">Total </td>
             <td align="center">Detail </td>
 
@@ -67,14 +38,14 @@ td {
         <td><?php echo $row->status;?></td>
         <td><?php echo $row->total;?></td>
         <td>
-            <table  width="350px">
+            <table  >
             <?php foreach($row->detail_pembelian as $detail ){ ?>
                 <tr>
-                    <td style="border:0mm" width="45%"> <?php echo $detail->barang->nama;?></td>
+                    <td style="border:0mm" > <?php echo $detail->barang->nama;?></td>
                     <td style="border:0mm"> <?php echo number_format(round($detail->jumlah_beli,1),1,',','.');?></td>
-                    <td style="border:0mm" width="10%">x</td>
-                    <td style="border:0mm;" width="20%"> <?php echo $detail->barang->harga_beli;?></td>
-                    <td style="border:0mm" width="10%">:</td>
+                    <td style="border:0mm" >x</td>
+                    <td style="border:0mm;" > <?php echo $detail->barang->harga_beli;?></td>
+                    <td style="border:0mm" >:</td>
                     <td style="border:0mm"> <?php echo number_format(round($detail->subtotal,1),1,',','.');?></td>
                 </tr>
                <?php } ?>
@@ -87,8 +58,5 @@ td {
     <?php } ?>
 
 </table>
-	 <section class="sheet padding-10mm">
-
-    </section>
 </div>
 </div>
