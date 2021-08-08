@@ -22,13 +22,13 @@
 <table width="100%" class="layout">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Suplier</th>
-                            <th>Kontak</th>
-                            <th>HP</th>
-                            <th>Alamat</th>
-							<th>Email</th>
-                            <th>Piutang</th>
+                            <td>#</td>
+                            <td>Suplier</td>
+                            <td>Kontak</td>
+                            <td>HP</td>
+                            <td>Alamat</td>
+							<td>Email</td>
+                            <td>Piutang</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -48,7 +48,7 @@
                             foreach ($row->hutangSuplier  as $dataHutang){
                              $sisaHutang += $dataHutang->sisa_hutang;
                             }
-                           
+
                             ?>
                               @rupiah($sisaHutang)</td>
                         </tr>

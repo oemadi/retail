@@ -290,7 +290,18 @@ class ReportController extends Controller
         ->get();
         $tgl1 =  request()->get('tanggal_awal');
         $tgl2 =  request()->get('tanggal_akhir');
-        return view('pages.report.bayar_suplier.print2', compact('data','tgl1','tgl2'));
+
+        $pdf = PDF::loadView('pages.report.bayar_suplier.print2', compact('data','tgl1','tgl2'))->setPaper('a4', 'portait');
+        $pdf->getDomPDF()->setHttpContext(
+        stream_context_create([
+            'ssl' => [
+                'allow_self_signed'=> TRUE,
+                'verify_peer' => FALSE,
+                'verify_peer_name' => FALSE,
+            ]
+        ])
+    );
+        return $pdf->stream();
 
     }
     public function customerPrint()

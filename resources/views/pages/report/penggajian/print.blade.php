@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Laporan</title>
     <link rel="stylesheet" href="{{ asset('adminlte') }}/bower_components/bootstrap/dist/css/bootstrap.css">
-    
+
 </head>
 
 
@@ -21,14 +21,14 @@
                 <table width="100%" class="layout">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Nama Pegawai</th>
-                            <th>Gaji Bulan</th>
-                            <th>Tanggal</th>
-                            <th>Faktur</th>
-                            <th>Gaji </th>
-                            <th>Potongan Gaji</th>
-                            <th>Gaji Bersih</th>
+                            <td>#</td>
+                            <td>Nama Pegawai</td>
+                            <td>Gaji Bulan</td>
+                            <td>Tanggal</td>
+                            <td>Faktur</td>
+                            <td>Gaji </td>
+                            <td>Potongan Gaji</td>
+                            <td>Gaji Bersih</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -52,10 +52,12 @@
                         @endforeach
                     </tbody>
                     <thead>
+                        <tr>
                         <td colspan="7">
                             <center><b>Total Gaji</b></center>
                         </td>
                         <td align="right" id="ttlpgj">@rupiah($total)</td>
+                    </tr>
                     </thead>
                 </table>
             </div>
