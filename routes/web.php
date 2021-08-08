@@ -220,6 +220,7 @@ Route::group(['middleware' => 'auth'], function ($app) use ($router) {
             $app->get('/', 'PembelianController@index')->name('index');
             $app->get('/create', 'PembelianController@create')->name('create');
             $app->post('/store', 'PembelianController@store')->name('store');
+			 $router->get('/{id}/faktur', 'PembelianController@faktur')->name('faktur');
             $app->get('/loadKotak', 'PembelianController@loadKotakAtas')->name('load_kotak_atas');
             $app->get('/loadTable', 'PembelianController@loadTable')->name('load_table');
             $app->get('/loadModal/{id}', 'PembelianController@loadModal')->name('load_modal');
@@ -249,6 +250,10 @@ Route::group(['middleware' => 'auth'], function ($app) use ($router) {
 		 $app->prefix('suplier')->name('suplier.')->group(function ($app) use ($router) {
             $app->get('/', 'ReportController@suplier')->name('suplier');
             $app->get('/print', 'ReportController@suplierPrint')->name('print');
+        });
+		 $app->prefix('penyesuaianStok')->name('penyesuaianStok.')->group(function ($app) use ($router) {
+			 $app->get('/print', 'ReportController@penyesuaianStokPrint')->name('print');
+           
         });
 		$app->prefix('penjualan')->name('penjualan.')->group(function ($app) use ($router) {
             $app->get('/', 'ReportController@penjualan')->name('penjualan');

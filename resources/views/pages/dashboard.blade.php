@@ -1,5 +1,5 @@
 @extends('layouts.template')
-@section('page','dashboard')
+@section('page','Dashboard')
 @section('content')
 <div class="row">
     <div class="col-lg-3 col-xs-6">
@@ -45,12 +45,12 @@
             <div class="icon">
                 <i class="ion ion-stats-bars"></i>
             </div>
-            <a href="{{ route('suplier.index') }}" class="small-box-footer">More info <i
+            <a href="{{ route('transaksi.penjualan.index') }}" class="small-box-footer">More info <i
                     class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
     <!-- ./col -->
-    <div class="col-lg-3 col-xs-6">
+    {{-- <div class="col-lg-3 col-xs-6">
         <!-- small box -->
         <div class="small-box bg-red">
             <div class="inner">
@@ -63,10 +63,10 @@
             </div>
             <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
         </div>
-    </div>
+    </div> --}}
     <!-- ./col -->
 </div>
-<div class="row">
+{{-- <div class="row">
     <div class="col-md-12">
         <div class="box box-danger">
             <div class="box-header with-border">
@@ -87,7 +87,7 @@
             <!-- /.box-body -->
         </div>
     </div>
-</div>
+</div> --}}
 
 <div class="row">
     <div class="col-md-6">

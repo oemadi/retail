@@ -16,6 +16,8 @@ use App\Piutang;
 use App\Return_pembelian;
 use App\Return_penjualan;
 use App\Transaksi;
+use App\PenyesuaianStok;
+use App\DetailPenyesuaianStok;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Saldo;
@@ -144,6 +146,24 @@ class ReportController extends Controller
             $pengeluaran = DB::table('kas')->whereDate('tanggal', ">=", request()->get('tanggal_awal'))->whereDate('tanggal', "<=", request()->get('tanggal_akhir'))->sum('pengeluaran');
         }
         return view("pages.report.kas.kotak_total", compact('pendapatan', 'pengeluaran'));
+    }
+	   public function penyesuaianStokPrint()
+    {
+        $id = request()->get('id');
+//		dd($id);
+        $data =  PenyesuaianStok::find($id);
+
+        $pdf = PDF::loadView('pages.transaksi.penyesuaian_stok.print', compact('data'))->setPaper('a4', 'portait');
+        $pdf->getDomPDF()->setHttpContext(
+        stream_context_create([
+            'ssl' => [
+                'allow_self_signed'=> TRUE,
+                'verify_peer' => FALSE,
+                'verify_peer_name' => FALSE,
+            ]
+        ])
+    );
+        return $pdf->stream();
     }
     public function kasPrint()
     {

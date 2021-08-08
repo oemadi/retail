@@ -23,4 +23,12 @@ class PenyesuaianStok extends Model
         }
         return $number;
     }
+	 public function DetailPenyesuaianStok()
+    {
+        return $this->hasMany(DetailPenyesuaianStok::class, 'penyesuaianStok_id', 'id');
+    }
+	 public function UserPenyesuaianStok()
+    {
+        return $this->hasOne(User::class, 'id','user_is');
+    }
 }

@@ -143,7 +143,7 @@
 		   {data:'user'},
 		   {data: 'id',
             "render": function (data) {
-         	 data1 = '<a href="/transaksi/penyesuaianStok/' + data + '/viewData"  class="btn btn-sm btn-primary fa fa-eye" >&nbsp;View</a>';
+         	 data1 = '<a href="/report/penyesuaianStok/print?id='+ data +'"  class="btn btn-sm btn-primary fa fa-eye" >&nbsp;View</a>';
 			return data1;
             }
 		   }

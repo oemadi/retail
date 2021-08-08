@@ -16,9 +16,24 @@ use Session;
 
 class PembelianController extends Controller
 {
+	 protected $page = "pages.transaksi.pembelian.";
     public function index()
     {
         return view("pages.transaksi.pembelian.index");
+    }
+	public function faktur($kode)
+    {
+            $atas = Pembelian::where('pembelian.id',$kode)
+            ->join('suplier','suplier.id','pembelian.suplier_id')
+            ->select('pembelian.*','suplier.nama as namasuplier','suplier.alamat')
+			->first();
+// dd($atas->faktur);
+			$detail = Pembelian::where('pembelian.id',$kode)
+            ->join('detail_pembelian','pembelian.id','detail_pembelian.pembelian_id')
+            ->join('barang','barang.id','detail_pembelian.barang_id')
+            ->select('barang.*','detail_pembelian.jumlah_beli','detail_pembelian.karung','detail_pembelian.harga','detail_pembelian.subtotal')
+			->get();
+        return view($this->page . "faktur", compact('atas','detail'));
     }
 
 	public function getDataPembelian(Request $request){
@@ -122,6 +137,7 @@ class PembelianController extends Controller
                 $detail->pembelian_id = $pembelian->id;
                 $detail->barang_id = $row['kode_barang'];
                 $detail->jumlah_beli = $row['jumlah'];
+                $detail->harga = $row['harga'];
                 $detail->karung = $row['karung'];
                 $detail->subtotal = $row['subtotal'];
                 $detail->save();

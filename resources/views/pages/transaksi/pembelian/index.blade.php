@@ -180,12 +180,12 @@
 		   {data:'tanggal_pembelian'},
 		   {data:'total'},
            {data:'status'},
-		//    {data: 'id',
-        //     "render": function (data) {
-        //  	 data1 = '<a href="/pembelian/' + data + '/print"  class="btn btn-sm btn-primary fa fa-print" >&nbsp;Print</a>';
-		// 	return data1;
-        //     }
-		//    }
+		    {data: 'id',
+             "render": function (data) {
+          	 data1 = '<a href="/transaksi/pembelian/' + data + '/faktur"  class="btn btn-sm btn-primary fa fa-print" >&nbsp;Print</a>';
+		 	return data1;
+             }
+		    }
 		   ]
 
         });
