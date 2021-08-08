@@ -83,16 +83,18 @@
              {{-- <img  style="float:left;width:50%;" src="<?php echo base_url().'assets/';?>ayam.jpg" > --}}
             </div>
 
-            <div style="float:right;width:70%;valign:middle" >
+            <div style="float:right;width:100%;valign:middle" >
             <p style=";line-height:5px;font-weight:bold;font-size:18px;" align="left">CV. FERYPUTRA</p>
             <p style="line-height:5px;font-weight:bold;font-size:18px;" align="left">REKAP SALDO</p>
             </div>
             </div>
             <br>
+
         <div class="row">
+            <p>Periode : <?= request()->get('tanggal_awal').' s/d '.request()->get('tanggal_akhir');?></p>
             <div class="col-md-12">
 
-<p>Periode : <?= request()->get('tanggal_awal').' s/d '.request()->get('tanggal_akhir');?></p>
+
 <table width="100%" class="layout">
                     <thead>
                         <tr>

@@ -18,6 +18,7 @@ use App\Transaksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Saldo;
+use PDF;
 
 class ReportController extends Controller
 {
@@ -174,15 +175,26 @@ class ReportController extends Controller
     {
         return view("pages.report.saldo.index");
     }
+
     public function saldoPrint()
     {
-    $saldo = Penjualan::with('customer')
-    ->whereDate('tanggal_penjualan', ">=", request()->get('tanggal_awal'))
-    ->whereDate('tanggal_penjualan', "<=", request()->get('tanggal_akhir'))
-    ->get();
-    $tgl1 =  request()->get('tanggal_awal');
-    $tgl2 =  request()->get('tanggal_akhir');
-    return view('pages.report.saldo.print', compact('saldo','tgl1','tgl2'));
+        $saldo = Penjualan::with('customer')
+        ->whereDate('tanggal_penjualan', ">=", request()->get('tanggal_awal'))
+        ->whereDate('tanggal_penjualan', "<=", request()->get('tanggal_akhir'))
+        ->get();
+        $tgl1 =  request()->get('tanggal_awal');
+        $tgl2 =  request()->get('tanggal_akhir');
+        $pdf = PDF::loadView('pages.report.saldo.print', compact('saldo','tgl1','tgl2'))->setPaper('a4', 'portait');
+        $pdf->getDomPDF()->setHttpContext(
+        stream_context_create([
+            'ssl' => [
+                'allow_self_signed'=> TRUE,
+                'verify_peer' => FALSE,
+                'verify_peer_name' => FALSE,
+            ]
+        ])
+    );
+        return $pdf->stream();
     }
     public function pembelian()
     {
