@@ -31,10 +31,10 @@ class Penjualan extends Model
             $penjualan = penjualan::where('branch',$branch)->orderBy('id', 'DESC')->first();
             $nourut = (int) substr($penjualan->faktur, -8, 8);
             $nourut++;
-            $char = "TRK";
+            $char = "FK";
             $number = $char  .  sprintf("%08s", $nourut);
         } else {
-            $number = "TRK"  . "00000001";
+            $number = "FK"  . "00000001";
         }
         return $number;
     }

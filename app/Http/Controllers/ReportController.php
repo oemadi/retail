@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Cabang;
 use App\Customer;
+use App\Suplier;
 use App\Barang;
 use App\Gaji;
 use App\Hutang;
@@ -102,7 +103,16 @@ class ReportController extends Controller
         $transaksi = $transaksi->get();
         return view($this->page . 'penjualan.periode.print', compact('transaksi'));
     }
+	public function customer()
+    {
 
+        return view("pages.report.customer.index");
+    }
+    public function suplier()
+    {
+
+        return view("pages.report.suplier.index");
+    }
 
     public function kas()
     {
@@ -261,6 +271,40 @@ class ReportController extends Controller
         $tgl1 =  request()->get('tanggal_awal');
         $tgl2 =  request()->get('tanggal_akhir');
         return view('pages.report.bayar_suplier.print2', compact('data','tgl1','tgl2'));
+
+    }
+    public function customerPrint()
+    {
+        $data = Customer::get();
+
+        $pdf = PDF::loadView('pages.report.customer.print', compact('data'))->setPaper('a4', 'portait');
+        $pdf->getDomPDF()->setHttpContext(
+        stream_context_create([
+            'ssl' => [
+                'allow_self_signed'=> TRUE,
+                'verify_peer' => FALSE,
+                'verify_peer_name' => FALSE,
+            ]
+        ])
+    );
+        return $pdf->stream();
+
+    }
+	    public function suplierPrint()
+    {
+        $data = Suplier::get();
+
+        $pdf = PDF::loadView('pages.report.suplier.print', compact('data'))->setPaper('a4', 'portait');
+        $pdf->getDomPDF()->setHttpContext(
+        stream_context_create([
+            'ssl' => [
+                'allow_self_signed'=> TRUE,
+                'verify_peer' => FALSE,
+                'verify_peer_name' => FALSE,
+            ]
+        ])
+    );
+        return $pdf->stream();
 
     }
     public function bayarCustomerPrint()

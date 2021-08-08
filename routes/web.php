@@ -242,7 +242,15 @@ Route::group(['middleware' => 'auth'], function ($app) use ($router) {
     });
 
     $app->prefix('report')->middleware(['cek:Admin,Manager'])->name('report.')->group(function ($app) use ($router) {
-        $app->prefix('penjualan')->name('penjualan.')->group(function ($app) use ($router) {
+        $app->prefix('customer')->name('customer.')->group(function ($app) use ($router) {
+            $app->get('/', 'ReportController@customer')->name('customer');
+            $app->get('/print', 'ReportController@customerPrint')->name('print');
+        });
+		 $app->prefix('suplier')->name('suplier.')->group(function ($app) use ($router) {
+            $app->get('/', 'ReportController@suplier')->name('suplier');
+            $app->get('/print', 'ReportController@suplierPrint')->name('print');
+        });
+		$app->prefix('penjualan')->name('penjualan.')->group(function ($app) use ($router) {
             $app->get('/', 'ReportController@penjualan')->name('penjualan');
             $app->get('/print', 'ReportController@penjualanPrint')->name('print');
         });

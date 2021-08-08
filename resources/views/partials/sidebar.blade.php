@@ -128,25 +128,6 @@
                             Hutang Customer</a>
                     </li>
 
-
-                    {{-- <li
-                        class="treeview {{ set_active(['transaksi.penjualan.periode.index','transaksi.penjualan.barang.index']) }}">
-                        <a href="#"><i class="fa fa-shopping-bag"></i> Penjualan
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li class="{{ set_active(['transaksi.penjualan.periode.index']) }}">
-                                <a href="{{ route('transaksi.penjualan.periode.index') }}"><i
-                                        class="fa fa-circle-o"></i>
-                                    Per Periode</a></li>
-
-                            <li class="{{ set_active(['transaksi.penjualan.barang.index']) }}">
-                                <a href="{{ route('transaksi.penjualan.barang.index') }}"><i class="fa fa-circle-o"></i>
-                                    Per Barang</a></li>
-                        </ul>
-                    </li> --}}
                     <li
                         class="treeview {{ set_active(['transaksi.return.penjualan.index','transaksi.return.penjualan.create','transaksi.return.pembelian.index','transaksi.return.pembelian.create']) }}">
                         <a href="#"><i class="fa fa-sticky-note"></i> Return
@@ -180,7 +161,15 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="{{ set_active(['report.saldo.saldo']) }}">
+                    <li class="{{ set_active(['report.customer.customer']) }}">
+                        <a href="{{ route('report.customer.customer') }}"><i class="fa fa-shopping-cart"></i>
+                            Customer</a>
+                    </li>
+					  <li class="{{ set_active(['report.suplier.suplier']) }}">
+                        <a href="{{ route('report.suplier.suplier') }}"><i class="fa fa-shopping-cart"></i>
+                            Suplier</a>
+                    </li>
+					<li class="{{ set_active(['report.saldo.saldo']) }}">
                         <a href="{{ route('report.saldo.saldo') }}"><i class="fa fa-shopping-cart"></i>
                             Saldo</a>
                     </li>

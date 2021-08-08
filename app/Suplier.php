@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Suplier extends Model
 {
     protected $table = 'suplier';
-    public function hutang()
+    public function hutangSuplier()
     {
-        return $this->hasMany(Hutang::class, 'suplier_id', 'id');
+        return $this->hasMany(HutangSuplier::class, 'suplier_id', 'id');
     }
     public function pembelian()
     {

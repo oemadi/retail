@@ -27,10 +27,10 @@
 @include('pages/report/logo')
 		<?php
 			
-		$tglawal=date("Y/m/d",strtotime($tgl1));
+		$tglawal=date("Y/m/d",strtotime($tgl1 ?? ''));
 		$tglakhir=date("Y/m/d",strtotime($tgl2));
 		
-		$tglawal_indo=date("d-m-Y",strtotime($tgl1));
+		$tglawal_indo=date("d-m-Y",strtotime($tgl1 ?? ''));
 		$tglakhir_indo=date("d-m-Y",strtotime($tgl2));
 		?>
 
