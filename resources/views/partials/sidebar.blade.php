@@ -100,17 +100,17 @@
                 </a>
                 <ul class="treeview-menu">
                     <li class="{{ set_active(['transaksi.kas.index','transaksi.kas.create']) }}">
-                        <a href="{{ route('transaksi.kas.index') }}"><i class="fa fa-calendar"></i> Kas</a>
+                        <a href="{{ route('transaksi.kas.index') }}"><i class="fa fa-money"></i> Kas</a>
                     </li>
                     <li class="{{ set_active(['transaksi.kas.index','transaksi.kas.create']) }}">
-                        <a href="{{ route('transaksi.penyesuaianStok.index') }}"><i class="fa fa-calendar"></i> Penyesuaian Stok</a>
+                        <a href="{{ route('transaksi.penyesuaianStok.index') }}"><i class="fa fa-money"></i> Penyesuaian Stok</a>
                     </li>
                     <li class="{{ set_active(['transaksi.pembelian.index','transaksi.pembelian.create']) }}">
                         <a href="{{ route('transaksi.pembelian.index') }}"><i class="fa fa-shopping-basket"></i>
                             Pembelian</a>
                     </li>
                     <li class="{{ set_active(['transaksi.penjualan.index','transaksi.penjualan.index']) }}">
-                        <a href="{{ route('transaksi.penjualan.index') }}"><i class="fa fa-credit-card"></i>
+                        <a href="{{ route('transaksi.penjualan.index') }}"><i class="fa fa-shopping-basket"></i>
                             Penjualan</a>
                     </li>
                     <li class="{{ set_active(['transaksi.penggajian.index','transaksi.penggajian.create']) }}">
@@ -162,16 +162,16 @@
                 </a>
                 <ul class="treeview-menu">
                     <li class="{{ set_active(['report.customer.customer']) }}">
-                        <a href="{{ route('report.customer.customer') }}"><i class="fa fa-shopping-cart"></i>
+                        <a href="{{ route('report.customer.customer') }}"><i class="fa fa-user"></i>
                             Customer</a>
                     </li>
 					  <li class="{{ set_active(['report.suplier.suplier']) }}">
-                        <a href="{{ route('report.suplier.suplier') }}"><i class="fa fa-shopping-cart"></i>
+                        <a href="{{ route('report.suplier.suplier') }}"><i class="fa fa-user"></i>
                             Suplier</a>
                     </li>
 					<li class="{{ set_active(['report.saldo.saldo']) }}">
-                        <a href="{{ route('report.saldo.saldo') }}"><i class="fa fa-shopping-cart"></i>
-                            Saldo</a>
+                        <a href="{{ route('report.saldo.saldo') }}"><i class="fa fa-money"></i>
+                            Keuntungan Penjualan</a>
                     </li>
                     <li class="{{ set_active(['report.penjualan.penjualan']) }}">
                         <a href="{{ route('report.penjualan.penjualan') }}"><i class="fa fa-shopping-cart"></i>
@@ -193,25 +193,25 @@
                         <a href="{{ route('report.bayarSuplier.bayarSuplier') }}"><i class="fa fa-calendar-minus-o"></i> Bayar ke Suplier</a>
                     </li>
                     <li class="{{ set_active(['report.bayarCustomer.bayarCustomer']) }}">
-                        <a href="{{ route('report.bayarCustomer.bayarCustomer') }}"><i class="fa fa-calendar"></i> Bayar dari Customer</a>
+                        <a href="{{ route('report.bayarCustomer.bayarCustomer') }}"><i class="fa fa-money"></i> Bayar dari Customer</a>
                     </li>
 					 <li class="{{ set_active(['report.tagihanCustomer.tagihanCustomer']) }}">
-                        <a href="{{ route('report.tagihanCustomer.tagihanCustomer') }}"><i class="fa fa-calendar"></i> Tagihan Customer</a>
+                        <a href="{{ route('report.tagihanCustomer.tagihanCustomer') }}"><i class="fa fa-money"></i> Tagihan Customer</a>
                     </li>
 					 <li class="{{ set_active(['report.tagihanCustomerCabang.tagihanCustomerCabang']) }}">
-                        <a href="{{ route('report.tagihanCustomerCabang.tagihanCustomerCabang') }}"><i class="fa fa-calendar"></i> Tagihan Customer All Cabang</a>
+                        <a href="{{ route('report.tagihanCustomerCabang.tagihanCustomerCabang') }}"><i class="fa fa-money"></i> Tagihan Customer All Cabang</a>
                     </li>
                     <li class="{{ set_active(['report.kas.index']) }}">
-                        <a href="{{ route('report.kas.index') }}"><i class="fa fa-calendar-check-o"></i> Kas</a>
+                        <a href="{{ route('report.kas.index') }}"><i class="fa fa-money"></i> Kas</a>
                     </li>
 					<li class="{{ set_active(['report.kasCabang.kasCabang']) }}">
-                        <a href="{{ route('report.kasCabang.kasCabang') }}"><i class="fa fa-calendar-check-o"></i> Kas All Cabang</a>
+                        <a href="{{ route('report.kasCabang.kasCabang') }}"><i class="fa fa-money"></i> Kas All Cabang</a>
                     </li>
                     {{-- <li class="{{ set_active(['report.labarugi.index']) }}">
                         <a href="{{ route('report.labarugi.index') }}"><i class="fa fa-line-chart"></i> Laba Rugi</a>
                     </li> --}}
                     <li class="{{ set_active(['report.penggajian.index']) }}">
-                        <a href="{{ route('report.penggajian.index') }}"><i class="fa fa-user"></i> Penggajian</a>
+                        <a href="{{ route('report.penggajian.index') }}"><i class="fa fa-money"></i> Penggajian</a>
                     </li>
                     {{-- <li class="{{ set_active(['report.grafik.index']) }}">
                         <a href="{{ route('report.grafik.index') }}"><i class="fa fa-bar-chart"></i> Grafik</a>
