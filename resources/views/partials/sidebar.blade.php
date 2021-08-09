@@ -179,7 +179,7 @@
                     </li>
 					<li class="{{ set_active(['report.saldo.saldo']) }}">
                         <a href="{{ route('report.saldo.saldo') }}"><i class="fa fa-money"></i>
-                            Keuntungan Penjualan</a>
+                            Laba Rugi Penjualan</a>
                     </li>
                     <li class="{{ set_active(['report.penjualan.penjualan']) }}">
                         <a href="{{ route('report.penjualan.penjualan') }}"><i class="fa fa-shopping-cart"></i>

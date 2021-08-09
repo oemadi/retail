@@ -76,7 +76,7 @@
   @include('pages/report/logo')
 
         <div class="row">
-		    <p style="margin-top:60px;line-height:5px;font-weight:bold;font-size:16px;">Rekap Keuntungan Penjualan</p>
+		    <p style="margin-top:60px;line-height:5px;font-weight:bold;font-size:16px;">Laba Rugi Penjualan</p>
             <p>Periode : <?= request()->get('tanggal_awal').' s/d '.request()->get('tanggal_akhir');?></p>
             <div class="col-md-12">
 
@@ -84,9 +84,10 @@
 <table width="100%" class="layout">
                     <thead>
                         <tr>
-                            <th>Penjualan</th>
-                            <th>Modal</th>
-                            <th>Keuntungan</th>
+                            <td>Penjualan</td>
+                            <td>Harga Pokok Penjualan (HPP)</td>
+                            <td>Laba</td>
+                            <td>Rugi</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -106,9 +107,15 @@
 
                         <?php } ?>
                         <tr>
-                            <td>@rupiah($penjualan)</td>
-                            <td>@rupiah($modal)</td>
-                            <td>@rupiah($penjualan-$modal)</td>
+                            <td align="right">@rupiah($penjualan)</td>
+                            <td align="right">@rupiah($modal)</td>
+                            @if ($penjualan-$modal<0)
+                            <td align="right">Rp. 0</td>
+                            <td align="right">@rupiah($penjualan-$modal)</td>
+                            @else
+                            <td align="right">@rupiah($penjualan-$modal)</td>
+                            <td align="right">Rp. 0</td>
+                            @endif
                         </tr>
                        </tbody>
                        <thead>

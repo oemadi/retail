@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Laporan</title>
     <link rel="stylesheet" href="{{ asset('adminlte') }}/bower_components/bootstrap/dist/css/bootstrap.css">
-   
+
 </head>
 
 
@@ -15,7 +15,7 @@
     <div class="containter">
         <div class="row">
                @include('pages/report/logo')
-         
+
         <div class="row">
             <div class="col-md-12">
 <p style="margin-top:60px;line-height:5px;font-weight:bold;font-size:16px;" align="left">REKAP KAS</p>
@@ -23,13 +23,13 @@
 <table width="100%" class="layout">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Tanggal</th>
-                            <th>Faktur</th>
-                            <th>Jenis</th>
-                            <th>Pendapatan</th>
-                            <th>Pengeluaran</th>
-                            <th>Keterangan</th>
+                            <td>#</td>
+                            <td>Tanggal</td>
+                            <td>Faktur</td>
+                            <td>Jenis</td>
+                            <td>Pendapatan</td>
+                            <td>Pengeluaran</td>
+                            <td>Keterangan</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,9 +43,9 @@
                             <td>{{ $row->tanggal }}</td>
                             <td>{{ $row->faktur }}</td>
                             <td>{{ $row->jenis }}</td>
-                            <td>@rupiah($row->pemasukan)</td>
-                            <td>@rupiah($row->pengeluaran)</td>
-                            <td>{{ $row->keterangan }}</td>
+                            <td align="right">@rupiah($row->pemasukan)</td>
+                            <td align="right">@rupiah($row->pengeluaran)</td>
+                            <td >{{ $row->keterangan }}</td>
                         </tr>
                         @php
                         $pemasukan +=$row->pemasukan;
@@ -58,19 +58,19 @@
                             <td colspan="6">
                                 <center><b>Total Pemasukan</b></center>
                             </td>
-                            <td><b id="pdpt">@rupiah($pemasukan)</b></td>
+                            <td align="right"><b id="pdpt">@rupiah($pemasukan)</b></td>
                         </tr>
                         <tr>
                             <td colspan="6">
                                 <center><b>Total Pengeluaran</b></center>
                             </td>
-                            <td><b id="pgl">@rupiah($pengeluaran)</b></td>
+                            <td align="right"><b id="pgl">@rupiah($pengeluaran)</b></td>
                         </tr>
                         <tr>
                             <td colspan="6">
                                 <center><b>Total Saldo</b></center>
                             </td>
-                            <td><b id="sld">@rupiah($pemasukan - $pengeluaran)</b></td>
+                            <td align="right"><b id="sld">@rupiah($pemasukan - $pengeluaran)</b></td>
                         </tr>
                     </thead>
                 </table>
