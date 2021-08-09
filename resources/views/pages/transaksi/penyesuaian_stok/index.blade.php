@@ -20,39 +20,7 @@
                         @endif
                     </div>
                 </div>
-                <div class="col-md-12">
-                    <div class=" box-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table">
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <select name="id_suplier" id="id_suplier" class="form-control select2-suplier" style="width: 100%;height:auto">
-                                                </select>
-                                            </td>
 
-                                            <td>
-                                                <select id="status" class="form-control">
-                                                    <option value="all">Semua Transaksi</option>
-                                                    <option value="tunai">tunai</option>
-                                                    <option value="hutang">hutang</option>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <a href="#" class="btn btn-success" style="width:100%" id="filter1"><i
-                                                        class="fa fa-search"></i>
-                                                    Filter</a>
-                                            </td>
-                                        </tr>
-
-                                    </tbody>
-                                </table>
-                            </div>
-
-                    </div>
-                </div>
-            </div>
                 <div class="row">
                     <div class="col-md-4">
                         <a href="{{ route('transaksi.penyesuaianStok.create') }}" class="btn btn-primary"><i

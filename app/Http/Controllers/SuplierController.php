@@ -145,17 +145,14 @@ class SuplierController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama' => 'required|min:4',
-            'no_hp' => 'required|min:10',
-            'kota' => 'required|min:5',
-            'alamat' => 'required|min:10',
+            'nama' => 'required',
+            'alamat' => 'required',
         ]);
         $suplier =  Suplier::find($id);
         $suplier->nama = $request->nama;
-        $suplier->no_hp = $request->no_hp;
         $suplier->alamat = $request->alamat;
-        if ($request->website) {
-            $suplier->website = $request->website;
+        if ($request->no_hp) {
+            $suplier->no_hp = $request->no_hp;
         }
         if ($request->email) {
             $suplier->email = $request->email;

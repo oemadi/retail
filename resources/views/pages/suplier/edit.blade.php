@@ -63,7 +63,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
-                            <div class="form-group @error('no_hp') has-error @enderror">
+                            <div class="form-group @error('alamat') has-error @enderror">
                                 <label for="alamat">Alamat</label>
                                 <textarea name="alamat" id="alamat" cols="30" rows="10" class="form-control"
                                     placeholder="Alamat....">{{ $suplier->alamat }}</textarea>
@@ -80,14 +80,11 @@
     </div>
 </div>
 @endsection
-@push('style')
-<link rel="stylesheet" href="{{ asset('adminlte') }}/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
-@endpush
 @push('script')
-<script src="{{ asset('adminlte') }}/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+
 <script>
     $(document).ready(function(){
-        $('#alamat').wysihtml5();
+    //   /  $('#alamat').wysihtml5();
     });
 </script>
 @endpush

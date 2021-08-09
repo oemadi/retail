@@ -138,6 +138,7 @@
 		.dataTable({
            processing:true,
 		   serverSide:true,
+           searching:false,
 		     ajax : {
 			 url:"{{route('getDataKas')}}",
 			 type:"get",
