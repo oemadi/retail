@@ -85,9 +85,7 @@
 <script>
     $(document).ready(function(){
         $('#sttlpgj').html($('#ttlpgj').html());
-        $('#filter-atas').click(function(){
-            loadTable($('#bulan').val(),$('#tahun').val());
-        });
+
         $('.print').click(function(){
             bulan = $('#bulan').val();
             tahun = $('#tahun').val();
@@ -96,29 +94,7 @@
             const parsedUrl = parseResult.documentElement.textContent;
             window.open(parsedUrl,'_blank');
         });
-        $('.excel').click(function(){
-            bulan = $('#bulan').val();
-            tahun = $('#tahun').val();
-            let url = `{{ url('report/penggajian/excel?bulan=${bulan}&tahun=${tahun}') }}`;
-            const parseResult = new DOMParser().parseFromString(url, "text/html");
-            const parsedUrl = parseResult.documentElement.textContent;
-            window.open(parsedUrl,'_blank');
-        });
-        function loadTable(bulan,tahun,lanjut="all"){
-            let url = `{{ url('report/penggajian/loadTable?bulan=${bulan}&tahun=${tahun}&lanjut=${lanjut}') }}`;
-            const parseResult = new DOMParser().parseFromString(url, "text/html");
-            const parsedUrl = parseResult.documentElement.textContent;
-            $('.table-responsive').load(parsedUrl,function(){
-                loadKotakAtas();
-            });
-        }
-        function loadKotakAtas(){
-            $('#sttlpgj').html($('#ttlpgj').html());
-        }
 
-        $(document).on('click','.lanjut',function(){
-            loadTable("asdasd","asd",$(this).data('filter'));
-        });
     });
 </script>
 @endpush

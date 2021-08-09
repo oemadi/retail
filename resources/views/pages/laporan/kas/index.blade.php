@@ -17,13 +17,13 @@
                                                 <td>
                                                     <input title="tanggal transaksi" class="form-control datepicker-here"
                                                         type="text" id="startdate" data-language="en" autocomplete="off"
-                                                        value="{{ date('Y-m-d') }}">
+                                                        value="{{ date('d-m-Y') }}">
                                                 </td>
                                                 <td>Tanggal Akhir</td>
                                                 <td>
                                                     <input title="tanggal transaksi" class="form-control datepicker-here"
                                                         type="text" id="enddate" data-language="en" autocomplete="off"
-                                                        value="{{ date('Y-m-d') }}">
+                                                        value="{{ date('d-m-Y') }}">
                                                 </td>
                                                 <td>
                                                     <a href="#" class="btn btn-success" style="width:100%" id="filter1"><i
@@ -112,13 +112,13 @@
 
         $("#startdate").datepicker({
             todayBtn: 1,
-            format : 'yyyy-mm-dd',
+            format : 'dd-mm-yyyy',
             autoclose: true,
         }).on('changeDate', function (selected) {
             var minDate = new Date(selected.date.valueOf());
             $('#enddate').datepicker('setStartDate', minDate);
         });
-        $("#enddate").datepicker({format : 'yyyy-mm-dd'}).on('changeDate', function (selected) {
+        $("#enddate").datepicker({format : 'dd-mm-yyyy'}).on('changeDate', function (selected) {
             var maxDate = new Date(selected.date.valueOf());
             $('#startdate').datepicker('setEndDate', maxDate);
         });

@@ -26,7 +26,7 @@
     <tr>
         <td><?php echo $no;?></td>
 		<td><?php echo $row->faktur;?></td>
-		<td><?php echo $row->tanggal_penjualan;?></td>
+		<td><?php echo tanggal_indo($row->tanggal_penjualan);?></td>
 		<td align="right"><?php echo number_format($row->total,0,',','.') ;?></td>
         <?php
 

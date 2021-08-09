@@ -47,7 +47,7 @@
 <script src="{{ asset('adminlte') }}/plugins/sweetalert2/dist/sweetalert2.all.min.js"></script>
 <script>
     $(document).ready(function(){
-       
+
         $('.print').click(function(){
             tanggal_awal = $('#startdate').val();
             tanggal_akhir = $('#enddate').val();
@@ -57,16 +57,16 @@
             const parsedUrl = parseResult.documentElement.textContent;
             window.open(parsedUrl,'_blank');
         });
-    
+
         $("#startdate").datepicker({
             todayBtn: 1,
-            format : 'yyyy-mm-dd',
+            format : 'dd-mm-yyyy',
             autoclose: true,
         }).on('changeDate', function (selected) {
             var minDate = new Date(selected.date.valueOf());
             $('#enddate').datepicker('setStartDate', minDate);
         });
-        $("#enddate").datepicker({format : 'yyyy-mm-dd'}).on('changeDate', function (selected) {
+        $("#enddate").datepicker({format : 'dd-mm-yyyy'}).on('changeDate', function (selected) {
             var maxDate = new Date(selected.date.valueOf());
             $('#startdate').datepicker('setEndDate', maxDate);
         });

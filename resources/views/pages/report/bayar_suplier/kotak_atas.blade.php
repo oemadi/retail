@@ -10,13 +10,13 @@
                                 <td>
                                     <input title="tanggal transaksi" class="form-control datepicker-here" type="text"
                                         id="startdate" data-language="en" autocomplete="off"
-                                        value="{{ date('Y-m-d') }}">
+                                        value="{{ date('d-m-Y') }}">
                                 </td>
                                <td width="20%">Tanggal Akhir</td>
 
                                 <td>
                                     <input title="tanggal transaksi" class="form-control datepicker-here" type="text"
-                                        id="enddate" data-language="en" autocomplete="off" value="{{ date('Y-m-d') }}">
+                                        id="enddate" data-language="en" autocomplete="off" value="{{ date('d-m-Y') }}">
                                 </td>
                             </tr>
 

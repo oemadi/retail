@@ -200,6 +200,8 @@
                 alert('Form masih kosong');
                 return;
             }
+            if(($('#sisa_hutang').val() >= 0) && ($('#bayar_sekarang').val() > 0)){
+
             let url = `{{ route('transaksi.bayarCustomer.store') }}`;
             $.ajax({
                 type: "POST",
@@ -224,9 +226,14 @@
                         loadTable();
                         Swal.fire("Success","Sukses saving pembayaran","success");
                         location.reload();
+
+
                     }
                 }
             });
+            }else{
+                alert('Transaksi tidak bisa diproses');
+            }
         });
 
 

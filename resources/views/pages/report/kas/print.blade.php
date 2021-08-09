@@ -40,7 +40,7 @@
                         @foreach ($kas as $key => $row)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $row->tanggal }}</td>
+                            <td>{{ tanggal_indo($row->tanggal) }}</td>
                             <td>{{ $row->faktur }}</td>
                             <td>{{ $row->jenis }}</td>
                             <td align="right"><?php echo format_angka($row->pemasukan);?></td>

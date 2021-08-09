@@ -153,6 +153,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
+                        <input type="text" name="idPenjualan" id="idPenjualan" class="form-control">
                         <table>
                             <tr>
                                 <td>Tanggal</td>
@@ -163,7 +164,7 @@
                                 <td id="showPelanggan"></td>
                             </tr>
                             <tr>
-                                <td>Invoice</td>
+                                <td>Faktur</td>
                                 <td>:</td>
                                 <td id="showInvoice"></td>
                             </tr>
@@ -187,7 +188,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal">Cetak Struk</button>
+                <button type="button" class="btn btn-success printStruk" data-dismiss="modal">Cetak Struk</button>
                 <a  class="btn btn-default newTrans">Selesai</a>
             </div>
         </div>
@@ -271,18 +272,26 @@
                 })
         });
 
-        $(document).on('click','#minus',function(){
-            minusCart($(this).data('kode'),$(this).data('i'));
-        });
-        $(document).on('click','#plus',function(){
-            plusCart($(this).data('kode'),$(this).data('i'));
-        });
         $('.showModalCustomer').click(function(){
             //alert();
             $('#modalcustomer').modal('show');
         });
         $('.showModalBarang').click(function(){
             $('#modalBarang').modal('show');
+        });
+       // href="/transaksi/penjualan/' + data + '/faktur"
+
+        $('.printStruk').click(function(){
+             id_penjualan = $('#idPenjualan').val();
+            //alert(id_penjualan);
+            ///report/penjualan/printStruk?id_penjualan=`+id_penjualan+`
+
+            let url =
+            `{{ url('/report/penjualan/printStruk?id_penjualan=`+id_penjualan+`') }}`;
+
+            const parseResult = new DOMParser().parseFromString(url, "text/html");
+            const parsedUrl = parseResult.documentElement.textContent;
+            window.open(parsedUrl,'_blank');
         });
         $(document).on('click','.btn-pilih-customer',function(){
             $('#customer').val($(this).data('ncustomer'));
@@ -497,6 +506,7 @@
             $('#showTanggal').text(data.tanggal_penjualan);
             $('#showPelanggan').text(data.customer.nama);
             $('#showInvoice').text(data.faktur);
+            $('#idPenjualan').val(data.id);
 
             var html = '';
             var subtotal = 0;

@@ -65,13 +65,13 @@
         });
         $("#startdate").datepicker({
             todayBtn: 1,
-            format : 'yyyy-mm-dd',
+            format : 'dd-mm-yyyy',
             autoclose: true,
         }).on('changeDate', function (selected) {
             var minDate = new Date(selected.date.valueOf());
             $('#enddate').datepicker('setStartDate', minDate);
         });
-        $("#enddate").datepicker({format : 'yyyy-mm-dd'}).on('changeDate', function (selected) {
+        $("#enddate").datepicker({format : 'dd-mm-yyyy'}).on('changeDate', function (selected) {
             var maxDate = new Date(selected.date.valueOf());
             $('#startdate').datepicker('setEndDate', maxDate);
         });

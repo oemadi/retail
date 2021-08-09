@@ -268,6 +268,7 @@ Route::group(['middleware' => 'auth'], function ($app) use ($router) {
 		$app->prefix('penjualan')->name('penjualan.')->group(function ($app) use ($router) {
             $app->get('/', 'ReportController@penjualan')->name('penjualan');
             $app->get('/print', 'ReportController@penjualanPrint')->name('print');
+            $app->get('/printStruk', 'ReportController@penjualanPrintStruk')->name('printStruk');
         });
         $app->prefix('saldo')->name('saldo.')->group(function ($app) use ($router) {
             $app->get('/', 'ReportController@saldo')->name('saldo');

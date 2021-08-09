@@ -6,6 +6,7 @@ use App\Kas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Session;
+use Helper;
 
 class KasController extends Controller
 {
@@ -20,8 +21,8 @@ class KasController extends Controller
 			$draw = $request->get('draw');
 			$start = $request->get('start');
 			$rowperpage = $request->get('length');
-			$awal = $request->post('awal');
-			$akhir = $request->post('akhir');
+			$awal = tanggal_english($request->post('awal'));
+			$akhir = tanggal_english($request->post('akhir'));
 
 
 
@@ -88,7 +89,7 @@ class KasController extends Controller
         $kas = new Kas();
         $branch = Session::get('branch');
         $kas->branch=$branch;
-        $kas->tanggal = $request->tanggal;
+        $kas->tanggal = tanggal_english($request->tanggal);
         $kas->faktur = $request->faktur;
         $kas->tipe = $request->tipe;
 

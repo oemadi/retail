@@ -10,8 +10,9 @@
 		$tglawal_indo=date("d-m-Y",strtotime($tgl1 ?? ''));
 		$tglakhir_indo=date("d-m-Y",strtotime($tgl2));
 		?>
-<div class="row" style="padding-top:100px;">
-<p >Periode : <?= $tglawal_indo.' s/d '.$tglakhir_indo;?></p>
+<div class="row" style="padding-top:10px;">
+    <p style="margin-top:60px;line-height:5px;font-weight:bold;font-size:14px;" align="left">REKAP PENJUALAN</p>
+<p style="line-height:5px;">Periode : <?= $tglawal_indo.' s/d '.$tglakhir_indo;?></p>
 </div>
   <table class="layout" width="100%">
     <thead>
@@ -34,7 +35,7 @@
         <td><?php echo $no++;?></td>
 		<td><?php echo $row->faktur;?></td>
 		<td><?php echo $row->customer->nama;?></td>
-		<td><?php echo $row->tanggal_penjualan;?></td>
+		<td><?php echo tanggal_indo($row->tanggal_penjualan);?></td>
         <td><?php echo $row->status;?></td>
         <td align="right"><?php echo format_angka($row->total);?></td>
         <td>

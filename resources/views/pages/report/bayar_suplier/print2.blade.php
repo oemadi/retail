@@ -62,7 +62,7 @@
 		<td><?php echo $row->id_bayar_hutang_suplier;?></td>
 		<td><?php echo $row->suplier->nama;?></td>
 		<td><?php echo $row->pembelian->faktur;?></td>
-		<td><?php echo $row->tanggal_bayar;?></td>
+		<td><?php echo tanggal_indo($row->tanggal_bayar);?></td>
 		<td align="right"><?php echo number_format($row->jumlah_bayar,0,',','.');?></td>
 		<td align="right"><?php echo number_format($row->sisa_hutang,0,',','.');?></td>
     </tr>

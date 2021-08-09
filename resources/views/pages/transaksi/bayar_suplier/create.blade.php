@@ -197,6 +197,7 @@
                 alert('Form masih kosong');
                 return;
             }
+            if(($('#sisa_hutang').val() >= 0) && ($('#bayar_sekarang').val() > 0)){
             let url = `{{ route('transaksi.bayarSuplier.store') }}`;
             $.ajax({
                 type: "POST",
@@ -224,6 +225,9 @@
                     }
                 }
             });
+            }else{
+                alert('Tidak dapat diproses');
+            }
         });
 
 

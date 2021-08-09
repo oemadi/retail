@@ -14,8 +14,8 @@
                             <label for="customer">Status</label>
                                 <select  id="status_lunas"  name="status_lunas" class="form-control">
                                 <option value="0">Semua</option>
-                                <option value="1">Sudah Lunas</option>
-                                <option value="2">Belum Lunas</option>
+                                <option value="lunas">Sudah Lunas</option>
+                                <option value="hutang">Belum Lunas</option>
                                 </select>
 
                         </div>

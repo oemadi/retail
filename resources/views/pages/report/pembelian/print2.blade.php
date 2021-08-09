@@ -34,7 +34,7 @@
         <td><?php echo $no++;?></td>
 		<td><?php echo $row->faktur;?></td>
 		<td><?php echo $row->suplier->nama;?></td>
-		<td><?php echo $row->tanggal_pembelian;?></td>
+		<td><?php echo tanggal_indo($row->tanggal_pembelian);?></td>
         <td><?php echo $row->status;?></td>
         <td align="right"><?php echo format_angka($row->total);?></td>
         <td>

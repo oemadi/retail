@@ -21,13 +21,14 @@
                                 <td>
                                     <input title="tanggal transaksi" class="form-control datepicker-here" type="text"
                                         id="startdate" data-language="en" autocomplete="off"
-                                        value="{{ date('Y-m-d') }}">
+                                        value="{{ date('d-m-Y') }}">
                                 </td>
                                 <td>
                                     <select id="status" class="form-control">
-                                        <option value="all">Semua Transaksi</option>
+                                        <option value="0">Semua Transaksi</option>
                                         <option value="tunai">Tunai</option>
-                                        <option value="hutang">Non Tunai</option>
+                                        <option value="hutang">Hutang</option>
+                                        <option value="lunas">Lunas</option>
                                     </select>
                                 </td>
                             </tr>
@@ -36,7 +37,7 @@
 
                                 <td>
                                     <input title="tanggal transaksi" class="form-control datepicker-here" type="text"
-                                        id="enddate" data-language="en" autocomplete="off" value="{{ date('Y-m-d') }}">
+                                        id="enddate" data-language="en" autocomplete="off" value="{{ date('d-m-Y') }}">
                                 </td>
 
                                 {{-- <td>

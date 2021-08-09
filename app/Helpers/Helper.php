@@ -30,3 +30,12 @@ function format_angka($angka){
     $hasil=number_format($angka,0,',','.');
 return $hasil;
 }
+function tanggal_indo($tanggal){
+    $hasil=date('d-m-y', strtotime($tanggal));;
+return $hasil;
+}
+function tanggal_english($tanggal){
+    $hasil=date('Y-m-d', strtotime($tanggal));;
+return $hasil;
+}
+

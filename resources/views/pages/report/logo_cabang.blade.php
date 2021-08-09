@@ -5,7 +5,6 @@
 
 	<div style="float:right;width:79%;valign:middle;border:0px solid red" >
 	<p style=";line-height:5px;font-weight:bold;font-size:18px;" align="left">CV. FERYPUTRA</p>
-    <p style=";line-height:5px;font-weight:bold;font-size:14px;" align="left">CABANG <b>{{ strtoupper(Session::get('branch_name'))}}</b></p>
     <p  style="line-height:3px;font-size:11px">Alamat : Jl. Urea 2 Kavling Kujang Blok Q No. 18 Beji Depok</p>
     <p  style="line-height:3px;font-size:11px">Telp. 0812 8845 7852 / 0857 1534 4141</p>
 	</div>
