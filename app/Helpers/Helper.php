@@ -25,3 +25,8 @@ function format_uang($angka){
     $hasil=number_format($angka,0,',','.');
 return $hasil;
 }
+
+function format_angka($angka){
+    $hasil=number_format($angka,0,',','.');
+return $hasil;
+}

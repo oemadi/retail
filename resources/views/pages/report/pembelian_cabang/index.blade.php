@@ -47,7 +47,7 @@
 <script src="{{ asset('adminlte') }}/plugins/sweetalert2/dist/sweetalert2.all.min.js"></script>
 <script>
     $(document).ready(function(){
-      
+
         $('.print').click(function(){
             tanggal_awal = $('#startdate').val();
             tanggal_akhir = $('#enddate').val();
@@ -57,7 +57,11 @@
             `{{ url('/report/pembelianCabang/print?cabang=`+ cabang +`&status=`+ status +`&tanggal_awal=`+tanggal_awal+`&tanggal_akhir=`+tanggal_akhir+`') }}`;
             const parseResult = new DOMParser().parseFromString(url, "text/html");
             const parsedUrl = parseResult.documentElement.textContent;
-            window.open(parsedUrl,'_blank');
+            if((cabang==0)){
+                alert('Pilih Cabang');
+             }else{
+                window.open(parsedUrl,'_blank');
+            }
         });
         $('.excel').click(function(){
             tanggal_awal = $('#startdate').val();

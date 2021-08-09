@@ -6,7 +6,7 @@
                         <div class="form-group">
                             <label for="customer">Cabang</label>
                                 <select name="id_cabang" id="id_cabang" class="form-control select2-cabang" style="width: 100%;height:auto">
-                               <option></option>
+                               <option value="0">--Pilih Cabang--</option>
                                 </select>
 
                         </div>

@@ -22,6 +22,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Saldo;
 use PDF;
+use Helper;
+
 
 class ReportController extends Controller
 {
@@ -249,6 +251,10 @@ class ReportController extends Controller
     );
         return $pdf->stream();
     }
+    public function barang()
+    {
+        return view("pages.report.barang.index");
+    }
     public function pembelian()
     {
         return view("pages.report.pembelian.index");
@@ -283,6 +289,23 @@ class ReportController extends Controller
     }
     //      $pembelian = BayarHutangSuplier::with('suplier')->get();
     // $pembelian = BayarHutangSuplier::with('suplier')->get();
+    public function barangPrint()
+    {
+        $data =  Barang::get();
+
+        $pdf = PDF::loadView('pages.report.barang.print', compact('data'))->setPaper('a4', 'portait');
+        $pdf->getDomPDF()->setHttpContext(
+        stream_context_create([
+            'ssl' => [
+                'allow_self_signed'=> TRUE,
+                'verify_peer' => FALSE,
+                'verify_peer_name' => FALSE,
+            ]
+        ])
+    );
+        return $pdf->stream();
+
+    }
     public function bayarSuplierPrint()
     {
         $data =  BayarHutangSuplier::whereDate('tanggal_bayar', ">=", request()->get('tanggal_awal'))

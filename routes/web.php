@@ -249,6 +249,10 @@ Route::group(['middleware' => 'auth'], function ($app) use ($router) {
     });
 
     $app->prefix('report')->middleware(['cek:Admin,Manager'])->name('report.')->group(function ($app) use ($router) {
+        $app->prefix('barang')->name('barang.')->group(function ($app) use ($router) {
+            $app->get('/', 'ReportController@barang')->name('barang');
+            $app->get('/print', 'ReportController@barangPrint')->name('print');
+        });
         $app->prefix('customer')->name('customer.')->group(function ($app) use ($router) {
             $app->get('/', 'ReportController@customer')->name('customer');
             $app->get('/print', 'ReportController@customerPrint')->name('print');

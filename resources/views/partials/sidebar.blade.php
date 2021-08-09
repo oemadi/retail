@@ -152,7 +152,7 @@
 
             @if (Auth::user()->level == "Admin" or Auth::user()->level == "Manager")
             <li
-                class="treeview {{ set_active(['report.suplier.suplier','report.customer.customer',
+                class="treeview {{ set_active(['report.barang.barang','report.suplier.suplier','report.customer.customer',
                 'report.saldo.saldo','report.pembelian.pembelian','report.pembelianCabang.pembelianCabang','report.kas.index',
                 'report.kasCabang.kasCabang','report.penjualan.penjualan',
                 'report.penjualanCabang.penjualanCabang','report.bayarCustomer.bayarCustomer','report.bayarSuplier.bayarSuplier',
@@ -165,6 +165,10 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
+                    <li class="{{ set_active(['report.barang.barang']) }}">
+                        <a href="{{ route('report.barang.barang') }}"><i class="fa fa-bar-chart"></i>
+                            Stok Barang</a>
+                    </li>
                     <li class="{{ set_active(['report.customer.customer']) }}">
                         <a href="{{ route('report.customer.customer') }}"><i class="fa fa-user"></i>
                             Customer</a>

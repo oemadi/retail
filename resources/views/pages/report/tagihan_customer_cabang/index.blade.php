@@ -55,7 +55,11 @@
             `{{ url('/report/tagihanCustomerCabang/print?id_cabang=`+id_cabang+`&status_lunas=`+status_lunas+`') }}`;
             const parseResult = new DOMParser().parseFromString(url, "text/html");
             const parsedUrl = parseResult.documentElement.textContent;
-            window.open(parsedUrl,'_blank');
+            if((id_cabang==0)){
+                alert('Pilih Cabang');
+             }else{
+                window.open(parsedUrl,'_blank');
+            }
         });
 
         $("#startdate").datepicker({

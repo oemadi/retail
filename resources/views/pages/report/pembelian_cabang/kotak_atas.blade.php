@@ -9,8 +9,8 @@
                            <td>Cabang</td>
                                 <td>
                                     <div class="form-group">
-											<select name="id_cabang" id="id_cabang" class="form-control select2-cabang" style="width: 100%;height:auto">
-										   <option></option>
+											<select  name="id_cabang" id="id_cabang" class="form-control select2-cabang" style="width: 100%;height:auto">
+										   <option value="0">--Pilih Cabang--</option>
 											</select>
 
 									</div>
