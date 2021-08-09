@@ -55,7 +55,11 @@
             `{{ url('/report/tagihanCustomer/print?id_customer=`+id_customer+`&status_lunas=`+status_lunas+`') }}`;
             const parseResult = new DOMParser().parseFromString(url, "text/html");
             const parsedUrl = parseResult.documentElement.textContent;
-            window.open(parsedUrl,'_blank');
+            if((id_customer==0)){
+                alert('Pilih Customer');
+             }else{
+                window.open(parsedUrl,'_blank');
+            }
         });
 
         $("#startdate").datepicker({

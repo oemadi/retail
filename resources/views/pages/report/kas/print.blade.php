@@ -43,8 +43,8 @@
                             <td>{{ $row->tanggal }}</td>
                             <td>{{ $row->faktur }}</td>
                             <td>{{ $row->jenis }}</td>
-                            <td align="right">@rupiah($row->pemasukan)</td>
-                            <td align="right">@rupiah($row->pengeluaran)</td>
+                            <td align="right"><?php echo format_angka($row->pemasukan);?></td>
+                            <td align="right"><?php echo format_angka($row->pengeluaran);?></td>
                             <td >{{ $row->keterangan }}</td>
                         </tr>
                         @php

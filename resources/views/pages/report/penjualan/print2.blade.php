@@ -10,7 +10,7 @@
 		$tglawal_indo=date("d-m-Y",strtotime($tgl1 ?? ''));
 		$tglakhir_indo=date("d-m-Y",strtotime($tgl2));
 		?>
-<div style="margin-top:60px;">
+<div class="row" style="padding-top:100px;">
 <p >Periode : <?= $tglawal_indo.' s/d '.$tglakhir_indo;?></p>
 </div>
   <table class="layout" width="100%">
@@ -36,7 +36,7 @@
 		<td><?php echo $row->customer->nama;?></td>
 		<td><?php echo $row->tanggal_penjualan;?></td>
         <td><?php echo $row->status;?></td>
-        <td><?php echo $row->total;?></td>
+        <td align="right"><?php echo format_angka($row->total);?></td>
         <td>
             <table  width="100%">
             <?php foreach($row->detail_penjualan as $detail ){ ?>
@@ -46,7 +46,7 @@
                     <td style="border:0mm" width="10px" align="center">x</td>
                     <td style="border:0mm;" width="10px" align="center"> <?php echo $detail->barang->harga_jual;?></td>
                     <td style="border:0mm" width="10px" align="center">:</td>
-                    <td style="border:0mm" width="10px" align="center"> <?php echo number_format(round($detail->subtotal,1),1,',','.');?></td>
+                    <td style="border:0mm" width="10px" align="right"><?php echo format_angka($detail->subtotal);?></td>
                 </tr>
                <?php } ?>
 
@@ -58,6 +58,6 @@
     <?php } ?>
 
 </table>
-	
+
 </div>
 </div>

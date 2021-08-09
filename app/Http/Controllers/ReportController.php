@@ -461,7 +461,7 @@ class ReportController extends Controller
         $tgl1 =  request()->get('tanggal_awal');
         $tgl2 =  request()->get('tanggal_akhir');
 		$cabang = Cabang::where('id',request()->get('cabang'))->first();
-        $pdf = PDF::loadView('pages.report.penjualan.print2', compact('penjualan','tgl1','tgl2','cabang'))->setPaper('a4', 'portait');
+        $pdf = PDF::loadView('pages.report.penjualan_cabang.print2', compact('penjualan','tgl1','tgl2','cabang'))->setPaper('a4', 'portait');
         $pdf->getDomPDF()->setHttpContext(
         stream_context_create([
             'ssl' => [

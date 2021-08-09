@@ -6,7 +6,7 @@
                         <div class="form-group">
                             <label for="customer">Customer</label>
                                 <select name="id_customer" id="id_customer" class="form-control select2-customer" style="width: 100%;height:auto">
-                               <option></option>
+                               <option value="0">--Pilih Customer--</option>
                                 </select>
 
                         </div>

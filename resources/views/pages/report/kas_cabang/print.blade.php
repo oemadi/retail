@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Laporan</title>
     <link rel="stylesheet" href="{{ asset('adminlte') }}/bower_components/bootstrap/dist/css/bootstrap.css">
-   
+
 </head>
 
 
@@ -21,13 +21,13 @@
 <table width="100%" class="layout">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Tanggal</th>
-                            <th>Faktur</th>
-                            <th>Jenis</th>
-                            <th>Pendapatan</th>
-                            <th>Pengeluaran</th>
-                            <th>Keterangan</th>
+                            <td>#</td>
+                            <td>Tanggal</td>
+                            <td>Faktur</td>
+                            <td>Jenis</td>
+                            <td>Pendapatan</td>
+                            <td>Pengeluaran</td>
+                            <td>Keterangan</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,8 +41,8 @@
                             <td>{{ $row->tanggal }}</td>
                             <td>{{ $row->faktur }}</td>
                             <td>{{ $row->jenis }}</td>
-                            <td>@rupiah($row->pemasukan)</td>
-                            <td>@rupiah($row->pengeluaran)</td>
+                            <td align="right"><?php echo format_angka($row->pemasukan);?></td>
+                            <td align="right"><?php echo format_angka($row->pengeluaran);?></td>
                             <td>{{ $row->keterangan }}</td>
                         </tr>
                         @php

@@ -12,7 +12,7 @@
 		$tglawal_indo=date("d-m-Y",strtotime($tgl1 ?? ''));
 		$tglakhir_indo=date("d-m-Y",strtotime($tgl2));
 		?>
-		<p style="margin-top:60px;line-height:5px;font-weight:bold;font-size:16px;">Rekap Pembelian PerCabang</p> 
+		<p style="margin-top:60px;line-height:5px;font-weight:bold;font-size:16px;">Rekap Pembelian PerCabang</p>
 <p>Cabang : <?= $cabang->nama;?></p>
 <p>Periode : <?= $tglawal_indo.' s/d '.$tglakhir_indo;?></p>
   <table width="100%" class="layout">
@@ -22,7 +22,7 @@
             <td>Faktur Pembelian</td>
 			<td>Suplier</td>
 			<td>Tanggal</td>
-		    <td align="right" >Pembelian</td>
+		    <td align="center" >Pembelian</td>
 			<td align="center">Total </td>
             <td align="center">Detail </td>
 
@@ -38,7 +38,7 @@
 		<td><?php echo $row->suplier->nama;?></td>
 		<td><?php echo $row->tanggal_pembelian;?></td>
         <td><?php echo $row->status;?></td>
-        <td><?php echo $row->total;?></td>
+        <td align="right"><?php echo format_angka($row->total);?></td>
         <td>
             <table >
             <?php foreach($row->detail_pembelian as $detail ){ ?>
@@ -46,9 +46,9 @@
                     <td style="border:0mm" > <?php echo $detail->barang->nama;?></td>
                     <td style="border:0mm"> <?php echo number_format(round($detail->jumlah_beli,1),1,',','.');?></td>
                     <td style="border:0mm" >x</td>
-                    <td style="border:0mm;" > <?php echo $detail->barang->harga_beli;?></td>
+                    <td style="border:0mm;" ><?php echo format_angka($detail->barang->harga_beli);?></td>
                     <td style="border:0mm" >:</td>
-                    <td style="border:0mm"> <?php echo number_format(round($detail->subtotal,1),1,',','.');?></td>
+                    <td style="border:0mm"><?php echo format_angka($detail->subtotal);?></td>
                 </tr>
                <?php } ?>
 

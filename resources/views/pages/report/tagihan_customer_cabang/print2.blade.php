@@ -20,6 +20,8 @@
     </thead>
     <?php
 	$no=0;
+    $jumlah_bayar=0;
+    $total_jumlah_bayar=0;
     $total_tagihan=0;
 	 foreach($data as $row ): $no++;
 	 ?>
@@ -32,7 +34,8 @@
         <?php
         $jumlah_bayar=0;
         foreach($row->BayarHutangCustomer as $d ){
-           $jumlah_bayar+= $d->jumlah_bayar;
+            $jumlah_bayar  += $d->jumlah_bayar;
+           $total_jumlah_bayar += $jumlah_bayar;
         }
         $total_tagihan+=$row->total-$jumlah_bayar;
         ?>
@@ -40,9 +43,10 @@
         <td align="right"><?php echo number_format($row->total-$jumlah_bayar,0,',','.');?></td>
     </tr>
     <?php endforeach;?>
-	   <tr>
-        <td align="center" colspan="6">Total</td>
-		<td align="right"><?php echo number_format($total_tagihan,0,',','.');?></td>
+    <tr>
+        <td align="center" colspan="5">Total</td>
+		<td align="right"><?php echo number_format($total_jumlah_bayar,0,',','.');?></td>
+        <td align="right"><?php echo number_format($total_tagihan,0,',','.');?></td>
 
     </tr>
 </table>

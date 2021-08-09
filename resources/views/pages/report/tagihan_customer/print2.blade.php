@@ -18,6 +18,8 @@
     </thead>
     <?php
 	$no=0;
+    $jumlah_bayar=0;
+    $total_jumlah_bayar=0;
     $total_tagihan=0;
 	 foreach($data as $row ): $no++;
 	 ?>
@@ -27,9 +29,10 @@
 		<td><?php echo $row->tanggal_penjualan;?></td>
 		<td align="right"><?php echo number_format($row->total,0,',','.') ;?></td>
         <?php
-        $jumlah_bayar=0;
+
         foreach($row->BayarHutangCustomer as $d ){
-           $jumlah_bayar+= $d->jumlah_bayar;
+           $jumlah_bayar  += $d->jumlah_bayar;
+           $total_jumlah_bayar += $jumlah_bayar;
         }
         $total_tagihan+=$row->total-$jumlah_bayar;
         ?>
@@ -38,13 +41,11 @@
     </tr>
     <?php endforeach;?>
 	   <tr>
-        <td align="center" colspan="5">Total</td>
-		<td align="right"><?php echo number_format($total_tagihan,0,',','.');?></td>
+        <td align="center" colspan="4">Total</td>
+		<td align="right"><?php echo number_format($total_jumlah_bayar,0,',','.');?></td>
+        <td align="right"><?php echo number_format($total_tagihan,0,',','.');?></td>
 
     </tr>
 </table>
-	 <section class="sheet padding-10mm">
-
-    </section>
 </div>
 </div>

@@ -51,7 +51,11 @@
     </thead>
     <?php
 	$no=0;
-	 foreach($data as $row ): $no++;
+	$total_jumlah_bayar=0;
+    $total_sisa_hutang=0;
+    foreach($data as $row ): $no++;
+    $total_jumlah_bayar += $row->jumlah_bayar;
+    $total_sisa_hutang += $row->sisa_hutang;
 	 ?>
     <tr>
         <td><?php echo $no;?></td>
@@ -64,9 +68,9 @@
     </tr>
     <?php endforeach;?>
 	   <tr>
-        <td align="center" colspan="6">Total</td>
-		<td align="right"></td>
-
+        <td align="center" colspan="5">Total</td>
+		<td align="right"><?php echo number_format($total_jumlah_bayar,0,',','.');?></td>
+        <td align="right"><?php echo number_format($total_sisa_hutang,0,',','.');?></td>
     </tr>
 </table>
 	 <section class="sheet padding-10mm">
