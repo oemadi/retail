@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Barang;
-use App\Detail_Pembelian;
+use App\Detail_pembelian;
 use App\History_stok_barang_masuk;
 use App\HutangSuplier;
 use App\Pembelian;
@@ -132,8 +132,8 @@ class PembelianController extends Controller
             $pembelian->total = $total;
             $pembelian->status = $request->status;
             $pembelian->save();
-            foreach ($request->data as $row) {
-                $detail = new Detail_Pembelian();
+          foreach ($request->data as $row) {
+                $detail = new Detail_pembelian();
                 $detail->pembelian_id = $pembelian->id;
                 $detail->barang_id = $row['kode_barang'];
                 $detail->jumlah_beli = $row['jumlah'];
@@ -157,7 +157,7 @@ class PembelianController extends Controller
                 $hutang->branch = Session::get('branch');
                 $hutang->save();
             } else {
-                KasHelper::add($pembelian->faktur, 'pengeluaran', 'pembelian', 0, $pembelian->total,Session::get('branch'));
+                KasHelper::add($request->faktur, 'pengeluaran', 'pembelian', 0, $pembelian->total,Session::get('branch'));
             }
             DB::commit();
             return response()->json(["success", "Pembelian berhasil"]);
