@@ -22,6 +22,36 @@
                         @endif
                     </div>
                 </div>
+                <div class="col-md-12">
+                    <div class=" box-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <select name="id_kategori" id="id_kategori" class="form-control select2-kategori" style="width: 100%;height:auto">
+                                                </select>
+                                            </td>
+
+                                            <td>
+                                                <select name="id_barang" id="id_barang" class="form-control select2-barang" style="width: 100%;height:auto">
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <a href="#" class="btn btn-success" style="width:100%" id="filter1"><i
+                                                        class="fa fa-search"></i>
+                                                    Filter</a>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                    </div>
+                </div>
+            </div>
                 <a href=" {{ route('barang.create') }}" class="btn btn-primary mb-2"><i class="fa fa-plus"></i> Tambah
                     Data</a>
 
@@ -167,17 +197,14 @@
 @push('script')
 <!-- SlimScroll -->
 <script type="text/javascript">
-    $(function() {
-
-        $(document).on('click','.showBarcode',function(){
-            barcode = $(this).first().html();
-            nama = $(this).data('nama');
-            barcode = barcode.replace("40",100);
-            barcode = barcode.replace("130",400);
-            $('#contentShowBarcode').html(barcode);
-            $('#exampleModalCenterTitle').html(`Barcode Barang : ${nama}`)
-            $('#modalBarcode').modal('show')
+       $('#filter1').click(function(){
+            $('#example-table').dataTable().fnDestroy();
+            loadDataTable();
         });
+        function loadDataTable(){
+        var id_kategori = $("#id_kategori").val();
+        var id_barang = $("#id_barang").val();
+       // alert(id_kategori,id_barang);
        	$.fn.dataTable.ext.errMode = 'none';
         $('#example-table')
 		.on( 'error.dt', function ( e, settings, techNote, message ) {
@@ -186,7 +213,12 @@
 		.dataTable({
            processing:true,
 		   serverSide:true,
-		   ajax:"{{route('getDataMasterBarang')}}",
+           searching:false,
+           ajax:{
+            url: "{{route('getDataMasterBarang')}}",
+            type:"get",
+            data:{id_kategori:id_kategori,id_barang:id_barang,_token: '{{csrf_token()}}'}
+           },
 		   columns:[
 		    {"data": "id",
                  render: function (data, type, row, meta) {
@@ -214,6 +246,53 @@
 		   }
 		   ]
         });
+        }
+    $(function() {
+        loadDataTable();
+        $(".select2-kategori").select2({
+        ajax: {
+        url: "{{ route('getDataKategoriSelect') }}",
+        contentType: 'application/json',
+        dataType: 'json',
+        delay:50,
+        type:"get",
+        data: function(params) {
+            return {
+            search: params.term,_token: '{{csrf_token()}}'
+            };
+        },
+        processResults: function(data) {
+            return {
+            results: data
+            };
+        },
+        cache: true
+        },
+        placeholder:"Nama Kategori",
+        });
+
+        $(".select2-barang").select2({
+        ajax: {
+        url: "{{ route('getDataBarang') }}",
+        contentType: 'application/json',
+        dataType: 'json',
+        delay:50,
+        type:"get",
+        data: function(params) {
+            return {
+            search: params.term,_token: '{{csrf_token()}}'
+            };
+        },
+        processResults: function(data) {
+            return {
+            results: data
+            };
+        },
+        cache: true
+        },
+        placeholder:"Nama Barang",
+        });
+
     });
 </script>
 @endpush

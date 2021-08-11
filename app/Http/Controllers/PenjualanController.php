@@ -97,7 +97,7 @@ class PenjualanController extends Controller
             $id = request()->get('search');
             $res = DB::select("SELECT a.* from customer a
             where a.branch=$branch and a.nama like '%".$id."%'
-             order by a.nama limit 10
+             order by a.nama
             ");
            foreach($res as $row){
                $data[] = array('id'=>$row->id,'text'=>$row->nama.'-'.$row->alamat);
@@ -110,20 +110,34 @@ class PenjualanController extends Controller
             $id = request()->get('search');
             $res = DB::select("SELECT a.* from suplier a
             where  a.nama like '%".$id."%'
-             order by a.nama limit 10
+             order by a.nama
             ");
            foreach($res as $row){
                $data[] = array('id'=>$row->id,'text'=>$row->nama.'-'.$row->alamat);
            }
             return json_encode($data);
         }
+        public function getDataKategoriSelect()
+        {
+            // $branch = Session::get('branch');
+            $id = request()->get('search');
+            $res = DB::select("SELECT a.* from kategori a
+            where  a.nama like '%".$id."%'
+             order by a.nama
+            ");
+           foreach($res as $row){
+               $data[] = array('id'=>$row->id,'text'=>$row->nama);
+           }
+            return json_encode($data);
+        }
+
        public function getDataCabangSelect()
         {
             // $branch = Session::get('branch');
             $id = request()->get('search');
             $res = DB::select("SELECT a.* from cabang a
             where  a.nama like '%".$id."%'
-             order by a.nama limit 10
+             order by a.nama
             ");
            foreach($res as $row){
                $data[] = array('id'=>$row->id,'text'=>$row->nama.'-'.$row->alamat);

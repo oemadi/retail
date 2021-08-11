@@ -20,6 +20,7 @@ Route::any('/getDataPenyesuaianStok', 'PenyesuaianStokController@getDataPenyesua
 
 Route::any('/getDataSuplier', 'SuplierController@getSuplier')->name('getDataSuplier');
 Route::any('/getDataSuplierSelect', 'PenjualanController@getDataSuplierSelect')->name('getDataSuplierSelect');
+Route::any('/getDataKategoriSelect', 'PenjualanController@getDataKategoriSelect')->name('getDataKategoriSelect');
 Route::any('/getDataCustomer', 'CustomerController@getDataCustomer')->name('getDataCustomer');
 Route::any('/getDataCabangSelect', 'PenjualanController@getDataCabangSelect')->name('getDataCabangSelect');
 Route::any('/getDataMasterPegawai', 'PegawaiController@getDataMasterPegawai')->name('getDataMasterPegawai');

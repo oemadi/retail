@@ -21,6 +21,9 @@ class BarangController extends Controller
 		$start = $request->get('start');
 		$rowperpage = $request->get('length');
 
+        $id_kategori = $request->get('id_kategori');
+        $id_barang = $request->get('id_barang');
+
 		$columnIndex_arr = $request->get('order');
 		$columnName_arr = $request->get('columns');
 		$order_arr = $request->get('order');
@@ -34,20 +37,20 @@ class BarangController extends Controller
         $branch = Session::get('branch');
 
 		$totalRecords = Barang::select('count(*)  as allcount')->count();
-        $totalRecordswithFilterA = DB::select("SELECT count(*) as allcount from barang where branch=$branch");
+
+        $totalRecordswithFilterA = DB::select("SELECT count(*) as allcount from barang a where a.branch=$branch
+        ".($id_kategori!="" ?  "and a.kategori_id='".$id_kategori."'"  : "")."
+        ".($id_barang!="" ?  "and a.id='".$id_barang."'"  : "")."");
         $totalRecordswithFilter =  $totalRecordswithFilterA[0]->allcount;
 
-		$records = Barang::select('barang.*','kategori.nama as kategori_nama','satuan.nama as satuan_nama')
-        ->join('satuan', 'satuan.id', '=', 'barang.satuan_id')
-        ->join('kategori', 'kategori.id', '=', 'barang.kategori_id')
-        ->where('barang.nama','like','%'.$searchValue.'%')
-        ->where('barang.branch',$branch)
-        ->orWhere('barang.kode','like','%'.$searchValue.'%')
-        ->where('barang.branch',$branch)
-		->skip($start)
-		->take($rowperpage)
-        ->orderBy($columnName,$columnSortOrder)
-		->get();
+        $records = DB::select("SELECT a.*,b.nama as kategori_nama,c.nama as satuan_nama from barang a
+            inner join kategori b on b.id=a.kategori_id
+            inner join satuan c on c.id=a.satuan_id
+            where  a.branch=$branch
+            ".($id_kategori!="" ?  "and a.kategori_id='".$id_kategori."'"  : "")."
+            ".($id_barang!="" ?  "and a.id='".$id_barang."'"  : "")."
+             order by $columnName $columnSortOrder
+             limit $start,$rowperpage");
 
 		$data_arr = array();
 		foreach($records as $record){
