@@ -177,7 +177,13 @@ class ReportController extends Controller
     // $pembelian = BayarHutangSuplier::with('suplier')->get();
     public function barangPrint()
     {
-        $data =  Barang::get();
+        $id_barang = request()->get('id_barang');
+        $id_kategori =  request()->get('id_kategori');
+
+        $data = DB::select("SELECT a.*,b.nama as kategori from barang a inner join kategori b on a.kategori_id=b.id where a.id>0
+        ".($id_kategori!="all" ?  "and a.kategori_id='".$id_kategori."'"  : "")."
+        ".($id_barang!="all" ?  "and a.id='".$id_barang."'"  : "")."");
+
 
         $pdf = PDF::loadView('pages.report.barang.print', compact('data'))->setPaper('a4', 'portait');
         $pdf->getDomPDF()->setHttpContext(

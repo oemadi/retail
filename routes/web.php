@@ -24,6 +24,9 @@ Route::any('/getDataKategoriSelect', 'PenjualanController@getDataKategoriSelect'
 Route::any('/getDataCustomer', 'CustomerController@getDataCustomer')->name('getDataCustomer');
 Route::any('/getDataCabangSelect', 'PenjualanController@getDataCabangSelect')->name('getDataCabangSelect');
 Route::any('/getDataMasterPegawai', 'PegawaiController@getDataMasterPegawai')->name('getDataMasterPegawai');
+
+Route::any('/getDataKategoriSelect2', 'PenjualanController@getDataKategoriSelect2')->name('getDataKategoriSelect2');
+
 Route::any('/getDataBarang', 'BarangController@getBarang')->name('getDataBarang');
 Route::any('/getDataSatuan', 'SatuanController@getSatuan')->name('getDataSatuan');
 Route::any('/getDataKategori', 'KategoriController@getKategori')->name('getDataKategori');

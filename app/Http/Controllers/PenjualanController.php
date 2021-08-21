@@ -144,16 +144,27 @@ class PenjualanController extends Controller
            }
             return json_encode($data);
         }
+
         public function getDataBarang()
         {
             $branch = Session::get('branch');
             $id = request()->get('search');
-            $res = DB::select("SELECT a.* from barang a where a.branch=$branch
+            $res = DB::select("SELECT a.* from barang a
              order by a.nama
             ");
            foreach($res as $row){
                $data[] = array('id'=>$row->id,'text'=>$row->kode.' - '.$row->nama);
            }
+            return json_encode($data);
+        }
+        public function getDataKategoriSelect2()
+        {
+            $branch = Session::get('branch');
+            $id = request()->get('search');
+            $res = DB::select("SELECT a.* from kategori a  order by a.nama");
+            foreach($res as $row){
+                $data[] = array('id'=>$row->id,'text'=>$row->nama);
+            }
             return json_encode($data);
         }
         public function getDataBarangSelect2()

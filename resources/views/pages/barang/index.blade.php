@@ -290,7 +290,7 @@
         },
         cache: true
         },
-        placeholder:"Nama Barang",
+        placeholder:"Kode/Nama Barang",
         });
 
     });

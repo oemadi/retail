@@ -25,14 +25,14 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $row->nama }}</td>
-							<td>{{ $row->kategori->nama }}</td>
+							<td>{{ $row->kategori }}</td>
                             <td align="right">{{ format_angka($row->stok_awal) }}</td>
                             <td align="right">{{ format_angka($row->stok_masuk) }}</td>
 							<td align="right">{{ format_angka($row->stok_keluar) }}</td>
                             <td align="right">{{ format_angka($row->stok_penyesuaian_penambahan) }}</td>
 							<td align="right">{{ format_angka($row->stok_penyesuaian_pengurangan) }}</td>
 							<td align="right">{{ format_angka($row->stok_akhir) }}</td>
-                           
+
                         </tr>
 
                         @endforeach
