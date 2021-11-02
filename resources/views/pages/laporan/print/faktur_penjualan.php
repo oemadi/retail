@@ -130,9 +130,9 @@ td.redcell2 {
     <?php
 	$no=0;
 
-	$total=0;
+	$totalharga = 0;
 	 foreach($detil_penjualan->result() as $row ): $no++;
-	 $total =+ $row->jumlah*$row->harga;
+	 $totalharga =+ $row->jumlah*$row->harga;
 	 ?>
     <tr>
         <td><?php echo $no;?></td>
@@ -147,7 +147,7 @@ td.redcell2 {
     <?php endforeach;?>
 	<tr>
 	 <td align="right" colspan="5">Total</td>
-	 <td align="right"><?php echo number_format(($total),0,',','.');?></td>
+	 <td align="right"><?php echo number_format(($totalharga),0,',','.');?></td>
 	</tr>
 </table>
 	  <div style="float:left;width:48%;height:150px;border:0px solid black;text-align:center;line-height:75px">Tanda Terima<br>(..............)</div>
