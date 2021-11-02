@@ -1,7 +1,7 @@
 
 <div class="panel panel-default">
 <div class="panel-body">
-  
+
 <style>
 table {
  font-family: sans-serif;
@@ -63,7 +63,7 @@ td.redcell2 {
 	display: table-row-group;
 }
 </style>
-	
+
  <style>
  * {
   box-sizing: border-box;
@@ -72,18 +72,18 @@ td.redcell2 {
 .box1 {
   float: left;
   width: 20%;
- 
+
 }
 .box2 {
   float: left;
   width: 50%;
- 
+
 }
 .box3 {
   float: left;
   width: 30%;
   paading-top:20px;
- 
+
 }
 .clearfix::after {
   content: "";
@@ -92,7 +92,7 @@ td.redcell2 {
 }
 
 
-  </style>	
+  </style>
 
 <br>
 
@@ -124,15 +124,15 @@ td.redcell2 {
 			<td align="center">Keterangan</td>
 			<td align="center">Harga</td>
 			<td align="center">Sub Total</td>
-		
+
         </tr>
     </thead>
     <?php
 	$no=0;
-	
-	$total=0;	
+
+	$total=0;
 	 foreach($detil_penjualan->result() as $row ): $no++;
-	 $total=$total+($row->jumlah*$row->harga);
+	 $total =+ $row->jumlah*$row->harga;
 	 ?>
     <tr>
         <td><?php echo $no;?></td>
@@ -141,9 +141,9 @@ td.redcell2 {
 			<td><?php echo $row->karung.' Q';?></td>
 		<td align="right"><?php echo number_format($row->harga,0,',','.');?></td>
 	    <td align="right"><?php echo number_format(($row->jumlah*$row->harga),0,',','.');?></td>
-		
+
 	</tr>
-	 
+
     <?php endforeach;?>
 	<tr>
 	 <td align="right" colspan="5">Total</td>
@@ -152,6 +152,6 @@ td.redcell2 {
 </table>
 	  <div style="float:left;width:48%;height:150px;border:0px solid black;text-align:center;line-height:75px">Tanda Terima<br>(..............)</div>
            <div style="float:left;width:48%;height:150px;border:0px solid black;text-align:center;line-height:75px">Hormat kami<br>(..............)</div>
-	 
+
 </div>
 </div>
