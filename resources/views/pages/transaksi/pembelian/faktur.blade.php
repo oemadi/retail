@@ -134,7 +134,7 @@
 
         $total=0;
          foreach($detail as $row ): $no++;
-         $total=$row->subtotal;
+         $total =+ $row->subtotal;
          ?>
         <tr>
             <td><?php echo $no;?></td>
