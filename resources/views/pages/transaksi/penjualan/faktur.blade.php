@@ -141,7 +141,7 @@
             <td><?php echo $no;?></td>
             <td><?php echo $row->nama;?></td>
             <td align="right"><?php echo number_format($row->jumlah_jual,1,',','.').' Kg';?></td>
-                <td align="right"><?php echo ' Q';?></td>
+                <td align="right"><?php echo number_format($row->karung' Q';?></td>
             <td align="right"><?php echo number_format($row->harga,0,',','.');?></td>
             <td align="right"><?php echo number_format(($row->subtotal),0,',','.');?></td>
 
