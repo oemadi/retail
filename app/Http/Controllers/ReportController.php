@@ -372,7 +372,7 @@ class ReportController extends Controller
             ->join('detail_penjualan','penjualan.id','detail_penjualan.penjualan_id')
             ->join('barang','barang.id','detail_penjualan.barang_id')
             ->select('barang.*','detail_penjualan.jumlah_jual','detail_penjualan.harga',
-            'detail_penjualan.subtotal')
+            'detail_penjualan.subtotal','detail_penjualan.karung')
 			->get();
         return view("pages.transaksi.penjualan.faktur", compact('atas','detail'));
     }
