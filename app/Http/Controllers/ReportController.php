@@ -374,7 +374,7 @@ class ReportController extends Controller
             ->select('barang.*','detail_penjualan.jumlah_jual','detail_penjualan.harga',
             'detail_penjualan.subtotal','detail_penjualan.karung')
 			->get();
-        return view("pages.transaksi.penjualan.faktur", compact('atas','detail1'));
+        return view("pages.transaksi.penjualan.faktur", compact('atas','detail'));
     }
   public function penjualanCabangPrint()
     {
