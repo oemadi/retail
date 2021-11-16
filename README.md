@@ -1,1 +1,1 @@
-## :rocket: Penjualan
+## :rocket: Retail POS
